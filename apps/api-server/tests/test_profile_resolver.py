@@ -222,6 +222,12 @@ class TestBuildSearchEnv:
         assert "SEARCH_CONFIDENCE_ENABLED" in env
         assert env["SEARCH_RESULT_NUM"] == "20"
 
+    def test_searxng_only_is_strict(self):
+        env = pr.build_search_env("searxng-only", 15)
+        assert env["SEARCH_PROVIDER_ORDER"] == "searxng"
+        assert env["SEARCH_PROVIDER_MODE"] == "fallback"
+        assert env["SEARCH_PROVIDER_ORDER_STRICT"] == "1"
+
     def test_unknown_profile_falls_back_to_searxng_first(self):
         # build_search_env 不做 normalize，但参数缺失会兜底（用于内部调用）
         env = pr.build_search_env("definitely-not-exist", 10)

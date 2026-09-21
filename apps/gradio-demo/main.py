@@ -602,6 +602,7 @@ SEARCH_PROFILE_ENV_MAP: Dict[str, Dict[str, str]] = {
     "searxng-only": {
         "SEARCH_PROVIDER_ORDER": "searxng",
         "SEARCH_PROVIDER_MODE": "fallback",
+        "SEARCH_PROVIDER_ORDER_STRICT": "1",
     },
 }
 

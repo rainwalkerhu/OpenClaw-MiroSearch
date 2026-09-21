@@ -349,6 +349,16 @@ def create_mcp_server_parameters(cfg: DictConfig, agent_cfg: DictConfig):
             "SEARCH_CONFIDENCE_HIGH_CONF_DOMAINS",
             "reuters.com,apnews.com,bbc.com,aljazeera.com,state.gov,un.org,iaea.org,who.int",
         )
+        dynamic_search_provider_order_strict = os.environ.get(
+            "SEARCH_PROVIDER_ORDER_STRICT", "0"
+        )
+        dynamic_search_searxng_only_allow_downgrade = os.environ.get(
+            "SEARCH_SEARXNG_ONLY_ALLOW_DOWNGRADE", "0"
+        )
+        dynamic_search_searxng_only_downgrade_order = os.environ.get(
+            "SEARCH_SEARXNG_ONLY_DOWNGRADE_ORDER",
+            "serpapi,tavily,serper",
+        )
         dynamic_scrape_proxy_fake_ip_cidrs = os.environ.get(
             "SCRAPE_PROXY_FAKE_IP_CIDRS", ""
         )
@@ -373,6 +383,15 @@ def create_mcp_server_parameters(cfg: DictConfig, agent_cfg: DictConfig):
                         "SEARXNG_BASE_URL": dynamic_searxng_base_url or "",
                         "SEARCH_PROVIDER_ORDER": dynamic_search_provider_order,
                         "SEARCH_PROVIDER_MODE": dynamic_search_provider_mode,
+                        "SEARCH_PROVIDER_ORDER_STRICT": (
+                            dynamic_search_provider_order_strict
+                        ),
+                        "SEARCH_SEARXNG_ONLY_ALLOW_DOWNGRADE": (
+                            dynamic_search_searxng_only_allow_downgrade
+                        ),
+                        "SEARCH_SEARXNG_ONLY_DOWNGRADE_ORDER": (
+                            dynamic_search_searxng_only_downgrade_order
+                        ),
                         "SEARCH_PROVIDER_TRUSTED_ORDER": dynamic_search_provider_trusted_order,
                         "SEARCH_PROVIDER_PARALLEL_MAX_WAIT_MS": dynamic_search_provider_parallel_max_wait_ms,
                         "SEARCH_PROVIDER_PARALLEL_MIN_SUCCESS": dynamic_search_provider_parallel_min_success,
