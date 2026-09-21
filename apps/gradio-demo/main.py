@@ -4945,6 +4945,17 @@ def build_demo():
         --icon-muted: #94a3b8;
         --icon-accent: #38bdf8;
         --focus-ring: 0 0 0 2px rgba(56, 189, 248, 0.32);
+        /* Soft theme still ships light checkbox-label fills — pin dark tokens */
+        --checkbox-label-background-fill: rgba(15, 23, 42, 0.88);
+        --checkbox-label-background-fill-hover: rgba(30, 41, 59, 0.95);
+        --checkbox-label-background-fill-selected: rgba(14, 165, 233, 0.78);
+        --checkbox-label-text-color: #cbd5e1;
+        --checkbox-label-text-color-selected: #f8fafc;
+        --checkbox-label-border-color: rgba(148, 163, 184, 0.22);
+        --checkbox-label-border-color-hover: rgba(148, 163, 184, 0.35);
+        --checkbox-label-border-color-selected: rgba(56, 189, 248, 0.55);
+        --block-info-text-color: #e2e8f0;
+        --block-label-text-color: #e2e8f0;
         max-width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
@@ -5123,8 +5134,11 @@ def build_demo():
 
     #stop-btn[disabled],
     #stop-btn:disabled {
-        opacity: 0.45 !important;
-        color: #80868b !important;
+        opacity: 0.82 !important;
+        filter: none !important;
+        color: #94a3b8 !important;
+        background: rgba(30, 41, 59, 0.55) !important;
+        border-color: rgba(148, 163, 184, 0.28) !important;
     }
 
     /* Hide legacy right options column if present */
@@ -6850,19 +6864,22 @@ def build_demo():
         margin: 0 0 8px !important;
     }
 
-    /* e2e-stop-disabled — idle Stop must look inert */
+    /* e2e-stop-disabled — idle Stop: readable muted, not invisible */
     #stop-btn[disabled],
     #stop-btn.disabled,
     #stop-btn[aria-disabled="true"],
-    #btn-row #stop-btn:disabled {
-        opacity: 0.35 !important;
-        filter: grayscale(0.4) !important;
+    #btn-row #stop-btn:disabled,
+    #btn-row #stop-btn[disabled] button,
+    #stop-btn[disabled] button,
+    #stop-btn:disabled button {
+        opacity: 0.82 !important;
+        filter: none !important;
         cursor: not-allowed !important;
         pointer-events: none !important;
         box-shadow: none !important;
-        border-color: rgba(148, 163, 184, 0.2) !important;
-        color: #64748b !important;
-        background: rgba(30, 41, 59, 0.45) !important;
+        border-color: rgba(148, 163, 184, 0.28) !important;
+        color: #94a3b8 !important;
+        background: rgba(30, 41, 59, 0.55) !important;
     }
 
     /* Short-viewport: Gradio .form inside modal can be ~2x card width (H-scrollbar) */
@@ -7376,7 +7393,20 @@ def build_demo():
     }
 
 
-    /* ===== Audit fix: modal labels + radios (no light Gradio chrome) ===== */
+    /* ===== Soft leftovers: pin dark — do not fight Soft light rules ===== */
+    :root, .dark, .gradio-container, .gradio-container.dark {
+        --checkbox-label-background-fill: rgba(15, 23, 42, 0.88) !important;
+        --checkbox-label-background-fill-hover: rgba(30, 41, 59, 0.95) !important;
+        --checkbox-label-background-fill-selected: rgba(14, 165, 233, 0.78) !important;
+        --checkbox-label-text-color: #cbd5e1 !important;
+        --checkbox-label-text-color-selected: #f8fafc !important;
+        --checkbox-label-border-color: rgba(148, 163, 184, 0.22) !important;
+        --checkbox-label-border-color-hover: rgba(148, 163, 184, 0.35) !important;
+        --checkbox-label-border-color-selected: rgba(56, 189, 248, 0.55) !important;
+        --block-info-text-color: #e2e8f0 !important;
+        --block-label-text-color: #e2e8f0 !important;
+    }
+
     #settings-modal [data-testid="block-info"],
     #export-modal [data-testid="block-info"],
     #settings-modal span[data-testid="block-info"],
@@ -7403,10 +7433,12 @@ def build_demo():
         overflow: visible !important;
     }
 
-    /* Output-detail radios: kill Gradio Soft white unselected chips */
+    /* Radios: Soft ships white unselected chips — override all modal radios */
     #output-detail-level-selector label,
     #settings-modal #output-detail-level-selector label,
-    #output-detail-level-selector label[data-testid$="-radio-label"] {
+    #output-detail-level-selector label[data-testid$="-radio-label"],
+    #settings-modal .wrap label,
+    #export-modal .wrap label {
         background: rgba(15, 23, 42, 0.88) !important;
         background-color: rgba(15, 23, 42, 0.88) !important;
         color: #cbd5e1 !important;
@@ -7416,14 +7448,18 @@ def build_demo():
     }
     #output-detail-level-selector label.selected,
     #output-detail-level-selector label[data-testid$="-radio-label"].selected,
-    #settings-modal #output-detail-level-selector label.selected {
+    #settings-modal #output-detail-level-selector label.selected,
+    #settings-modal .wrap label.selected,
+    #export-modal .wrap label.selected {
         background: rgba(14, 165, 233, 0.78) !important;
         background-color: rgba(14, 165, 233, 0.78) !important;
         color: #f8fafc !important;
         border-color: rgba(56, 189, 248, 0.55) !important;
     }
     #output-detail-level-selector .wrap,
-    #settings-modal #output-detail-level-selector .wrap {
+    #settings-modal #output-detail-level-selector .wrap,
+    #settings-modal .wrap,
+    #export-modal .wrap {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -7431,18 +7467,34 @@ def build_demo():
         display: flex !important;
         flex-wrap: wrap !important;
     }
-    #output-detail-level-selector input[type="radio"] {
+    #output-detail-level-selector input[type="radio"],
+    #settings-modal input[type="radio"],
+    #export-modal input[type="radio"] {
         accent-color: #38bdf8 !important;
     }
 
-    /* Document-style process fold: never light Gradio leftover wash */
-    #log-view .process-details {
+    /* Document-style process fold / log-view: never light Gradio leftover wash */
+    #log-view,
+    #log-view .block,
+    #log-view .solid,
+    #log-view .prose,
+    #log-view .md,
+    #log-view .process-details,
+    #log-view .thought-card,
+    #log-view .tool-card,
+    #log-view .search-step-board {
         background: transparent !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+    }
+    #log-view .process-details {
         border: 1px solid rgba(148, 163, 184, 0.16) !important;
         border-radius: 10px !important;
         padding: 0 !important;
     }
-    #log-view .process-details > summary {
+    #log-view .process-details > summary,
+    #log-view .thought-card > summary,
+    #log-view .tool-header {
         color: #94a3b8 !important;
         background: transparent !important;
     }
@@ -7805,6 +7857,25 @@ def build_demo():
             border_color_primary_dark="#334155",
             body_text_color="#cbd5e1",
             body_text_color_dark="#cbd5e1",
+            # Soft defaults to white checkbox-label chips — force dark
+            block_info_text_color="#e2e8f0",
+            block_info_text_color_dark="#e2e8f0",
+            checkbox_label_background_fill="#0f172a",
+            checkbox_label_background_fill_dark="#0f172a",
+            checkbox_label_background_fill_hover="#1e293b",
+            checkbox_label_background_fill_hover_dark="#1e293b",
+            checkbox_label_background_fill_selected="#0284c7",
+            checkbox_label_background_fill_selected_dark="#0284c7",
+            checkbox_label_text_color="#cbd5e1",
+            checkbox_label_text_color_dark="#cbd5e1",
+            checkbox_label_text_color_selected="#f8fafc",
+            checkbox_label_text_color_selected_dark="#f8fafc",
+            checkbox_label_border_color="#334155",
+            checkbox_label_border_color_dark="#334155",
+            checkbox_label_border_color_hover="#475569",
+            checkbox_label_border_color_hover_dark="#475569",
+            checkbox_label_border_color_selected="#38bdf8",
+            checkbox_label_border_color_selected_dark="#38bdf8",
         ),
         head=demo_head,
     ) as demo:
