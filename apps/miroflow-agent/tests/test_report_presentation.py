@@ -5,6 +5,7 @@ from src.io.report_presentation import (
     drop_incomplete_reference_lines,
     ensure_content_analysis_and_topology,
     prepare_user_facing_report,
+    reshape_report_for_consumer,
     strip_diagnostic_noise,
 )
 
@@ -34,6 +35,13 @@ MESSY = """
 1. https://example.com/reuters-2026-09-18
 2. https://www
 
+## 线索追踪 / Lead Trail
+
+### Lead 1: What are the most important unresolved aspects of the attack?
+**来源**: query_seed (Turn 0)
+**优先级**: 0.65
+**状态**: pending
+
 --------------------- Extracted Result ---------------------
 boxed text
 
@@ -41,13 +49,6 @@ boxed text
 Total Input Tokens: 123
 Pricing is disabled - no cost information available
 -----------------------------------------------------
-
-## 线索追踪 / Lead Trail
-
-### Lead 1: What are the most important unresolved aspects of the attack?
-**来源**: query_seed (Turn 0)
-**优先级**: 0.65
-**状态**: pending
 """
 
 
@@ -106,7 +107,47 @@ def test_prepare_user_facing_report_end_to_end():
     assert "Token Usage" not in out
     assert "Pricing is disabled" not in out
     assert "https://www\n" not in out
-    assert "未跟进" in out
+    assert "## 结论" in out
+    assert "证据与来源" in out
+    assert "未跟进" in out  # lead trail compacted into deep dive
     assert "内容分析" in out
     assert "```mermaid" in out
-    assert out.strip().endswith((".", "。", "`", "进", "）", ")")) or "未跟进" in out
+    assert out.index("## 结论") < out.index("证据与来源")
+
+def test_prepare_consumer_layout_glance_first():
+    out = prepare_user_facing_report(MESSY, detail_level="detailed")
+    assert "## 结论" in out
+    assert "证据与来源" in out
+    assert out.index("## 结论") < out.index("证据与来源")
+    assert "深入了解" in out
+    # nested analysis demoted under deep dive
+    assert "### 内容分析" in out or "内容分析" in out
+
+
+def test_prepare_compact_skips_deep_dive():
+    out = prepare_user_facing_report(MESSY, detail_level="compact")
+    assert "## 结论" in out
+    assert "深入了解" not in out
+    assert "```mermaid" not in out
+
+
+def test_reshape_keeps_conflict_short():
+    body = """## TL;DR
+短结论。
+
+## 冲突与不确定
+- a啊
+- b吧
+- c从
+- d的
+
+## References
+1. https://example.com/x
+"""
+    out = reshape_report_for_consumer(body, detail_level="balanced")
+    assert "## 争议与不确定" in out
+    # at most 3 bullets under conflict
+    conflict = out.split("## 争议与不确定", 1)[1].split("## ", 1)[0]
+    bullets = [ln for ln in conflict.splitlines() if ln.strip().startswith("-")]
+    assert len(bullets) <= 3
+

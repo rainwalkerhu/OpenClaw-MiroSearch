@@ -703,4 +703,21 @@ def test_build_summary_section_passes_compact_detail_level():
     )
     assert "## 📋 研究总结" in rendered
     assert "```mermaid" not in rendered
-    assert "report-tldr" in rendered or "结论" in rendered
+    assert "report-glance" in rendered or "report-tldr" in rendered or "结论" in rendered
+
+
+def test_decorate_folds_evidence_and_deep():
+    demo_main = _load_demo_main()
+    md = (
+        "## 结论\n短结论。\n\n"
+        "<!-- confidence:high -->\n"
+        "**置信度：高**\n\n"
+        "## 要点\n- 要点一\n\n"
+        "## 证据与来源\n1. https://example.com/a\n\n"
+        "## 深入了解\n### 详细分析\n很长。\n"
+    )
+    out = demo_main._decorate_report_for_web(md)
+    assert "report-glance" in out
+    assert out.count('<details class="report-fold">') == 2
+    assert "证据与来源" in out
+    assert "深入了解" in out

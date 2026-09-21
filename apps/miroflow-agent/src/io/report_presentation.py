@@ -295,6 +295,238 @@ def renumber_citations(text: str) -> str:
     return re.sub(r"\[(\d+)\]", _sub, text)
 
 
+
+def _split_markdown_sections(text: str) -> List[tuple[str, str]]:
+    """Split markdown into [(heading_without_hashes_or_empty, body), ...]."""
+    if not text:
+        return []
+    parts = re.split(r"(?m)^(##\s+.+)$", text)
+    sections: List[tuple[str, str]] = []
+    # parts[0] is preamble before first ##
+    if parts and parts[0].strip():
+        sections.append(("", parts[0].strip()))
+    i = 1
+    while i < len(parts):
+        heading = parts[i].strip()
+        body = parts[i + 1].strip() if i + 1 < len(parts) else ""
+        sections.append((heading, body))
+        i += 2
+    return sections
+
+
+def _section_kind(heading: str) -> str:
+    h = heading.lower()
+    if re.search(r"tl;?\s*dr|结论|总览|executive summary|一句话", h, re.I):
+        return "glance"
+    if re.search(r"冲突|不确定|conflict|uncertaint", h, re.I):
+        return "conflict"
+    if re.search(r"references|参考文献|来源|引用", h, re.I):
+        return "sources"
+    if re.search(r"内容分析|content analysis|关系拓扑|relationship|mermaid|拓扑", h, re.I):
+        return "analysis"
+    if re.search(r"线索|lead trail|pending", h, re.I):
+        return "leads"
+    if re.search(r"证据|evidence|事实|timeline|时间线", h, re.I):
+        return "evidence"
+    if re.search(r"conclusion|总结|详述|分析", h, re.I):
+        return "detail"
+    return "other"
+
+
+def _guess_confidence(text: str) -> tuple[str, str]:
+    """Return (level, label) level in high|mid|low."""
+    if re.search(r"(高\s*置信|confidence\s*[:=]?\s*high|\bhigh confidence\b)", text, re.I):
+        return "high", "置信度：高"
+    if re.search(r"(低\s*置信|confidence\s*[:=]?\s*low|\blow confidence\b)", text, re.I):
+        return "low", "置信度：低"
+    if re.search(r"(中\s*置信|confidence\s*[:=]?\s*medium|\bmedium confidence\b)", text, re.I):
+        return "mid", "置信度：中"
+    # heuristic from conflict density
+    if re.search(r"冲突|不确定|存疑|未证实|谣言", text):
+        return "mid", "置信度：中"
+    return "mid", "置信度：中"
+
+
+def _first_paragraph(body: str, max_chars: int = 160) -> str:
+    lines = []
+    for line in (body or "").splitlines():
+        s = line.strip()
+        if not s or s.startswith("#") or s.startswith("```"):
+            if lines:
+                break
+            continue
+        if s.startswith(("-", "*", "•", "|")):
+            break
+        lines.append(s)
+        if sum(len(x) for x in lines) >= max_chars:
+            break
+    text = " ".join(lines).strip()
+    if len(text) > max_chars:
+        text = text[: max_chars - 1].rstrip() + "…"
+    return text
+
+
+def _bullet_points(body: str, limit: int = 3) -> List[str]:
+    bullets: List[str] = []
+    for line in (body or "").splitlines():
+        s = line.strip()
+        if s.startswith(("-", "*", "•")):
+            bullets.append(re.sub(r"^[-*•]\s*", "", s))
+        if len(bullets) >= limit:
+            break
+    if bullets:
+        return bullets
+    # fallback: first short sentences
+    para = _first_paragraph(body, max_chars=240)
+    if not para:
+        return []
+    chunks = re.split(r"(?<=[。！？.!?])\s*", para)
+    return [c.strip() for c in chunks if c.strip()][:limit]
+
+
+def reshape_report_for_consumer(text: str, *, detail_level: str = "detailed") -> str:
+    """Reorder a research report into glance-first consumer layout.
+
+    Structure:
+      1) ## 结论 (short) + confidence hint line
+      2) ## 要点 (≤3) when available
+      3) ## 争议与不确定 (only if present, short)
+      4) ## 证据与来源 (marker for UI to fold)
+      5) ## 深入了解 (analysis / topology / long detail) — skipped/minimized for compact
+    """
+    if not text or not text.strip():
+        return text
+    level = (detail_level or "detailed").strip().lower()
+    if level not in {"compact", "balanced", "detailed"}:
+        level = "detailed"
+
+    sections = _split_markdown_sections(text)
+    if not sections:
+        return text
+
+    glance_bodies: List[str] = []
+    conflict_bodies: List[str] = []
+    evidence_parts: List[str] = []
+    source_parts: List[str] = []
+    analysis_parts: List[str] = []
+    other_parts: List[str] = []
+
+    for heading, body in sections:
+        if not heading:
+            # preamble — treat as glance candidate
+            if body.strip():
+                glance_bodies.append(body.strip())
+            continue
+        kind = _section_kind(heading)
+        block = f"{heading}\n\n{body}".strip()
+        if kind == "glance":
+            glance_bodies.append(body.strip())
+        elif kind == "conflict":
+            conflict_bodies.append(body.strip())
+        elif kind == "sources":
+            source_parts.append(block)
+        elif kind == "evidence":
+            evidence_parts.append(block)
+        elif kind == "analysis":
+            analysis_parts.append(block)
+        elif kind == "leads":
+            if level == "compact":
+                continue
+            other_parts.append(block)
+        elif kind == "detail":
+            if level == "compact":
+                # keep only a short paragraph for glance if needed
+                glance_bodies.append(body.strip())
+            else:
+                other_parts.append(block)
+        else:
+            other_parts.append(block)
+
+    glance_text = "\n\n".join(b for b in glance_bodies if b).strip()
+    if not glance_text and other_parts:
+        # fall back to first other body
+        first = other_parts[0]
+        glance_text = re.sub(r"^##\s+.+\n+", "", first).strip()
+
+    conf_level, conf_label = _guess_confidence(text)
+    answer = _first_paragraph(glance_text, max_chars=140 if level == "compact" else 180)
+    bullets = _bullet_points(glance_text, limit=2 if level == "compact" else 3)
+
+    out: List[str] = []
+    out.append("## 结论\n")
+    if answer:
+        out.append(answer)
+    else:
+        out.append("暂无法给出明确结论，请展开来源查看原始材料。")
+    out.append("")
+    out.append(f"<!-- confidence:{conf_level} -->")
+    out.append(f"**{conf_label}**")
+    out.append("")
+
+    if bullets:
+        out.append("## 要点\n")
+        for b in bullets:
+            out.append(f"- {b}")
+        out.append("")
+
+    if conflict_bodies:
+        out.append("## 争议与不确定\n")
+        # keep at most 3 bullets total
+        collected: List[str] = []
+        for body in conflict_bodies:
+            for b in _bullet_points(body, limit=3):
+                collected.append(b)
+                if len(collected) >= 3:
+                    break
+            if len(collected) >= 3:
+                break
+        if collected:
+            for b in collected:
+                out.append(f"- {b}")
+        else:
+            # short paragraph fallback
+            out.append(_first_paragraph(conflict_bodies[0], max_chars=120))
+        out.append("")
+
+    # Evidence + sources fold target
+    fold_evidence: List[str] = []
+    fold_evidence.extend(evidence_parts)
+    fold_evidence.extend(source_parts)
+    def _demote_headings(block: str) -> str:
+        # Keep only one H2 per fold region so Gradio can wrap it cleanly.
+        return re.sub(r"(?m)^##\s+", "### ", block)
+
+    if fold_evidence:
+        out.append("## 证据与来源\n")
+        cleaned_bits: List[str] = []
+        for block in fold_evidence:
+            cleaned = re.sub(
+                r"(?m)^##\s*(References|参考文献|来源|引用)\s*$",
+                "",
+                block,
+                count=1,
+            ).strip()
+            if cleaned:
+                cleaned_bits.append(_demote_headings(cleaned))
+        if cleaned_bits:
+            out.append("\n\n".join(cleaned_bits))
+        out.append("")
+
+    # Deep dive
+    deep: List[str] = []
+    if level != "compact":
+        deep.extend(analysis_parts)
+        deep.extend(other_parts)
+    if deep:
+        out.append("## 深入了解\n")
+        out.append("\n\n".join(_demote_headings(b) for b in deep))
+        out.append("")
+
+    result = "\n".join(out).strip() + "\n"
+    result = re.sub(r"\n{3,}", "\n\n", result)
+    return result
+
+
 def prepare_user_facing_report(
     text: str, *, detail_level: str = "detailed"
 ) -> str:
@@ -307,6 +539,7 @@ def prepare_user_facing_report(
     out = ensure_content_analysis_and_topology(out, detail_level=detail_level)
     out = strip_duplicate_trailing_conclusion(out)
     out = renumber_citations(out)
+    out = reshape_report_for_consumer(out, detail_level=detail_level)
     # collapse excessive blank lines
     out = re.sub(r"\n{3,}", "\n\n", out).strip() + "\n"
     return out

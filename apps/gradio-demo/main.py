@@ -2769,8 +2769,40 @@ def _decorate_report_for_web(markdown_text: str) -> str:
     if not text.strip():
         return text
 
-    # Wrap first TL;DR / 结论 section as a callout (until next ## heading).
-    # Leave a blank line after the open div so CommonMark still parses body MD.
+    # 1) Glance card for consumer ## 结论
+    def _wrap_glance(match: "re.Match[str]") -> str:
+        body = (match.group(1) or "").strip()
+        conf_m = re.search(r"<!--\s*confidence:(high|mid|low)\s*-->", body)
+        level = conf_m.group(1) if conf_m else "mid"
+        body = re.sub(r"<!--\s*confidence:(?:high|mid|low)\s*-->\s*", "", body)
+        label_m = re.search(r"\*\*置信度：([高中低])\*\*", body)
+        if label_m:
+            label = f"置信度：{label_m.group(1)}"
+            body = re.sub(r"\*\*置信度：[高中低]\*\*\s*", "", body).strip()
+        else:
+            label = {"high": "置信度：高", "mid": "置信度：中", "low": "置信度：低"}.get(
+                level, "置信度：中"
+            )
+        conf = (
+            f'<span class="confidence-badge confidence-{level}">'
+            f"{html.escape(label, quote=False)}</span>"
+        )
+        return (
+            f'<div class="report-glance">\n'
+            f'<div class="report-glance-kicker">结论</div>\n'
+            f'<div class="report-glance-head">{conf}</div>\n\n'
+            f"{body}\n\n"
+            f"</div>\n\n"
+        )
+
+    text = re.sub(
+        r"(?ms)^##\s*结论\s*\n+(.*?)(?=^##\s|\Z)",
+        _wrap_glance,
+        text,
+        count=1,
+    )
+
+    # 2) Legacy TL;DR callout (skip if already glance-wrapped; exclude bare 结论)
     def _wrap_tldr(match: "re.Match[str]") -> str:
         title = html.escape(match.group(1).strip(), quote=False)
         body = (match.group(2) or "").strip()
@@ -2795,32 +2827,54 @@ def _decorate_report_for_web(markdown_text: str) -> str:
             f"</div>\n\n"
         )
 
-    text = re.sub(
-        r"(?ms)^##\s*([^\n]*(?:TL;?DR|结论|总览|Executive Summary)[^\n]*)\n+(.*?)(?=^##\s|\Z)",
-        _wrap_tldr,
-        text,
-        count=1,
-    )
+    if 'class="report-glance"' not in text:
+        text = re.sub(
+            r"(?ms)^##\s*([^\n]*(?:TL;?DR|总览|Executive Summary)[^\n]*)\n+(.*?)(?=^##\s|\Z)",
+            _wrap_tldr,
+            text,
+            count=1,
+        )
 
-    # Conflict tag: keep Markdown ## heading, append HTML badge (does not break MD)
+    # 3) Conflict tag on heading (keep open, short)
     text = re.sub(
-        r"(?m)^(##\s*[^\n]*(?:冲突|不确定|Conflicts?|Uncertainties?)[^\n]*)$",
+        r"(?m)^(##\s*[^\n]*(?:争议与不确定|冲突|不确定|Conflicts?|Uncertainties?)[^\n]*)$",
         r'\1 <span class="conflict-tag">冲突/不确定</span>',
         text,
         count=1,
     )
 
-    # Mermaid fences → card wrapper; blank lines keep fence parseable
+    # 4) Fold heavy sections (evidence / deep dive). Nested headings are ###.
+    def _fold_section(match: "re.Match[str]") -> str:
+        heading = match.group(1).strip()
+        body = (match.group(2) or "").strip()
+        n_links = len(re.findall(r"https?://", body))
+        n_items = len(re.findall(r"(?m)^\s*(?:\d+\.|[-*•])\s+", body))
+        n = n_links or n_items
+        count_hint = f"（{n}）" if n else ""
+        title = html.escape(re.sub(r"^##\s*", "", heading), quote=False)
+        # Mermaid card inside fold body
+        body = re.sub(
+            r"(?ms)(###\s*[^\n]*(?:关系拓扑|Relationship Map|拓扑)[^\n]*\n+)(```mermaid\n.*?```)",
+            r'<div class="mermaid-card">\n\n\1\2\n\n</div>\n\n',
+            body,
+            count=1,
+        )
+        return (
+            f'<details class="report-fold">\n'
+            f"<summary>{title}{count_hint}</summary>\n\n"
+            f"{body}\n\n"
+            f"</details>\n\n"
+        )
+
     text = re.sub(
-        r"(?ms)^(##\s*[^\n]*(?:关系拓扑|Relationship Map|拓扑)[^\n]*\n+)(```mermaid\n.*?```)",
-        r'<div class="mermaid-card">\n\n\1\2\n\n</div>\n\n',
+        r"(?ms)^(##\s*[^\n]*(?:证据与来源|深入了解)[^\n]*)\n+(.*?)(?=^##\s|\Z)",
+        _fold_section,
         text,
-        count=1,
     )
 
-    # Reference list items → chip-friendly class via HTML after linkify
     text = text.replace('class="ref-citation"', 'class="ref-citation ref-chip"')
     return text
+
 
 
 def _build_summary_section(
