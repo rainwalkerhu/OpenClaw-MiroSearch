@@ -526,22 +526,30 @@ def reshape_report_for_consumer(text: str, *, detail_level: str = "detailed") ->
         glance_text = re.sub(r"^##\s+.+\n+", "", first).strip()
 
     conf_level, conf_label = _guess_confidence(text)
-    if _extract_direct_answer(text) and not re.search(r"冲突|不确定|存疑|未证实|谣言", text):
+    direct_answer = _extract_direct_answer(text)
+    if direct_answer and not re.search(r"冲突|不确定|存疑|未证实|谣言", text):
         # Clear arithmetic / factual one-liners should not stay mid by default
         if conf_level == "mid" and not re.search(
             r"(中\s*置信|confidence\s*[:=]?\s*medium)", text, re.I
         ):
             conf_level, conf_label = "high", "置信度：高"
+    # Prefer boxed/答案 from the FULL report — glance sections often omit \boxed{}.
     if level == "compact":
-        answer = _first_paragraph(glance_text, max_chars=140)
+        answer = direct_answer or _first_paragraph(glance_text, max_chars=140)
+        if direct_answer and len(answer) > 140:
+            answer = answer[:139].rstrip() + "…"
         bullets = _bullet_points(glance_text, limit=2)
         conflict_limit = 2
     elif level == "balanced":
-        answer = _first_paragraph(glance_text, max_chars=180)
+        answer = direct_answer or _first_paragraph(glance_text, max_chars=180)
+        if direct_answer and len(answer) > 180:
+            answer = answer[:179].rstrip() + "…"
         bullets = _bullet_points(glance_text, limit=3)
         conflict_limit = 3
     else:  # detailed
-        answer = _first_paragraph(glance_text, max_chars=280)
+        answer = direct_answer or _first_paragraph(glance_text, max_chars=280)
+        if direct_answer and len(answer) > 280:
+            answer = answer[:279].rstrip() + "…"
         bullets = _bullet_points(glance_text, limit=5)
         conflict_limit = 5
 
