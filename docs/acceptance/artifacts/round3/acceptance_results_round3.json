@@ -1,0 +1,449 @@
+{
+  "A": {
+    "case_id": "A",
+    "query": "What is the capital of France?",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=5",
+      "++agent.research_intensity=light",
+      "++agent.enable_lead_tracking=false",
+      "+output_formatter.detail_level=compact"
+    ],
+    "effective_config": {
+      "mode": "balanced",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 10,
+      "verification_min_search_rounds": 1,
+      "output_detail_level": "compact",
+      "research_intensity": "light"
+    },
+    "tracker_enabled_at_compose": false,
+    "tracker_max_follow_ups": 3,
+    "status": "completed",
+    "duration_seconds": 8.985572,
+    "final_boxed_answer": "Paris",
+    "final_summary_excerpt": "\n============================== Final Answer ==============================\n\\boxed{Paris}\n\n-------------------- Extracted Result --------------------\nParis\n\n-------------------- Token Usage --------------------\nTotal Input Tokens: 8094\nTotal Cache Input Tokens: 0\nTotal Output Tokens: 63\n-----------------------------------------------------\nPricing is disabled - no cost information available\n-----------------------------------------------------",
+    "has_lead_trail": false,
+    "log_file": "/workspace/acceptance_round3_artifacts/logs/task_acceptance_a_20260920_032412_2026-09-20-11-24-12.json",
+    "metrics": {
+      "rate_limit_429_count": 0,
+      "timeout_count": 0,
+      "key_switch_count": 0,
+      "model_route_hits": {
+        "glm-5.3-flash": {
+          "glm-5.3-flash": 2
+        }
+      },
+      "search_rounds": 0,
+      "scrape_count": 0,
+      "follow_up_searches": 0,
+      "total_duration_ms": 8984,
+      "stage_durations": {
+        "pipeline.llm_client_init": 26,
+        "pipeline.orchestrator_init": 0,
+        "llm.request.main": 5551,
+        "answer_generator.llm_call.main": 5552,
+        "llm.request.final_summary": 1205,
+        "answer_generator.llm_call.final_summary": 1205,
+        "pipeline.main_agent_run": 8955,
+        "pipeline.total": 8984
+      },
+      "failback_activated": false,
+      "failback_model": "",
+      "effective_config": {
+        "mode": "balanced",
+        "search_profile": "parallel-trusted",
+        "search_result_num": 10,
+        "verification_min_search_rounds": 1,
+        "output_detail_level": "compact",
+        "research_intensity": "light"
+      }
+    },
+    "lead_steps_count": 1,
+    "error": null
+  },
+  "B": {
+    "case_id": "B",
+    "query": "What were the global CO2 emissions in 2023?",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=10",
+      "++agent.research_intensity=deep",
+      "+agent.main_agent.research_mode=verified",
+      "+output_formatter.detail_level=detailed",
+      "+agent.main_agent.verification_min_search_rounds=3",
+      "+agent.main_agent.enable_lead_tracking=true"
+    ],
+    "effective_config": {
+      "mode": "verified",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 20,
+      "verification_min_search_rounds": 3,
+      "output_detail_level": "detailed",
+      "research_intensity": "deep"
+    },
+    "tracker_enabled_at_compose": true,
+    "tracker_max_follow_ups": 3,
+    "status": "completed",
+    "duration_seconds": 241.912087,
+    "final_boxed_answer": "37.4",
+    "final_summary_excerpt": "\n============================== Final Answer ==============================\n## TL;DR\n\n1. **IEA report** (*CO2 Emissions in 2023*): Global energy-related CO2 emissions rose 1.1% (+410 Mt) in 2023, reaching a record high of **37.4 Gt (37.4 billion tonnes)**.\n\n**Summary of research:**\n\n1. **IEA report** (*CO2 Emissions in 2023*): Global energy-related CO2 emissions rose 1.1% (+410 Mt) in 2023, reaching a record high of **37.4 Gt (37.4 billion tonnes)**.\n2. **Global Carbon Budget 2023** (official website news): Fossil CO2 emissions projected at **36.8 billion tonnes** in 2023, up 1.1% from 2022 (total including land-use change ≈ 40.9 GtCO2).\n3. The ESSD journal paper (Global Carbon Budget 2023, Friedlingstein et al.) confirmed the same fossil emissions figure of 36.8 GtCO2.\n\nThe most commonly cited headline figure for global CO2 emissions in 2023 (from the IEA, representing energy-related emissions) is 37.4 billion tonnes.\n\n\\boxed{37.4}\n## Conclusion\n\nThe most commonly cited headline figure for global CO2 emissions in 2023 (from the IEA, representing energy-related emissions) is 37.4 billion tonnes.\n\n\n\n-------------------- Extracted Result --------------------\n37.4\n\n-------------------- Token Usage --------------------\nTotal Input Tokens: 120675\nTotal Cache Input Tokens: 0\nTotal Output Tokens: 8318\n-----------------------------------------------------\nPricing is disabled - no cost information available\n-----------------------------------------------------\n\n## 线索追踪 / Lead Trail\n\n以下是研究过程中追踪的关键线索及其发现：\n\n\n### Lead 1: The user asks: What were the global CO2 emissions in 2023?\n**来源**: assistant_response (Turn 1)\n**优先级**: 0.75\n**状态**: followed\n**追踪轮次**: Turn 4\n\n**发现**:\n正在追踪中...\n\n\n### Lead 2: What are the most important unresolved or contested aspects of: What were the global CO2 emissions in 2023??\n**来源**: query_seed (Turn 0)\n**优先级**: 0.65\n**状态**: pending\n",
+    "has_lead_trail": true,
+    "log_file": "/workspace/acceptance_round3_artifacts/logs/task_acceptance_b_20260920_032421_2026-09-20-11-24-21.json",
+    "metrics": {
+      "rate_limit_429_count": 0,
+      "timeout_count": 0,
+      "key_switch_count": 0,
+      "model_route_hits": {
+        "glm-5.3-flash": {
+          "glm-5.3-flash": 19
+        }
+      },
+      "search_rounds": 0,
+      "scrape_count": 10,
+      "follow_up_searches": 1,
+      "total_duration_ms": 241907,
+      "stage_durations": {
+        "pipeline.llm_client_init": 18,
+        "pipeline.orchestrator_init": 0,
+        "llm.request.main": 216747,
+        "answer_generator.llm_call.main": 216760,
+        "llm.request.final_summary": 4870,
+        "answer_generator.llm_call.final_summary": 4870,
+        "pipeline.main_agent_run": 241884,
+        "pipeline.total": 241907
+      },
+      "failback_activated": false,
+      "failback_model": "",
+      "effective_config": {
+        "mode": "verified",
+        "search_profile": "parallel-trusted",
+        "search_result_num": 20,
+        "verification_min_search_rounds": 3,
+        "output_detail_level": "detailed",
+        "research_intensity": "deep"
+      }
+    },
+    "lead_steps_count": 23,
+    "error": null
+  },
+  "C": {
+    "case_id": "C",
+    "query": "How did the discovery of DNA structure lead to CRISPR technology?",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=10",
+      "+agent.main_agent.research_intensity=deep",
+      "+agent.main_agent.enable_lead_tracking=true",
+      "+agent.main_agent.max_lead_follow_ups=2",
+      "+output_formatter.detail_level=balanced"
+    ],
+    "effective_config": {
+      "mode": "research",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 20,
+      "verification_min_search_rounds": 2,
+      "output_detail_level": "balanced",
+      "research_intensity": "deep"
+    },
+    "tracker_enabled_at_compose": true,
+    "tracker_max_follow_ups": 2,
+    "status": "completed",
+    "duration_seconds": 228.790987,
+    "final_boxed_answer": "DNA双螺旋结构(1953)确立了A-T、C-G碱基互补配对原则和遗传信息可读写的原理，由此催生限制酶、重组DNA、Sanger测序、PCR、人类基因组计划等中间技术，这些工具揭示了细菌CRISPR免疫系统(1987年发现，后证实为以向导RNA通过碱基配对靶向病毒DNA的适应性免疫)，最终Doudna与Charpentier在2012年将Cas9与单一向导RNA重编程为可在任意预定序列切割DNA的“基因剪刀”，使基于碱基配对靶向原理的精准基因组编辑技术CRISPR得以诞生",
+    "final_summary_excerpt": "\n============================== Final Answer ==============================\n## TL;DR\n\n**对话总结：** 用户最初询问 DNA 结构的发现如何促成 CRISPR 技术。我的第一轮回答给出了从 1953 年双螺旋到 2012 年 CRISPR 的因果链。随后按用户要求执行了多轮检索核实：google_search 因无 API 密钥失败；改用 scrape_url 抓取权威来源，成功核实了诺贝尔奖 2020 化学奖新闻稿（Charpentier 发现 tracrRNA，与 Doudna 于 2012 年重编程基因剪刀）、Wikipedia CRISPR 条目（1987 年 Ishino 意外发现重复序列、Mojica 的研究）、DNA 碱基配对与 1962 诺贝尔奖、限制酶发现史（1970 年 HindII、1978 年诺贝尔奖）、2007 年基因打靶诺贝尔奖（Capecchi/Evans/Smithies）、以及 CRISPR 编辑机制（Cas9 + gRNA，HDR/NHEJ 修复）。FDA Casgevy 页面被拦截，但其余关键环节均已验证。结论：DNA 结构确立了碱基互补配对原则（正是向导 RNA 靶向基因的机制）和测序/克隆技术管线，使 CRISPR 系统被发现、解码并重编程为可编程基因组编辑工具。\n\n**对话总结：** 用户最初询问 DNA 结构的发现如何促成 CRISPR 技术。我的第一轮回答给出了从 1953 年双螺旋到 2012 年 CRISPR 的因果链。随后按用户要求执行了多轮检索核实：google_search 因无 API 密钥失败；改用 scrape_url 抓取权威来源，成功核实了诺贝尔奖 2020 化学奖新闻稿（Charpentier 发现 tracrRNA，与 Doudna 于 2012 年重编程基因剪刀）、Wikipedia CRISPR 条目（1987 年 Ishino 意外发现重复序列、Mojica 的研究）、DNA 碱基配对与 1962 诺贝尔奖、限制酶发现史（1970 年 HindII、1978 年诺贝尔奖）、2007 年基因打靶诺贝尔奖（Capecchi/Evans/Smithies）、以及 CRISPR 编辑机制（Cas9 + gRNA，HDR/NHEJ 修复）。FDA Casgevy 页面被拦截，但其余关键环节均已验证。结论：DNA 结构确立了碱基互补配对原则（正是向导 RNA 靶向基因的机制）和测序/克隆技术管线，使 CRISPR 系统被发现、解码并重编程为可编程基因组编辑工具。\n\n\\boxed{DNA双螺旋结构(1953)确立了A-T、C-G碱基互补配对原则和遗传信息可读写的原理，由此催生限制酶、重组DNA、Sanger测序、PCR、人类基因组计划等中间技术，这些工具揭示了细菌CRISPR免疫系统(1987年发现，后证实为以向导RNA通过碱基配对靶向病毒DNA的适应性免疫)，最终Doudna与Charpentier在2012年将Cas9与单一向导RNA重编程为可在任意预定序列切割DNA的“基因剪刀”，使基于碱基配对靶向原理的精准基因组编辑技术CRISPR得以诞生}\n## Conclusion\n\n\\boxed{DNA双螺旋结构(1953)确立了A-T、C-G碱基互补配对原则和遗传信息可读写的原理，由此催生限制酶、重组DNA、Sanger测序、PCR、人类基因组计划等中间技术，这些工具揭示了细菌CRISPR免疫系统(1987年发现，后证实为以向导RNA通过碱基配对靶向病毒DNA的适应性免疫)，最终Doudna与Charpentier在2012年将Cas9与单一向导RNA重编程为可在任意预定序列切割DNA的“基因剪刀”，使基于碱基配对靶向原理的精准基因组编辑技术CRISPR得以诞生}\n\n\n\n-------------------- Extracted Result --------------------\nDNA双螺旋结构(1953)确立了A-T、C-G碱基互补配对原则和遗传信息可读写的原理，由此催生限制酶、重组DNA、Sanger测序、PCR、人类基因组计划等中间技术，这些工具揭示了细菌CRISPR免疫系统(1987年发现，后证实为以向导RNA通过碱基配对靶向病毒DNA的适应性免疫)，最终Doudna与Charpentier在2012年将Cas9与单一向导RNA重编程为可在任意预定序列切割DNA的“基因剪刀”，使基于碱基配对靶向原理的精准基因组编辑技术CRISPR得以诞生\n\n-------------------- Token Usage --------------------\nTotal Input Tokens: 75152\nTotal Cache Input Tokens: 0\nTotal Output Tokens: 8728\n-----------------------------------------------------\nPricing is disabled - no cost information available\n-----------------------------------------------------\n\n## 线索追踪 / Lead Trail\n\n以下是研究过程中追踪的关键线索及其发现：\n\n\n### Lead 1: What intermediate scientific discoveries connected the discovery of DNA structure to CRISPR technology?\n**来源**: query_seed (Turn 0)\n**优先级**: 0.95\n**状态**: followed\n**追踪轮次**: Turn 4\n\n**发现**:\n正在追踪中...\n\n\n### Lead ",
+    "has_lead_trail": true,
+    "log_file": "/workspace/acceptance_round3_artifacts/logs/task_acceptance_c_20260920_032823_2026-09-20-11-28-23.json",
+    "metrics": {
+      "rate_limit_429_count": 0,
+      "timeout_count": 0,
+      "key_switch_count": 0,
+      "model_route_hits": {
+        "glm-5.3-flash": {
+          "glm-5.3-flash": 11
+        }
+      },
+      "search_rounds": 0,
+      "scrape_count": 10,
+      "follow_up_searches": 2,
+      "total_duration_ms": 228787,
+      "stage_durations": {
+        "pipeline.llm_client_init": 17,
+        "pipeline.orchestrator_init": 0,
+        "llm.request.main": 201067,
+        "answer_generator.llm_call.main": 201075,
+        "llm.request.final_summary": 12020,
+        "answer_generator.llm_call.final_summary": 12021,
+        "pipeline.main_agent_run": 228765,
+        "pipeline.total": 228787
+      },
+      "failback_activated": false,
+      "failback_model": "",
+      "effective_config": {
+        "mode": "research",
+        "search_profile": "parallel-trusted",
+        "search_result_num": 20,
+        "verification_min_search_rounds": 2,
+        "output_detail_level": "balanced",
+        "research_intensity": "deep"
+      }
+    },
+    "lead_steps_count": 14,
+    "error": null
+  },
+  "D1": {
+    "case_id": "D1",
+    "query": "What is the current population of Tokyo?",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=6",
+      "++agent.research_intensity=standard",
+      "+output_formatter.detail_level=balanced"
+    ],
+    "effective_config": {
+      "mode": "balanced",
+      "search_profile": "searxng-only",
+      "search_result_num": 15,
+      "verification_min_search_rounds": 2,
+      "output_detail_level": "balanced",
+      "research_intensity": "standard"
+    },
+    "tracker_enabled_at_compose": false,
+    "tracker_max_follow_ups": 3,
+    "status": "completed",
+    "duration_seconds": 117.199995,
+    "final_boxed_answer": "14254039",
+    "final_summary_excerpt": "\n============================== Final Answer ==============================\n## TL;DR\n\nBased on the conversation, the Wikipedia data showed Tokyo Metropolis has a population of 14,254,039 as of May 2025, with over 14 million as of 2023/2025.\n\nBased on the conversation, the Wikipedia data showed Tokyo Metropolis has a population of 14,254,039 as of May 2025, with over 14 million as of 2023/2025.\n\n\\boxed{14254039}\n## Conclusion\n\nBased on the conversation, the Wikipedia data showed Tokyo Metropolis has a population of 14,254,039 as of May 2025, with over 14 million as of 2023/2025.\n\n\n\n-------------------- Extracted Result --------------------\n14254039\n\n-------------------- Token Usage --------------------\nTotal Input Tokens: 61955\nTotal Cache Input Tokens: 0\nTotal Output Tokens: 1825\n-----------------------------------------------------\nPricing is disabled - no cost information available\n-----------------------------------------------------",
+    "has_lead_trail": false,
+    "log_file": "/workspace/acceptance_round3_artifacts/logs/task_acceptance_d1_20260920_033436_2026-09-20-11-34-36.json",
+    "metrics": {
+      "rate_limit_429_count": 0,
+      "timeout_count": 0,
+      "key_switch_count": 0,
+      "model_route_hits": {
+        "glm-5.3-flash": {
+          "glm-5.3-flash": 11
+        }
+      },
+      "search_rounds": 0,
+      "scrape_count": 5,
+      "follow_up_searches": 0,
+      "total_duration_ms": 117197,
+      "stage_durations": {
+        "pipeline.llm_client_init": 26,
+        "pipeline.orchestrator_init": 0,
+        "llm.request.main": 75483,
+        "answer_generator.llm_call.main": 75489,
+        "llm.request.final_summary": 2672,
+        "answer_generator.llm_call.final_summary": 2673,
+        "pipeline.main_agent_run": 117166,
+        "pipeline.total": 117197
+      },
+      "failback_activated": false,
+      "failback_model": "",
+      "effective_config": {
+        "mode": "balanced",
+        "search_profile": "searxng-only",
+        "search_result_num": 15,
+        "verification_min_search_rounds": 2,
+        "output_detail_level": "balanced",
+        "research_intensity": "standard"
+      }
+    },
+    "lead_steps_count": 1,
+    "error": null
+  },
+  "D2": {
+    "case_id": "D2",
+    "query": "What is the current population of Tokyo?",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=6",
+      "++agent.research_intensity=standard",
+      "+output_formatter.detail_level=balanced"
+    ],
+    "effective_config": {
+      "mode": "balanced",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 15,
+      "verification_min_search_rounds": 2,
+      "output_detail_level": "balanced",
+      "research_intensity": "standard"
+    },
+    "tracker_enabled_at_compose": false,
+    "tracker_max_follow_ups": 3,
+    "status": "completed",
+    "duration_seconds": 78.518366,
+    "final_boxed_answer": "14254039",
+    "final_summary_excerpt": "\n============================== Final Answer ==============================\n## TL;DR\n\nBased on the conversation: Wikipedia (May 2025) reports Tokyo Metropolis population at 14,254,039, which is the most authoritative figure retrieved.\n\nBased on the conversation: Wikipedia (May 2025) reports Tokyo Metropolis population at 14,254,039, which is the most authoritative figure retrieved.\n\n\\boxed{14254039}\n## Conclusion\n\nBased on the conversation: Wikipedia (May 2025) reports Tokyo Metropolis population at 14,254,039, which is the most authoritative figure retrieved.\n\n\n\n-------------------- Extracted Result --------------------\n14254039\n\n-------------------- Token Usage --------------------\nTotal Input Tokens: 63594\nTotal Cache Input Tokens: 0\nTotal Output Tokens: 1932\n-----------------------------------------------------\nPricing is disabled - no cost information available\n-----------------------------------------------------",
+    "has_lead_trail": false,
+    "log_file": "/workspace/acceptance_round3_artifacts/logs/task_acceptance_d2_20260920_033633_2026-09-20-11-36-33.json",
+    "metrics": {
+      "rate_limit_429_count": 0,
+      "timeout_count": 0,
+      "key_switch_count": 0,
+      "model_route_hits": {
+        "glm-5.3-flash": {
+          "glm-5.3-flash": 11
+        }
+      },
+      "search_rounds": 0,
+      "scrape_count": 6,
+      "follow_up_searches": 0,
+      "total_duration_ms": 78516,
+      "stage_durations": {
+        "pipeline.llm_client_init": 17,
+        "pipeline.orchestrator_init": 0,
+        "llm.request.main": 65542,
+        "answer_generator.llm_call.main": 65551,
+        "llm.request.final_summary": 2396,
+        "answer_generator.llm_call.final_summary": 2397,
+        "pipeline.main_agent_run": 78494,
+        "pipeline.total": 78516
+      },
+      "failback_activated": false,
+      "failback_model": "",
+      "effective_config": {
+        "mode": "balanced",
+        "search_profile": "parallel-trusted",
+        "search_result_num": 15,
+        "verification_min_search_rounds": 2,
+        "output_detail_level": "balanced",
+        "research_intensity": "standard"
+      }
+    },
+    "lead_steps_count": 1,
+    "error": null
+  },
+  "E1": {
+    "case_id": "E1",
+    "query": "Summarize the main causes of the 2008 financial crisis.",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=8",
+      "++agent.research_intensity=deep",
+      "+output_formatter.detail_level=compact"
+    ],
+    "effective_config": {
+      "mode": "research",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 15,
+      "verification_min_search_rounds": 2,
+      "output_detail_level": "compact",
+      "research_intensity": "deep"
+    },
+    "tracker_enabled_at_compose": true,
+    "tracker_max_follow_ups": 3,
+    "status": "completed",
+    "duration_seconds": 296.488909,
+    "final_boxed_answer": "The 2008 financial crisis was caused by: (1) a US housing bubble fueled by low interest rates and lax lending standards (subprime and Alt-A mortgages, low documentation loans); (2) securitization of toxic mortgages into MBS and CDOs that spread risk through the global financial system; (3) excessive leverage and reliance on short-term wholesale funding by banks and shadow banks; (4) failures in financial regulation and supervision (deregulation, unregulated derivatives, shadow banking); (5) inflated AAA credit ratings from rating agencies; (6) risk-management failures and inflated compensation incentives; and (7) global macroeconomic imbalances (savings glut pushing down interest rates). Its trigger was the collapse of the housing bubble starting 2006-2007, rising mortgage defaults, and the failures/rescues of Bear Stearns, Lehman Brothers, and AIG in 2008, which froze credit markets worldwide. Key contested aspects remain: the role of Fed monetary policy vs a global savings glut, government housing policy (Fannie/Freddie, CRA) vs private-sector risk-taking, and whether the Lehman bankruptcy decision triggered the panic",
+    "final_summary_excerpt": "\n============================== Final Answer ==============================\n## TL;DR\n\n**Conversation summary:** I researched the 2008 financial crisis causes and its unresolved/contested aspects. Key findings: (1) The FCIC (10 members, 6D/4R) concluded the crisis was avoidable, caused by regulatory/supervisory failures, but issued Republican and Wallison dissents — only 1 of 10 commissioners blamed government housing policy as a primary cause; (2) Bernanke (2010 AEA speech) contested claims that Fed monetary policy (1% rates in 2003) caused the housing bubble; (3) BIS working paper 346 disputed the \"global savings glut\" view, arguing instead for \"excess elasticity\" of the monetary/financial system; (4) Taylor (NBER w14631) argued deviations from the Taylor rule and government interventions caused/worsened the crisis; (5) Gorton–Metrick (NBER w15223) framed the panic as a run on repo/securitized banking, finding the banking system effectively insolvent; (6) Lehman's collapse (Sept 15, 2008; $600B+ assets, 31:1 leverage) and whether allowing its bankruptcy was a policy error remains debated.\n\n**Conversation summary:** I researched the 2008 financial crisis causes and its unresolved/contested aspects. Key findings: (1) The FCIC (10 members, 6D/4R) concluded the crisis was avoidable, caused by regulatory/supervisory failures, but issued Republican and Wallison dissents — only 1 of 10 commissioners blamed government housing policy as a primary cause; (2) Bernanke (2010 AEA speech) contested claims that Fed monetary policy (1% rates in 2003) caused the housing bubble; (3) BIS working paper 346 disputed the \"global savings glut\" view, arguing instead for \"excess elasticity\" of the monetary/financial system; (4) Taylor (NBER w14631) argued deviations from the Taylor rule and government interventions caused/worsened the crisis; (5) Gorton–Metrick (NBER w15223) framed the panic as a run on repo/securitized banking, finding the banking system effectively insolvent; (6) Lehman's collapse (Sept 15, 2008; $600B+ assets, 31:1 leverage) and whether allowing its bankruptcy was a policy error remains debated.\n\n\\boxed{The 2008 financial crisis was caused by: (1) a US housing bubble fueled by low interest rates and lax lending standards (subprime and Alt-A mortgages, low documentation loans); (2) securitization of toxic mortgages into MBS and CDOs that spread risk through the global financial system; (3) excessive leverage and reliance on short-term wholesale funding by banks",
+    "has_lead_trail": true,
+    "log_file": "/workspace/acceptance_round3_artifacts/logs/task_acceptance_e1_20260920_033752_2026-09-20-11-37-52.json",
+    "metrics": {
+      "rate_limit_429_count": 0,
+      "timeout_count": 0,
+      "key_switch_count": 0,
+      "model_route_hits": {
+        "glm-5.3-flash": {
+          "glm-5.3-flash": 13
+        }
+      },
+      "search_rounds": 0,
+      "scrape_count": 16,
+      "follow_up_searches": 1,
+      "total_duration_ms": 296484,
+      "stage_durations": {
+        "pipeline.llm_client_init": 17,
+        "pipeline.orchestrator_init": 0,
+        "llm.request.main": 265227,
+        "answer_generator.llm_call.main": 265237,
+        "llm.request.final_summary": 13668,
+        "answer_generator.llm_call.final_summary": 13669,
+        "pipeline.main_agent_run": 296462,
+        "pipeline.total": 296484
+      },
+      "failback_activated": false,
+      "failback_model": "",
+      "effective_config": {
+        "mode": "research",
+        "search_profile": "parallel-trusted",
+        "search_result_num": 15,
+        "verification_min_search_rounds": 2,
+        "output_detail_level": "compact",
+        "research_intensity": "deep"
+      }
+    },
+    "lead_steps_count": 8,
+    "error": null
+  },
+  "E2": {
+    "case_id": "E2",
+    "query": "Summarize the main causes of the 2008 financial crisis.",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=10",
+      "++agent.research_intensity=deep",
+      "+output_formatter.detail_level=detailed"
+    ],
+    "effective_config": {
+      "mode": "research",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 15,
+      "verification_min_search_rounds": 2,
+      "output_detail_level": "detailed",
+      "research_intensity": "deep"
+    },
+    "tracker_enabled_at_compose": true,
+    "tracker_max_follow_ups": 3,
+    "status": "completed",
+    "duration_seconds": 324.659509,
+    "final_boxed_answer": "\\text{Main causes of the 2008 financial crisis: (1) the U.S. housing bubble fueled by low interest rates, easy credit, and speculation; (2) widespread subprime and Alt-A mortgage lending with lax underwriting; (3) securitization of risky mortgages into MBS and CDOs that spread risk globally and obscured it; (4) inflated AAA credit ratings from conflicted rating agencies; (5) excessive leverage and thin capital buffers at financial institutions; (6) an unregulated shadow banking system dependent on short-term funding vulnerable to runs; (7) unregulated derivatives, especially credit default swaps concentrated at AIG; (8) regulatory failures, deregulation, and the repeal of Glass-Steagall; (9) misaligned incentives and originate-to-distribute lending; (10) global macroeconomic imbalances and capital inflows. The crisis triggered when housing prices fell, mortgage-linked assets collapsed, and failures like Lehman Brothers froze credit markets worldwide. Most important unresolved and contested aspects: the FCIC itself split—its majority blamed widespread regulatory and risk-management failures, while Republican dissenters emphasized global imbalances and low interest rates, and Commissioner Peter Wallison alone blamed government housing policy (CRA, Fannie Mae and Freddie Mac); contested evidence against the government-policy blame theory includes subprime lending doubling from 2004 to 2006 with no new housing laws, private-label lenders (not bound by the CRA) originating most late-stage subprime loans, and simultaneous housing bubbles in Europe; the deregulation debate remains unsettled—whether the Glass-Steagall repeal was a key cause or incidental, and whether the problem was too little regulation, failed supervision, or over-regulation subsidizing risk; economists remain divided between the global savings glut explanation (Bernanke) versus too-loose Federal Reserve monetary policy under the Taylor rule; and scholars continue to debate whether trigger events (subprime losses, Lehman's collapse) or underlying vulnerabilities (shadow banking runs, leverage, interconnectedness) were decisive, and whether the crisis was fundamentally one of greed, incentives, ideas, or policy failure.}",
+    "final_summary_excerpt": "\n============================== Final Answer ==============================\n## TL;DR\n\nConversation summary: The user asked to summarize the main causes of the 2008 financial crisis, with the answer wrapped in \\boxed{}. I provided an initial comprehensive answer. The user then asked to research the most important unresolved or contested aspects of that summary. Search tools were unavailable (no search provider configured), so I scraped Wikipedia articles: \"Government policies and the subprime mortgage crisis,\" \"Subprime mortgage crisis,\" \"Causes of the Great Recession,\" and \"Financial Crisis Inquiry Commission.\" These sources confirmed the core contested areas: FCIC majority vs. dissents (especially Peter Wallison's lone dissent on government housing policy), the CRA/GSE blame debate vs. private-label lending evidence, deregulation vs. over-regulation claims, shadow banking failures, the savings glut vs. Fed monetary policy debate, and Glass-Steagall repeal significance. LLM extraction and Python sandbox tools then failed due to missing configuration/authentication, so no further research was possible.\n\nConversation summary: The user asked to summarize the main causes of the 2008 financial crisis, with the answer wrapped in \\boxed{}. I provided an initial comprehensive answer. The user then asked to research the most important unresolved or contested aspects of that summary. Search tools were unavailable (no search provider configured), so I scraped Wikipedia articles: \"Government policies and the subprime mortgage crisis,\" \"Subprime mortgage crisis,\" \"Causes of the Great Recession,\" and \"Financial Crisis Inquiry Commission.\" These sources confirmed the core contested areas: FCIC majority vs. dissents (especially Peter Wallison's lone dissent on government housing policy), the CRA/GSE blame debate vs. private-label lending evidence, deregulation vs. over-regulation claims, shadow banking failures, the savings glut vs. Fed monetary policy debate, and Glass-Steagall repeal significance. LLM extraction and Python sandbox tools then failed due to missing configuration/authentication, so no further research was possible.\n\n\\boxed{\\text{Main causes of the 2008 financial crisis: (1) the U.S. housing bubble fueled by low interest rates, easy credit, and speculation; (2) widespread subprime and Alt-A mortgage lending with lax underwriting; (3) securitization of risky mortgages into MBS and CDOs that spread risk globally and obscured it; (4) inflated AAA credit rating",
+    "has_lead_trail": true,
+    "log_file": "/workspace/acceptance_round3_artifacts/logs/task_acceptance_e2_20260920_034248_2026-09-20-11-42-48.json",
+    "metrics": {
+      "rate_limit_429_count": 0,
+      "timeout_count": 0,
+      "key_switch_count": 0,
+      "model_route_hits": {
+        "glm-5.3-flash": {
+          "glm-5.3-flash": 15
+        }
+      },
+      "search_rounds": 0,
+      "scrape_count": 15,
+      "follow_up_searches": 1,
+      "total_duration_ms": 324655,
+      "stage_durations": {
+        "pipeline.llm_client_init": 17,
+        "pipeline.orchestrator_init": 0,
+        "llm.request.main": 258300,
+        "answer_generator.llm_call.main": 258306,
+        "llm.request.final_summary": 16006,
+        "answer_generator.llm_call.final_summary": 16007,
+        "pipeline.main_agent_run": 324631,
+        "pipeline.total": 324655
+      },
+      "failback_activated": false,
+      "failback_model": "",
+      "effective_config": {
+        "mode": "research",
+        "search_profile": "parallel-trusted",
+        "search_result_num": 15,
+        "verification_min_search_rounds": 2,
+        "output_detail_level": "detailed",
+        "research_intensity": "deep"
+      }
+    },
+    "lead_steps_count": 7,
+    "error": null
+  }
+}

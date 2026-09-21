@@ -1,0 +1,153 @@
+{
+  "case_id": "H1",
+  "query": "智谱 ZCode 被指静默上传代码仓库：上传了哪些内容？是否跨境？官方如何回应？各方说法有何冲突？",
+  "overrides": [
+    "agent=mirothinker_v1.5_keep5_max200",
+    "llm=glm-flash",
+    "agent.main_agent.max_turns=12",
+    "++agent.research_intensity=deep",
+    "++agent.research_report_mode=true",
+    "+agent.main_agent.research_mode=verified",
+    "+output_formatter.detail_level=detailed",
+    "++agent.output_detail_level=detailed",
+    "+agent.main_agent.verification_min_search_rounds=3",
+    "+agent.main_agent.enable_lead_tracking=true",
+    "++agent.max_lead_follow_ups=2",
+    "++agent.max_scrape_per_task=8",
+    "++agent.deep_early_stop_on_agreement=true",
+    "++agent.parallel_tool_calls=true",
+    "++agent.deep_exit_on_early_stop=true",
+    "++agent.deep_post_early_stop_turns=2",
+    "++agent.max_final_answer_retries=1"
+  ],
+  "env_patch": {
+    "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+    "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_ORDER_STRICT": "0",
+    "SEARCH_RESULT_NUM": "20",
+    "SEARXNG_BASE_URL": ""
+  },
+  "effective_config": {
+    "mode": "verified",
+    "search_profile": "parallel-trusted",
+    "search_result_num": 20,
+    "verification_min_search_rounds": 3,
+    "output_detail_level": "detailed",
+    "research_intensity": "deep"
+  },
+  "tracker_enabled_at_compose": true,
+  "tracker_max_follow_ups": 2,
+  "status": "completed",
+  "duration_seconds": 126.221682,
+  "final_boxed_answer": "## TL;DR / 结论（标明置信度）\n\n2026年9月18日凌晨，技术博主 ferstar 发布逆向分析文章，指控智谱AI旗下AI编程桌面工具 ZCode 在用户登录状态下，于后台静默将整个工作区打包加密上传至阿里云OSS，上传范围不仅是当前源码，还包括完整的 Git 提交历史、LFS 大文件缓存与本地操作记录，且界面上没有任何开关能真正阻止上传（置信度：高，多来源交叉验证）。\n\n关于“是否跨境”：从 ferstar 还原的链路看，数据上传目标是阿里云OSS（境内存储），智谱后端域名 zcode.z.ai 亦为中国境内服务，目前公开证据未显示数据出境；但事件发酵后已有企业要求智谱说明是否涉及跨境传输，说明跨境问题尚未有官方逐项澄清（置信度：中——无出境证据但官方未正面逐项说明）。\n\n官方回应（9月18日傍晚飞书群、9月19日情况说明）：承认争议源于“代码库索引（Repo Wiki）”功能，该功能上线初期默认开启，导致用户未充分感知时触发上传；声称云端生成 Wiki 页面后上传数据立即销毁、不会留存；称漏洞已修复；承诺开源 ZCode 代码库、引入第三方审计、向全体用户补偿一次周额度重置（已发放）（置信度：高，属官方单方宣称的事实本身高置信，但其解释内容存在争议）。\n\n各方说法冲突集中在四点：①上传范围（博主：含全量.git历史/LFS缓存/内网主机名等；官方：功能不读取.git文件、仅按需发送过滤后的代码内容）；②触发场景（博主：每次提问前和任务完成时无条件触发，单会话最多62次捕获；官方：仅在生成Repo Wiki页面时触发）；③数据留存（博主：本地发现313MB待传包、失败后重试564次持续重传、密文只有云端能解密；官方：云端生成后立即销毁不保存）；④隐私政策一致性（现行政策仅声明收集“对话中提交”的文本文件代码，未提及整库快照）。官方截至发稿未逐项解释上述矛盾（置信度：高）。\n\n## 冲突与不确定 / Conflicts & Uncertainties\n\n1. **上传范围之争**：ferstar 对一个含42411个文件的快照清单统计，\".git/lfs/\"占56.8%、\".git/objects/\"占29.6%、\".git/logs/\"占0.2%，源码与文档仅约13.4%，\".git\"目录合计占86.6%——即上传主体是 Git 历史；官方则称“该功能不读取.git文件、依赖目录、构建产物和缓存，仅按需发送经过过滤的代码内容”。两者直接矛盾，智谱未说明如何解释本地发现的全量快照。\n2. **触发机制之争**：博主称快照组件在客户端启动时被无条件加载，唯一前提是登录有效，触发点在每次提问前和任务完成时；官方称仅在 Repo Wiki 页面生成过程中触发上传。\n3. **留存与销毁之争**：官方称“云端生成Wiki页面后，上传的数据会立刻销毁、不会留存”；博主在本地发现313MB加密包、状态文件显示已重试上传564次未果并滞留重传，且加密信封的RSA私钥从不下发、只有云端能解密——这暗示服务端具备解密读取能力，与“仅为本地回滚设计”的功能定位不符（博主认为若真为用户服务，密钥应如 Time Machine 一样握在用户手中）。\n4. **开关有效性之争**：博主称界面“优化体验”开关实际只控制数据是否用于训练，“仓库快照索引”开关只控制服务器是否对已上传快照建索引，二者均不能阻止打包与上传；且手动删除待传包后半小时内即重新打包。官方仅以“默认开启已修复”回应。\n5. **隐私政策缺口**：ZCode现行隐私政策仅载明收集“在对话中提交的文本、文件和代码”，未提及整库快照与Git历史静默上传——涉及《个人信息保护法》第十七条（告知义务）、第六条（最小必要）、第十四条（知情同意）的合规疑问。QQ新闻分析指出“默认不用于训练”≠“默认不上传”，是两个独立授权环节。\n6. **未决问题**：官方未逐项说明——被上传文件确切范围、为何包含Git历史、哪些场景触发快照、服务端是否具备解密能力、此前已上传数据如何处置、开源范围是否含上传与加密组件、审计结论能否公开。\n7. **跨境问题**：无公开证据显示数据出境（上传至阿里云OSS境内节点），但有企业已发函要求说明是否跨境传输，智谱尚未就此正面逐项回应——此点为“无法核实/单方未回应”状态。\n8. **商业秘密风险**：员工以个人身份点击消费级隐私政策，无权代企业处分商业秘密（《反不正当竞争法》第十条），企业代码仓库被静默上传的责任归属尚无定论。\n\n## 时间线 / Timeline\n\n- **2026年9月18日凌晨**：技术博主 ferstar 发布逆向分析文章，披露 ~/.zcode 目录超700MB、\"v2/checkpoints/\"下发现313MB加密包、重试上传564次等证据；文章在开发者社区迅速发酵。\n- **2026年9月18日傍晚**：智谱在官方飞书群致歉回应，承认“代码库索引”功能生成 Repo Wiki 时可能上传仓库数据，称上线初期默认开启、已修复，承诺开源、第三方审计、全员周额度重置补偿。\n- **2026年9月19日上午**：ZCode 官方发布情况说明（新浪科技报道），致歉并披露整改方案，称上传数据在云端生成Wiki页面后立即销毁；补偿额度当日发放。\n- **2026年9月19日前后**：风波扩大，有企业向智谱发函/提出要求，说明代码是否被跨境传输；网友对照官方文档与设置逐项质疑。\n- **2026年9月20日（今日）**：争议持续发酵中，官方逐项澄清仍未完成。\n\n## Evidence / 证据\n\n**博主侧（ferstar 逆向取证，来源：QQ新闻转述、OSCHINA、cnblogs转载、知乎、Hacker News讨论）：**\n- 磁盘证据：~/.zcode 占用超700MB，v2/checkpoints/ 下有313MB加密包，状态文件显示扫描其一个商业项目、排除node_modules后约345MB打包为“基线全量快照”，重试上传564次未果。\n- 上传链路还原：客户端先向 zcode.z.ai 申请上传凭证与RSA公钥 → 本地 tar.gz 打包 → AES-256-CTR 加密内容、RSA-OAEP 加密包钥 → 密文直传阿里云OSS → OSS回调智谱后端登记；运行进程与智谱服务器及两个OSS节点保持长连接。\n- 快照清单统计（42411文件）：.git/lfs/ 56.8% + .git/objects/ 29.6% + .git/logs/ 0.2%，源码文档约13.4%，.git合计86.6%。\n- 风险内容：旧提交中已删除的密钥口令、.git/config内网主机名与仓库路径、未推送分支名、被reset抹掉的操作记录、LFS大文件。\n- 密钥归属：RSA公钥由服务器临时下发、私钥从不下发，ferstar 用本机所有私钥解包信封密钥全部失败——只有云端能解密。\n- 开关失效证据：解包 app.asar 核对代码，“优化体验”只控训练授权，“仓库快照索引”只控服务端建索引；删除待传包半小时内重新打包；单活跃会话最多62次捕获。\n- 另有独立博主（cnblogs wlor、foxcharon）从磁盘占用、日志、app.asar、网络请求多角度复现了类似结论。\n\n**官方侧（来源：新浪财经9月19日情况说明报道、凤凰科技、QQ新闻）：**\n- 争议源于“代码库索引”功能，设计初衷为本地生成仓库索引，支撑会话断点恢复、历史版本回退、Repo Wiki。\n- Repo Wiki 页面在云端生成过程中会触发仓库数据上传，生成后数据立即销毁、不会留存。\n- 功能上线初期默认开启，波及部分用户，漏洞已修复；官方文档现已明确该功能不读取.git文件、依赖目录、构建产物和缓存。\n- 整改承诺：近期开源ZCode代码库、引入第三方评估人员独立审查、持续公开审计进展；补偿全体用户一次周额度重置，当日到账。\n\n**跨境与行业对照（来源：虎嗅/新浪9月20日报道、QQ新闻分析）：**\n- 有企业要求智谱说明是否跨境传输；公开链路显示存储为阿里云OSS（境内）。\n- 行业对照：三星2023年3月ChatGPT泄密事件（员工主动粘贴，性质不同）；GitHub Copilot 2026年3月默认训练争议（至少公开告知+退出路径）；Cursor隐私模式默认关闭但开启后不留存。行业分水岭：是否明确告知范围、开关是否真正生效、是否默认最小化、密钥归谁、有无私有化方案。\n\n## 已确认 vs 未确认 / Confirmed vs Unconfirmed\n\n**已确认：**\n- ZCode 存在后台打包工作区（含.git）并加密上传至阿里云OSS的机制（博主取证+官方承认存在上传，双方口径重叠）；\n- 官方承认功能上线初期默认开启、已修复、将开源并引入第三方审计、发放补偿；\n- 隐私政策未披露整库快照上传（多方核验）。\n\n**未确认 / 存疑：**\n- 数据是否跨境（无出境证据，但官方未正面逐项说明，企业正在追问）；\n- 上传数据的真实范围（博主称86.6%为.git vs 官方称不读取.git，直接冲突）；\n- 服务端是否具备并行使解密能力、已上传数据如何处置；\n- “立即销毁”说法与本地持续重试机制如何对应；\n- 开源范围、审计结论的可验证性。\n\n## 关键数字表\n\n| 指标 | 数值 | 来源 |\n|---|---|---|\n| 本地 .zcode 目录占用 | >700MB | ferstar |\n| 发现的待传加密包 | 313MB | ferstar |\n| 打包基线快照大小（排除node_modules） | ~345MB | ferstar |\n| 上传重试次数 | 564次 | ferstar |\n| 快照清单文件数 | 42411个 | ferstar |\n| .git/lfs 占比 | 56.8% | ferstar |\n| .git/objects 占比 | 29.6% | ferstar |\n| .git/logs 占比 | 0.2% | ferstar |\n| .git 目录合计占比 | 86.6% | ferstar |\n| 源码与文档占比 | ~13.4% | ferstar |\n| 单活跃会话最多捕获次数 | 62次 | ferstar |\n| 手动删除后重新打包时间 | ~30分钟 | ferstar |\n| 加密方式 | AES-256-CTR + RSA-OAEP | ferstar |\n\n## 深度背景\n\nZCode 是智谱旗下新一代“氛围编程”工具，主打 GLM-5.3 模型与多智能体协作，此前凭高额额度福利用户数迅速突破百万。AI编程工具读取代码上下文本属预期，但真正越界的组合是：全量范围＋静默方式＋不可关闭＋密钥仅存云端。用户自查建议：商业与涉密项目不登录该客户端；企业将其纳入第三方安全评估与白名单；个人可对 ~/.zcode/v2/checkpoints 目录内核层加锁拒绝写入，并定期轮换误提交密钥。信任重建三条试金石：密钥谁持有、功能谁可关、数据谁可删——三问指向用户才是备份，指向厂商更像采集。\n\n## 风险与后续观察\n\n1. 跨境传输的官方答复与企业追责函进展；\n2. 开源代码库范围是否包含上传与加密组件；\n3. 第三方审计结论是否公开、可验证；\n4. 已上传数据（含Git历史中的历史密钥）的处置与用户告知；\n5. 是否触发监管介入（网信办、数据出境安全评估）；\n6. 企业客户流失与国产AI编程工具行业整体合规整改。\n\n## References\n\n- 新浪财经《智谱ZCode回应数据上传争议：功能默认开启致数据上传，将开源代码》2026-09-19\n- 腾讯新闻《智谱ZCode上传全量代码库，是否合规？》2026-09-18\n- OSCHINA《智谱旗下AI编程工具ZCode被扒静默上传完整Git历史》\n- 虎嗅/新浪《智谱偷传数据风波扩大，有企业要求说明是否跨境传输》2026-09-20\n- ferstar 原始逆向分析（知乎专栏，及cnblogs foxcharon/wlor 复现文章）\n- 凤凰科技/网易《上传用户仓库？智谱道歉：已修复，将开源ZCode》2026-09-18\n- Hacker News、Reddit r/LocalLLaMA 相关讨论\n\nZCode被曝在登录状态下静默将整个工作区（含全量.git历史、LFS缓存、本地操作记录，占快照86.6%）经AES-256-CTR加密后上传至阿里云OSS，私钥仅存云端且开关无法阻止；公开证据未显示数据出境（存储为境内阿里云OSS）但已有企业",
+  "final_summary_excerpt": "\n============================== Final Answer ==============================\n\n## Conclusion\n\n\\boxed{ZCode被曝在登录状态下静默将整个工作区（含全量.git历史、LFS缓存、本地操作记录，占快照86.6%）经AES-256-CTR加密后上传至阿里云OSS，私钥仅存云端且开关无法阻止；公开证据未显示数据出境（存储为境内阿里云OSS）但已有企业\n\n## TL;DR / 结论（标明置信度）\n\n2026年9月18日凌晨，技术博主 ferstar 发布逆向分析文章，指控智谱AI旗下AI编程桌面工具 ZCode 在用户登录状态下，于后台静默将整个工作区打包加密上传至阿里云OSS，上传范围不仅是当前源码，还包括完整的 Git 提交历史、LFS 大文件缓存与本地操作记录，且界面上没有任何开关能真正阻止上传（置信度：高，多来源交叉验证）。\n\n关于“是否跨境”：从 ferstar 还原的链路看，数据上传目标是阿里云OSS（境内存储），智谱后端域名 zcode.z.ai 亦为中国境内服务，目前公开证据未显示数据出境；但事件发酵后已有企业要求智谱说明是否涉及跨境传输，说明跨境问题尚未有官方逐项澄清（置信度：中——无出境证据但官方未正面逐项说明）。\n\n官方回应（9月18日傍晚飞书群、9月19日情况说明）：承认争议源于“代码库索引（Repo Wiki）”功能，该功能上线初期默认开启，导致用户未充分感知时触发上传；声称云端生成 Wiki 页面后上传数据立即销毁、不会留存；称漏洞已修复；承诺开源 ZCode 代码库、引入第三方审计、向全体用户补偿一次周额度重置（已发放）（置信度：高，属官方单方宣称的事实本身高置信，但其解释内容存在争议）。\n\n各方说法冲突集中在四点：①上传范围（博主：含全量.git历史/LFS缓存/内网主机名等；官方：功能不读取.git文件、仅按需发送过滤后的代码内容）；②触发场景（博主：每次提问前和任务完成时无条件触发，单会话最多62次捕获；官方：仅在生成Repo Wiki页面时触发）；③数据留存（博主：本地发现313MB待传包、失败后重试564次持续重传、密文只有云端能解密；官方：云端生成后立即销毁不保存）；④隐私政策一致性（现行政策仅声明收集“对话中提交”的文本文件代码，未提及整库快照）。官方截至发稿未逐项解释上述矛盾（置信度：高）。\n\n## 冲突与不确定 / Conflicts & Uncertainties\n\n1. **上传范围之争**：ferstar 对一个含42411个文件的快照清单统计，\".git/lfs/\"占56.8%、\".git/objects/\"占29.6%、\".git/logs/\"占0.2%，源码与文档仅约13.4%，\".git\"目录合计占86.6%——即上传主体是 Git 历史；官方则称“该功能不读取.git文件、依赖目录、构建产物和缓存，仅按需发送经过过滤的代码内容”。两者直接矛盾，智谱未说明如何解释本地发现的全量快照。\n2. **触发机制之争**：博主称快照组件在客户端启动时被无条件加载，唯一前提是登录有效，触发点在每次提问前和任务完成时；官方称仅在 Repo Wiki 页面生成过程中触发上传。\n3. **留存与销毁之争**：官方称“云端生成Wiki页面后，上传的数据会立刻销毁、不会留存”；博主在本地发现313MB加密包、状态文件显示已重试上传564次未果并滞留重传，且加密信封的RSA私钥从不下发、只有云端能解密——这暗示服务端具备解密读取能力，与“仅为本地回滚设计”的功能定位不符（博主认为若真为用户服务，密钥应如 Time Machine 一样握在用户手中）。\n4. **开关有效性之争**：博主称界面“优化体验”开关实际只控制数据是否用于训练，“仓库快照索引”开关只控制服务器是否对已上传快照建索引，二者均不能阻止打包与上传；且手动删除待传包后半小时内即重新打包。官方仅以“默认开启已修复”回应。\n5. **隐私政策缺口**：ZCode现行隐私政策仅载明收集“在对话中提交的文本、文件和代码”，未提及整库快照与Git历史静默上传——涉及《个人信息保护法》第十七条（告知义务）、第六条（最小必要）、第十四条（知情同意）的合规疑问。QQ新闻分析指出“默认不用于训练”≠“默认不上传”，是两个独立授权环节。\n6. **未决问题**：官方未逐项说明——被上传文件确切范围、为何包含Git历史、哪些场景触发快照、服务端是否具备解密能力、此前已上传数据如何处置、开源范围是否含上传与加密组件、审计结论能否公开。\n7. **跨境问题**：无公开证据显示数据出境（上传至阿里云OSS境内节点），但有企业已发函要求说明是否跨境传输，智谱尚未就此正面逐项回应——此点为“无法核实/单方未回应”状态。\n8. **商业秘密风险**：员工以个人身份点击消费级隐私政策，无权代企业处分商业秘密（《反不正当竞争法》第十条），企业代码仓库被静默上传的责任归属尚无定论。\n\n## 时间线 / Timeline\n\n- **2026年9月18日凌晨**：技术博主 ferstar 发布逆向分析文章，披露 ~/.zcode 目录超700MB、\"v2/checkpoints/\"下发现313MB加密包、重试上传564次等证据；文章在开发者社区迅速发酵。\n- **2026年9月18日傍晚**：智谱在官方飞书群致歉回应，承认“代码库索引”功能生成 Repo Wiki 时可能上传仓库数据，称上线初期默认开启、已修复，承诺开源、第三方审计、全员周额度重置补偿。\n- **2026年9月19日上午**：ZCode 官方发布情况说明（新浪科技报道），致歉并披露整改方案，称上传数据在云端生成Wiki页面后立即销毁；补偿额度当日发放。\n- **2026年9月19日前后**：风波扩大，有企业向智谱发函/提出要求，说明代码是否被跨境传输；网友对照官方文档与设置逐项质疑。\n- **2026年9月20日（今日）**：争议持续发酵中，官方逐项澄清仍未完成。\n\n## Evidence / 证据\n\n**博主侧（ferstar 逆向取证，来源：QQ新闻转述、OSCHINA、cnblogs转载、知乎、Hacker News讨论）：**\n- 磁盘证据：~/.zcode 占用超700MB，v2/checkpoints/ 下有313MB加密包，状态文件显示扫描其一个商业项目、排除node_modules后约345MB打包为“基线全量快照”，重试上传564次未果。\n- 上传链路还原：客户端先向 zcode.z.ai 申请上传凭证与RSA公钥 → 本地 tar.gz 打包 → AES-256-CTR 加密内容、RSA-OAEP 加密包钥 → 密文直传阿里云OSS → OSS回调智谱后端登记；运行进程与智谱服务器及两个OSS节点保持长连接。\n- 快照清单统计（42411文件）：.git/lfs/ 56.8% + .git/objects/ 29.6% + .git/logs/ 0.2%，源码文档约13.4%，.git合计86.6%。\n- 风险内容：旧提交中已删除的密钥口令、.git/config内网主机名与仓库路径、未推送分支名、被reset抹掉的操作记录、LFS大文件。\n- 密钥归属：RSA公钥由服务器临时下发、私钥从不下发，ferstar 用本机所有私钥解包信封密钥全部失败——只有云端能解密。\n- 开关失效证据：解包 app.asar 核对代码，“优化体验”只控训练授权，“仓库快照索引”只控服务端建索引；删除待传包半小时内重新打包；单活跃会话最多62次捕获。\n- 另有独立博主（cnblogs wlor、foxcharon）从磁盘占用、日志、app.asar、网络请求多角度复现了类似结论。\n\n**官方侧（来源：新浪财经9月19日情况说明报道、凤凰科技、QQ新闻）：**\n- 争议源于“代码库索引”功能，设计初衷为本地生成仓库索引，支撑会话断点恢复、历史版本回退、Repo Wiki。\n- Repo Wiki 页面在云端生成过程中会触发仓库数据上传，生成后数据立即销毁、不会留存。\n- 功能上线初期默认开启，波及部分用户，漏洞已修复；官方文档现已明确该功能不读取.git文件、依赖目录、构建产物和缓存。\n- 整改承诺：近期开源ZCode代码库、引入第三方评估人员独立审查、持续公开审计进展；补偿全体用户一次周额度重置，当日到账。\n\n**跨境与行业对照（来源：虎嗅/新浪9月20日报道、QQ新闻分析）：**\n- 有企业要求智谱说明是否跨境传输；公开链路显示存储为阿里云OSS（境内）。\n- 行业对照：三星2023年3月ChatGPT泄密事件（员工主动粘贴，性质不同）；GitHub Copilot 2026年3月默认训练争议（至少公开告知+退出路径）；Cursor隐私模式默认关闭但开启后不留存。行业分水岭：是否明确告知范围、开关是否真正生效、是否默认最小化、密钥归谁、有无私有化方案。\n\n## 已确认 vs 未确认 / Confirmed vs Unconfirmed\n\n**已确认：**\n- ZCode 存在后台打包工作区（含.git）并加密上传至阿里云OSS的机制（博主取证+官方承认存在上传，双方口径重叠）；\n- 官方承认功能上线初期默认开启、已修复、将开源并引入第三方审计、发放补偿；\n- 隐私政策未披露整库快照上传（多方核验）。\n\n**未确认 / 存疑：**\n- 数据是否跨境（无出境证据，但官方未正面逐项说明，企业正在追问）；\n- 上传数据的真实范围（博主称86.",
+  "final_summary_chars": 11676,
+  "summary_file": "../../docs/acceptance/artifacts/round7/case_H1_summary.md",
+  "has_lead_trail": true,
+  "log_file": "../../docs/acceptance/artifacts/round7/logs/task_acceptance_h1_20260920_084153_2026-09-20-16-41-53.json",
+  "metrics": {
+    "rate_limit_429_count": 0,
+    "timeout_count": 0,
+    "http_timeout_count": 0,
+    "wall_timeout_count": 0,
+    "llm_retry_count": 0,
+    "summary_passes": 1,
+    "key_switch_count": 0,
+    "model_route_hits": {
+      "glm-5.3-flash": {
+        "glm-5.3-flash": 6
+      }
+    },
+    "search_rounds": 4,
+    "search_attempts": 8,
+    "search_provider_hits": {
+      "serper": 4
+    },
+    "scrape_count": 4,
+    "follow_up_searches": 0,
+    "early_stop_triggered": true,
+    "early_stop_turn": 4,
+    "total_duration_ms": 126218,
+    "stage_durations": {
+      "pipeline.llm_client_init": 17,
+      "pipeline.orchestrator_init": 0,
+      "llm.request.main": 52326,
+      "answer_generator.llm_call.main": 52329,
+      "llm.request.final_summary": 63585,
+      "answer_generator.llm_call.final_summary": 63586,
+      "pipeline.main_agent_run": 126195,
+      "pipeline.total": 126218
+    },
+    "failback_activated": false,
+    "failback_model": "",
+    "effective_config": {
+      "mode": "verified",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 20,
+      "verification_min_search_rounds": 3,
+      "output_detail_level": "detailed",
+      "research_intensity": "deep"
+    }
+  },
+  "route_traces": [],
+  "lead_steps_count": 9,
+  "gate_evaluation": {
+    "gates": "hotspot_detailed",
+    "detail_level": "detailed",
+    "pass": true,
+    "failures": [],
+    "structure_valid": true,
+    "structure_issues": [
+      "conclusion_too_short:129<150",
+      "insufficient_citations"
+    ],
+    "structure_metadata": {
+      "found_sections": [
+        "tldr",
+        "conclusion",
+        "conflicts",
+        "timeline",
+        "evidence",
+        "confirmed",
+        "references"
+      ],
+      "missing_required": [],
+      "section_lengths": {
+        "tldr": 784,
+        "conclusion": 129,
+        "conflicts": 1063,
+        "timeline": 422,
+        "evidence": 1205,
+        "confirmed": 329,
+        "references": 502
+      },
+      "citation_count": 0,
+      "has_conflicts_section": true,
+      "unsourced_number_warnings": [
+        "2026",
+        "42411",
+        "56.8%",
+        "29.6%",
+        "0.2%",
+        "2026",
+        "345",
+        "564"
+      ]
+    },
+    "summary_chars": 11676,
+    "has_confidence_marker": true,
+    "has_conflicts_heading": true,
+    "unsourced_number_warnings": [
+      "2026",
+      "42411",
+      "56.8%",
+      "29.6%",
+      "0.2%",
+      "2026",
+      "345",
+      "564"
+    ]
+  },
+  "error": null
+}

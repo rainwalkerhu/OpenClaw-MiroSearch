@@ -1,0 +1,109 @@
+{
+  "case_id": "H4",
+  "query": "智谱 ZCode 被指静默上传代码仓库：上传了哪些内容？是否跨境？官方如何回应？各方说法有何冲突？",
+  "overrides": [
+    "agent=mirothinker_v1.5_keep5_max200",
+    "llm=glm-flash",
+    "agent.main_agent.max_turns=5",
+    "++agent.research_intensity=light",
+    "++agent.enable_lead_tracking=false",
+    "+output_formatter.detail_level=compact",
+    "++agent.output_detail_level=compact"
+  ],
+  "env_patch": {
+    "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+    "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_ORDER_STRICT": "0",
+    "SEARCH_RESULT_NUM": "8",
+    "SEARXNG_BASE_URL": ""
+  },
+  "effective_config": {
+    "mode": "balanced",
+    "search_profile": "parallel-trusted",
+    "search_result_num": 8,
+    "verification_min_search_rounds": 1,
+    "output_detail_level": "compact",
+    "research_intensity": "light"
+  },
+  "tracker_enabled_at_compose": false,
+  "tracker_max_follow_ups": 3,
+  "status": "completed",
+  "duration_seconds": 57.886921,
+  "final_boxed_answer": "上传内容：完整工作区快照，含全量Git历史(.git/objects、logs、reflog)、LFS大文件缓存、源代码、架构设计、数据库口令、接口密钥、云凭证及员工/用户个人信息（ferstar发现313MB加密包、42411个文件中86.6%为.git数据；上传失败564次；承明科技取证6个工作区被传，最大391.94MB），经RSA服务端下发公钥加密后传至阿里云OSS，隐私开关无法关闭。跨境问题：客户端请求指向zcode.z.ai/cdn-zcode.z.ai，Z.AI平台缔约主体及数据控制者为新加坡注册的智谱全资子公司JINGSHENG HENGXING PTE.LTD，英文版称服务自新加坡提供，但中文版协议称处理者为北京智谱华章且个人信息存于境内不跨境，承明科技要求说明是否跨境传输，智谱未回应，尚未证实。官方回应：9月18日致歉，归因于\"代码库索引\"功能中Repo Wiki生成页面触发上传，Wiki生成后数据立即销毁不保存，功能上线初期默认开启致部分用户受影响，已修复（9月19日3.14.0版本），承诺开源代码库、引入第三方审查、补偿一次周额度重置。各方冲突：ferstar称默认常开且无开关可关、含完整Git历史、服务端掌握解密能力，官方称系Repo Wiki功能且上传数据立即销毁；官方称上传为\"代码片段\"，承明科技证实为结构完整归档含密钥凭证等，远超隐私政策收集范围；中文版承诺境内存储不跨境与英文版/域名指向新加坡主体存在矛盾；官方回应未解释触发场景、解密能力及数据留存细节",
+  "final_summary_excerpt": "\n============================== Final Answer ==============================\n## TL;DR\n\n\\boxed{上传内容：完整工作区快照，含全量Git历史(.git/objects、logs、reflog)、LFS大文件缓存、源代码、架构设计、数据库口令、接口密钥、云凭证及员工/用户个人信息（ferstar发现313MB加密包、42411个文件中86.6%为.git数据；上传失败564次；承明科技取证6个工作区被传，最大391.94MB），经RSA服务端下发公钥加密后传至阿里云OSS，隐私开关无法关闭。跨境问题：客户端请求指向zcode.z.ai/cdn-zcode.z.ai，Z.AI平台缔约主体及数据控制者为新加坡注册的智谱全资子公司JINGSHENG HENGXING PTE.LTD，英文版称服务自新加坡提供，但中文版协议称处理者为北京智谱华章且个人信息存于境内不跨境，承明科技要求说明是否跨境传输，智谱未回应，尚未证实。官方回应：9月18日致歉，归因于\"代码库索引\"功能中Repo Wiki生成页面触发上传，Wiki生成后数据立即销毁不保存，功能上线初期默认开启致部分用户受影响，已修复（9月19日3.14.0版本），承诺开源代码库、引入第三方审查、补偿一次周额度重置。各方冲突：ferstar称默认常开且无开关可关、含完整Git历史、服务端掌握解密能力，官方称系Repo Wiki功能且上传数据立即销毁；官方称上传为\"代码片段\"，承明科技证实为结构完整归档含密钥凭证等，远超隐私政策收集范围；中文版承诺境内存储不跨境与英文版/域名指向新加坡主体存在矛盾；官方回应未解释触发场景、解密能力及数据留存细节}\n\n\\boxed{上传内容：完整工作区快照，含全量Git历史(.git/objects、logs、reflog)、LFS大文件缓存、源代码、架构设计、数据库口令、接口密钥、云凭证及员工/用户个人信息（ferstar发现313MB加密包、42411个文件中86.6%为.git数据；上传失败564次；承明科技取证6个工作区被传，最大391.94MB），经RSA服务端下发公钥加密后传至阿里云OSS，隐私开关无法关闭。跨境问题：客户端请求指向zcode.z.ai/cdn-zcode.z.ai，Z.AI平台缔约主体及数据控制者为新加坡注册的智谱全资子公司JINGSHENG HENGXING PTE.LTD，英文版称服务自新加坡提供，但中文版协议称处理者为北京智谱华章且个人信息存于境内不跨境，承明科技要求说明是否跨境传输，智谱未回应，尚未证实。官方回应：9月18日致歉，归因于\"代码库索引\"功能中Repo Wiki生成页面触发上传，Wiki生成后数据立即销毁不保存，功能上线初期默认开启致部分用户受影响，已修复（9月19日3.14.0版本），承诺开源代码库、引入第三方审查、补偿一次周额度重置。各方冲突：ferstar称默认常开且无开关可关、含完整Git历史、服务端掌握解密能力，官方称系Repo Wiki功能且上传数据立即销毁；官方称上传为\"代码片段\"，承明科技证实为结构完整归档含密钥凭证等，远超隐私政策收集范围；中文版承诺境内存储不跨境与英文版/域名指向新加坡主体存在矛盾；官方回应未解释触发场景、解密能力及数据留存细节}\n## Conclusion\n\n\\boxed{上传内容：完整工作区快照，含全量Git历史(.git/objects、logs、reflog)、LFS大文件缓存、源代码、架构设计、数据库口令、接口密钥、云凭证及员工/用户个人信息（ferstar发现313MB加密包、42411个文件中86.6%为.git数据；上传失败564次；承明科技取证6个工作区被传，最大391.94MB），经RSA服务端下发公钥加密后传至阿里云OSS，隐私开关无法关闭。跨境问题：客户端请求指向zcode.z.ai/cdn-zcode.z.ai，Z.AI平台缔约主体及数据控制者为新加坡注册的智谱全资子公司JINGSHENG HENGXING PTE.LTD，英文版称服务自新加坡提供，但中文版协议称处理者为北京智谱华章且个人信息存于境内不跨境，承明科技要求说明是否跨境传输，智谱未回应，尚未证实。官方回应：9月18日致歉，归因于\"代码库索引\"功能中Repo Wiki生成页面触发上传，Wiki生成后数据立即销毁不保存，功能上线初期默认开启致部分用户受影响，已修复（9月19日3.14.0版本），承诺开源代码库、引入第三方审查、补偿一次周额度重置。各方冲突：f\n\n\n\n-------------------- Extracted Result --------------------\n上传内容：完整工作区快照，含全量Git历史(.git/objects、logs、reflog)、LFS大文件缓存、源代码、架构设计、数据库口令、接口密钥、云凭证及员工/用户个人信息（ferstar发现313MB加密包、42411个文件中86.6%为.git数据；上传失败564次；承明科技取证6个工作区被传，最大391.94MB），经RSA服务端下发公钥加密后传至阿里云OSS，隐私开关无法关闭。跨境问题：客户端请求指向zcode.z.ai/cdn-zcode.z.ai，Z.AI平台缔约主体及数据控制者为新加坡注册的智谱全资子公司JINGSHENG HENGXING PTE.LTD，英文版称服务自新加坡提供，但中文版协议称处理者为北京智谱华章且个人信息存于境内不跨境，承明科技要求说明是否跨境传输，智谱未回应，尚未证实。官方回应：9月18日致歉，归因于\"代码库索引\"功能中Repo Wiki生成页面触发上传，Wiki生成后数据立即销毁不保存，功能上线初期默认开启致部分用户受影响，已修复（9月19日3.14.0版本），承诺开源代码库、引入第三方审查、补偿一次周额度重置。各方冲突：ferstar称默认常开且无开关可关、含完整Git历史、服务端掌握解密能力，官方称系Repo Wiki功能且上传数据立即销毁；官方称上传为\"代码片段\"，承明科技证实为结构完整归档含密钥凭证等，远超隐私政策收集范围；中文版承诺境内存储不跨境与英文版/域名指向新加坡主体存在矛盾；官方回应未解释触发场景、解密能力及数据留存细节\n\n-------------------- Token Usage --------------------\nTotal Input Tokens: 54843\nTotal Cache Input Tokens: 0\nTotal Output Tokens: 1335\n-----------------------------------------------------\nPricing is disabled - no cost information available\n-----------------------------------------------------",
+  "final_summary_chars": 2937,
+  "summary_file": "/workspace/docs/acceptance/artifacts/round5/case_H4_summary.md",
+  "has_lead_trail": false,
+  "log_file": "/workspace/docs/acceptance/artifacts/round5/logs/task_acceptance_h4_20260920_062345_2026-09-20-14-23-45.json",
+  "metrics": {
+    "rate_limit_429_count": 0,
+    "timeout_count": 0,
+    "key_switch_count": 0,
+    "model_route_hits": {
+      "glm-5.3-flash": {
+        "glm-5.3-flash": 6
+      }
+    },
+    "search_rounds": 4,
+    "search_attempts": 9,
+    "search_provider_hits": {
+      "serper": 4
+    },
+    "scrape_count": 5,
+    "follow_up_searches": 0,
+    "total_duration_ms": 57885,
+    "stage_durations": {
+      "pipeline.llm_client_init": 66,
+      "pipeline.orchestrator_init": 0,
+      "llm.request.main": 29623,
+      "answer_generator.llm_call.main": 29627,
+      "llm.request.final_summary": 11067,
+      "answer_generator.llm_call.final_summary": 11067,
+      "pipeline.main_agent_run": 57815,
+      "pipeline.total": 57885
+    },
+    "failback_activated": false,
+    "failback_model": "",
+    "effective_config": {
+      "mode": "balanced",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 8,
+      "verification_min_search_rounds": 1,
+      "output_detail_level": "compact",
+      "research_intensity": "light"
+    }
+  },
+  "route_traces": [],
+  "lead_steps_count": 1,
+  "gate_evaluation": {
+    "gates": "hotspot_compact",
+    "detail_level": "compact",
+    "pass": true,
+    "failures": [],
+    "structure_valid": true,
+    "structure_issues": [],
+    "structure_metadata": {
+      "found_sections": [
+        "tldr",
+        "conclusion"
+      ],
+      "missing_required": [],
+      "section_lengths": {
+        "tldr": 1324,
+        "conclusion": 1511
+      },
+      "citation_count": 0,
+      "has_conflicts_section": false,
+      "unsourced_number_warnings": [
+        "54843",
+        "0",
+        "1335"
+      ]
+    },
+    "summary_chars": 2937,
+    "has_confidence_marker": false,
+    "has_conflicts_heading": false
+  },
+  "error": null
+}

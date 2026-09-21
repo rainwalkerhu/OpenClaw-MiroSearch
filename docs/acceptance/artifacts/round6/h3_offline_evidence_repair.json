@@ -1,0 +1,30 @@
+{
+  "before_valid": false,
+  "before_missing": [
+    "conclusion",
+    "evidence",
+    "confirmed"
+  ],
+  "before_issues": [
+    "missing_conclusion",
+    "missing_evidence",
+    "missing_confirmed",
+    "insufficient_citations",
+    "missing_references_section"
+  ],
+  "after_valid": true,
+  "after_missing": [],
+  "after_found": [
+    "tldr",
+    "conclusion",
+    "conflicts",
+    "timeline",
+    "evidence",
+    "confirmed",
+    "references"
+  ],
+  "evidence_len": 1646,
+  "issues_after": [
+    "insufficient_citations"
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "case_id": "D2",
+  "query": "What is the current population of Tokyo?",
+  "overrides": [
+    "agent=mirothinker_v1.5_keep5_max200",
+    "llm=glm-flash",
+    "agent.main_agent.max_turns=6",
+    "++agent.research_intensity=standard",
+    "+output_formatter.detail_level=balanced"
+  ],
+  "env_patch": {
+    "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+    "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_ORDER_STRICT": "0",
+    "SEARCH_PROVIDER_PARALLEL_MAX_WAIT_MS": "4500",
+    "SEARCH_PROVIDER_PARALLEL_MIN_SUCCESS": "1",
+    "SEARCH_PROVIDER_FALLBACK_MAX_STEPS": "3",
+    "SEARCH_CONFIDENCE_ENABLED": "1",
+    "SEARCH_CONFIDENCE_SCORE_THRESHOLD": "0.62",
+    "SEARCH_CONFIDENCE_MIN_RESULTS": "8",
+    "SEARCH_CONFIDENCE_MIN_UNIQUE_DOMAINS": "5",
+    "SEARCH_CONFIDENCE_MIN_PROVIDER_COVERAGE": "2",
+    "SEARCH_CONFIDENCE_MIN_HIGH_CONF_HITS": "2",
+    "SEARCH_RESULT_NUM": "15",
+    "SEARXNG_BASE_URL": ""
+  },
+  "effective_config": {
+    "mode": "balanced",
+    "search_profile": "parallel-trusted",
+    "search_result_num": 15,
+    "verification_min_search_rounds": 2,
+    "output_detail_level": "balanced",
+    "research_intensity": "standard"
+  },
+  "tracker_enabled_at_compose": false,
+  "tracker_max_follow_ups": 3,
+  "status": "completed",
+  "duration_seconds": 20.022321,
+  "final_boxed_answer": "14.2 million",
+  "final_summary_excerpt": "\n============================== Final Answer ==============================\n\\boxed{14.2 million}\n\n-------------------- Extracted Result --------------------\n14.2 million\n\n-------------------- Token Usage --------------------\nTotal Input Tokens: 15956\nTotal Cache Input Tokens: 0\nTotal Output Tokens: 722\n-----------------------------------------------------\nPricing is disabled - no cost information available\n-----------------------------------------------------",
+  "has_lead_trail": false,
+  "log_file": "/workspace/acceptance_round4_artifacts/logs/task_acceptance_d2_20260920_054526_2026-09-20-13-45-26.json",
+  "metrics": {
+    "rate_limit_429_count": 0,
+    "timeout_count": 0,
+    "key_switch_count": 0,
+    "model_route_hits": {
+      "glm-5.3-flash": {
+        "glm-5.3-flash": 3
+      }
+    },
+    "search_rounds": 1,
+    "search_attempts": 1,
+    "search_provider_hits": {
+      "serper": 1
+    },
+    "scrape_count": 0,
+    "follow_up_searches": 0,
+    "total_duration_ms": 20020,
+    "stage_durations": {
+      "pipeline.llm_client_init": 18,
+      "pipeline.orchestrator_init": 0,
+      "llm.request.main": 14200,
+      "answer_generator.llm_call.main": 14202,
+      "llm.request.final_summary": 3422,
+      "answer_generator.llm_call.final_summary": 3422,
+      "pipeline.main_agent_run": 19999,
+      "pipeline.total": 20020
+    },
+    "failback_activated": false,
+    "failback_model": "",
+    "effective_config": {
+      "mode": "balanced",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 15,
+      "verification_min_search_rounds": 2,
+      "output_detail_level": "balanced",
+      "research_intensity": "standard"
+    }
+  },
+  "route_traces": [],
+  "lead_steps_count": 1,
+  "error": null
+}

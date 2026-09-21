@@ -1,0 +1,208 @@
+
+============================== Final Answer ==============================
+## TL;DR
+
+\textbf{研究报告：2026年9月19–20日胡塞武装宣称袭击利雅得与延布能源设施——双方分歧、可确认与不可确认事实全景}
+
+\boxed{
+\textbf{研究报告：2026年9月19–20日胡塞武装宣称袭击利雅得与延布能源设施——双方分歧、可确认与不可确认事实全景}
+
+\section*{TL;DR / 结论（标明置信度）}
+当地时间2026年9月19日（周六），也门胡塞武装（Ansar Allah）军事发言人叶海亚·萨雷亚（Yahya Saree，准将）宣布发动"两次军事行动"：第一次打击沙特首都利雅得的"敏感目标"，第二次打击红海港口城市延布的沙特阿美（Aramco）油气设施，宣称使用"大量弹道导弹、巡航导弹和无人机"，两次行动均"取得成功"并造成目标区域"大规模火灾"，理由是回应"沙特敌方"对萨那的"罪恶打击"（并称上周沙特在也门发动约300次空袭）。沙特主导联军发言人图尔基·马利基（Turki al-Malki）则只承认拦截了一枚当天凌晨射向利雅得的弹道导弹，称胡塞对延布、塔伊夫、拜什、法拉桑等地的袭击"企图"均已被挫败，并将胡塞行动定性为"企图袭击平民和民用设施"，未证实任何损失或伤亡。
+\textbf{核心判断（置信度标注）}：
+- 可确认（高置信度，多源交叉）：9/19凌晨确有一枚弹道导弹袭向利雅得并被拦截；利雅得两次传出爆炸声；哈立德国王国际机场（KKIA）附近一个阿美品牌储油罐起火并产生巨大黑色烟柱；机场航班一度严重延误/取消后恢复；沙特对延布等地发布"挫败"声明；美方发布安全警报。
+- 不可确认（低置信度/无裁定）：胡塞宣称的袭击规模（"数十枚/大量"弹体）、利雅得"敏感目标"为何物及是否命中、延布阿美设施9/19当天是否实际中弹受损、机场油罐起火归因、双方伤亡数字、胡塞"300次空袭"等动机叙事。阿美公司对媒体置评请求"未予回应"（NPR原文），是延布问题上的关键沉默。
+
+\section*{一、事件概况与双方原始口径}
+1. 胡塞方（萨雷亚声明，经路透/AP/AFP/BBC等多家转述）：
+- 两次行动：利雅得"敏感目标"+ 延布阿美设施；
+- 武器："大量弹道导弹、巡航导弹和无人机"（英媒多为 cruise and ballistic missiles as well as drones）；
+- 战果宣称：两次均"取得成功"、目标区域"大规模火灾"；部分后续报道称其宣称"所有目标均被成功命中"（CGTN Europe转述口径：针对吉赞与延布，使用数十枚弹道导弹、巡航导弹和无人机）；
+- 动机：回应沙特"试图打击"也门首都萨那（未给细节）。
+2. 沙特方（联军发言人马利基声明，经AP/NPR/路透转述）：
+- 确认当天凌晨\textbf{一枚}弹道导弹射向利雅得、\textbf{被拦截}——这是7月胡塞升级对沙特袭击以来利雅得\textbf{首次}被导弹瞄准、首次拉响防空警报；
+- 称胡塞对延布（红海港口城市，沙特一条关键输油管道的终点——NPR原文"where a key Saudi pipeline ends"）、以及塔伊夫、拜什、法拉桑的袭击企图"均已被挫败"，\textbf{未给任何细节}；
+- 将胡塞行动定性为"企图袭击平民和民用设施"——注意NPR全文中沙特用的是"civilian infrastructure"（民用基础设施）而非"能源命脉"的表述，这一措辞差异本身是口径问题；
+- 声明发布时间严重滞后：NPR明确指出联军声明"came long after the dawn attempt"（在凌晨袭击很久之后才发布）；
+- 强调有权依国际人道法采取反制，并谴责胡塞"持续升级行动"。
+
+\section*{二、冲突与不确定 / Conflicts & Uncertainties（硬性必填章节，逐条并列，不消抹分歧）}
+1. \textbf{规模冲突（最典型的"罗生门"）}：胡塞称"大量/数十枚"弹道导弹、巡航导弹和无人机、两波行动；沙特只承认\textbf{1枚}。差距悬殊，AP明确表示"The Associated Press couldn't independently verify the claims"（无法独立核实胡塞说法）。无法核实，单方宣称 vs 单方否认。
+2. \textbf{延布阿美设施是否中弹——头号悬念}：胡塞称成功打击并起"大火"；沙特称"企图已被挫败"；阿美对置评请求"未予回应"（NPR原文"Aramco, the world's largest oil company, did not respond to a request for comment"）；无延布现场独立影像或损害评估。\textbf{完全矛盾，无裁定}。
+3. \textbf{利雅得"敏感目标"为何物}：胡塞未具体说明、宣称命中；沙特只谈拦截。\textbf{无法核实}。
+4. \textbf{机场储油罐起火归因}：现象可确认，但AFP/ABC45原文均写"The cause of the fire was not immediately established independently"（起火原因未获独立确定）。可能性包括：胡塞弹体/无人机直接命中、拦截残骸坠落、其他事故——沙特未公布调查结论。\textbf{归因未定}。
+5. \textbf{媒体自身口径分裂}：airlive.net直接写"Houthi Drone Strike Hits Fuel Depot…striking main jet fuel storage tanks"（断言击中）；NDTV Profit标题写"Fuel Depot Hit…In Houthi Missile Barrage"；而AFP、NPR、Straits Times等只描述火灾现象、不作归因。媒体层面同样存在"先行归因"与"审慎不归因"两条线，不可偏信。
+6. \textbf{追加宣称的"宣称膨胀"问题}（均无独立战果证据）：
+- 9月14日（周一）：胡塞宣称以"数十枚弹道导弹和无人机"打击沙特西南部\textbf{哈立德国王空军基地}（King Khalid Air Base，海米斯穆谢特，Middle East Monitor 2026-09-14；CGTN转述"dozens of ballistic missiles"）；
+- 9月16日（周三）：宣称打击\textbf{阿卜哈、奈季兰、吉赞}的阿美设施及机场（Siasat Daily/Instagram转述"dozens of ballistic missiles and drones targeted Saudi Aramco facilities in Abha, Najran and Jizan, alongside an airport"）；
+- 更早（9月6日/9月8日）：宣称"数十枚"打击吉赞阿美设施、吉赞与延布（Facebook/posts转述，自称9/6命中吉赞油设施）；
+- 9/19胡塞第二轮口径：对吉赞与延布使用"数十枚"弹体并"全部命中"（CGTN Europe）。
+这些宣称共同构成一组持续的、不可核验的"数十枚+全部命中"话术，与沙特"仅拦截一枚/悉数挫败"形成系统性对立。
+7. \textbf{麦加指控的针锋相对}：9月17日（周三）沙特指控胡塞企图用无人机袭击伊斯兰圣城麦加并将其定性为"红线"（"red line"）；胡塞"坚决否认"（fiercely denied）。又一处各执一词、无独立裁定。
+8. \textbf{动机叙事不可核实}：胡塞称上周沙特在也门发动"约300次空袭"（其宣称），未获独立核实；沙特则谴责胡塞"持续升级行动"。
+9. \textbf{伤亡不可核实}：本轮9/19–20袭击沙特零伤亡通报，胡塞说法无从核实；AFP所报也门境内当日48人死亡（胡塞方面31人、政府军17人）被BBC明确标注为"未经确认"（unconfirmed）。另有背景：9月18日（周四）沙特民防称被拦截胡塞无人机的残骸在沙特境内砸死一名也门裔居民——这是本轮升级中首例被报出的平民死亡（AP/NPR）。
+
+\section*{三、时间线 / Timeline（绝对日期锚定）}
+- \textbf{2026年7月}：胡塞升级对沙特的封锁与袭击，开启"伊朗战争"的新前线（AP/NPR背景表述：the escalation…has opened a new front in the Iran war）；此前7月袭击中，阿美曾表示"未造成实质性运营或财务影响"（Instagram转述阿美口径，日期为更早帖文）。
+- \textbf{2026-09-06}：胡塞宣称"数十枚"弹道导弹和无人机袭击吉赞阿美石油设施（Facebook帖文转述，单方宣称）。
+- \textbf{2026-09-08}：胡塞发动"重大行动"（"dozens of ballistic missiles"）；同日沙特指控胡塞无人机袭击麦加，胡塞坚决否认；也门境内冲突致73名以上平民受伤（此前轮次检索）。
+- \textbf{2026-09-10（周四）}：无人机袭击打坏沙特\textbf{东西输油管道}（East-West Pipeline）泵站，管道停输（CNBC：drone attack launched from Iraq damaged the Saudi pipeline last Thursday——注意CNBC口径称袭击"发自伊拉克"，与胡塞主导叙事存在出入，本身是又一处归属分歧）；AGSI：沙特自9/10起暂停延布的石油与成品油出口。
+- \textbf{2026-09-13（周六，报道日）}：路透：管道中断威胁全球约\textbf{4\%}石油供应；沙特在各港口保有5–7天出口库存。
+- \textbf{2026-09-14（周一）}：胡塞宣称"数十枚"打击哈立德国王空军基地（MEMO 2026-09-14）；同日油价大涨，The Hill：布伦特收于105.66美元、涨4\%；Yahoo Finance：布伦特一度涨4.68美元（4.5\%）至109.29美元（16周高位）；Guardian：油价破108美元、美国借贷成本自2023年以来首触5\%，引发通胀担忧；WSJ报道管道关闭与胡塞收紧对曼德海峡控制。
+- \textbf{2026-09-15（周一）}：阿美确认暂停红海延布港装船（X/proshare：Saudi Arabia's export disruption widened on 15 September）；oilprice.com：延布装运暂停+东西管道停输，布伦特回到108美元；AIRA：布伦特涨约3\%至105美元附近（盘中一度涨达29\%后回落的说法国外帖文有出现，需谨慎）。
+- \textbf{2026-09-16（周三）}：胡塞宣称打击阿卜哈、奈季兰、吉赞的阿美设施及机场（"dozens"）；沙特指控胡塞无人机袭麦加（NPR时间线将麦加指控记为"周三"，即9/16，与上文9/17表述合并以NPR为准：Wednesday=9/16）。
+- \textbf{2026-09-17（周三）}：Al Jazeera：追踪沙特替代输油路线（延布→苏哈尔），确认上周无人机袭击致东西管道部分瘫痪、油流中断。
+- \textbf{2026-09-18（周四）}：沙特民防通报被拦截无人机残骸致死一名在沙也门裔居民（本轮升级首例平民死亡）；路透：油价回落，布伦特收104.87美元（跌0.95美元/0.93\%），WTI收100.30美元（跌——此前CNBC口径：自管道袭击以来油价累计涨超5\%）；诱因之一是\textbf{中国要求伊朗约束胡塞对沙特的袭击}（Reuters 2026-09-18标题：Oil slides after China asks Iran to limit Houthi attacks）。
+- \textbf{2026-09-19（周六）凌晨}：\textbf{本轮核心事件}：利雅得防空警报首次拉响（7月以来首次）；导弹来袭被拦截；凌晨与上午利雅得两次传出爆炸声（路透记者+多名居民）；沙特民防向利雅得与哈尔杰（Al-Kharj）发手机预警后于周六上午解除；KKIA旁阿美储油罐起火，巨大黑色烟柱与火焰（路透视频、法新社记者目击消防员扑救）；机场航班一度严重延误/取消（Flightradar24记录、AeroCorner称当日为该机场"最严重中断"）后逐步恢复；随后萨雷亚宣布"两次行动"；\textbf{很久之后}联军才发布声明承认拦截一枚、宣布挫败对延布/塔伊夫/拜什/法拉桑的袭击图谋；美方（国务院及驻耶路撒冷、阿曼、伊拉克使馆）发布安全警报；美方表态"目前与胡塞没有战事"（no current fight with the Houthis）。
+- \textbf{2026-09-20（周日，即"今天"）}：双方各执一词持续；延布9/19是否受损仍无独立证据。
+
+\section*{四、Evidence / 证据（含来源与日期）}
+1. \textbf{NPR全文（2026-
+## Conclusion
+
+\section*{三、时间线 / Timeline（绝对日期锚定）}
+- \textbf{2026年7月}：胡塞升级对沙特的封锁与袭击，开启"伊朗战争"的新前线（AP/NPR背景表述：the escalation…has opened a new front in the Iran war）；此前7月袭击中，阿美曾表示"未造成实质性运营或财务影响"（Instagram转述阿美口径，日期为更早帖文）。
+- \textbf{2026-09-06}：胡塞宣称"数十枚"弹道导弹和无人机袭击吉赞阿美石油设施（Facebook帖文转述，单方宣称）。
+- \textbf{2026-09-08}：胡塞发动"重大行动"（"dozens of ballistic missiles"）；同日沙特指控胡塞无人机袭击麦加，胡塞坚决否认；也门境内冲突致73名以上平民受伤（此前轮次检索）。
+- \textbf{2026-09-10（周四）}：无人机袭击打坏沙特\textbf{东西输油管道}（East-West Pipeline）泵站，管道停输（CNBC：drone attack launched from Ira
+
+
+## 冲突与不确定 / Conflicts & Uncertainties
+
+\boxed{
+\textbf{研究报告：2026年9月19–20日胡塞武装宣称袭击利雅得与延布能源设施——双方分歧、可确认与不可确认事实全景}
+
+\section*{二、冲突与不确定 / Conflicts & Uncertainties（硬性必填章节，逐条并列，不消抹分歧）}
+1. \textbf{规模冲突（最典型的"罗生门"）}：胡塞称"大量/数十枚"弹道导弹、巡航导弹和无人机、两波行动；沙特只承认\textbf{1枚}。差距悬殊，AP明确表示"The Associated Press couldn't independently verify the claims"（无法独立核实胡塞说法）。无法核实，单方宣称 vs 单方否认。
+2. \textbf{延布阿美设施是否中弹——头号悬念}：胡塞称成功打击并起"大火"；沙特称"企图已被挫败"；阿美对置评请求"未予回应"（NPR原文"Aramco, the world's largest oil company, did not respond to a request for com
+
+\section*{三、时间线 / Timeline（绝对日期锚定）}
+- \textbf{2026年7月}：胡塞升级对沙特的封锁与袭击，开启"伊朗战争"的新前线（AP/NPR背景表述：the escalation…has opened a new front in the Iran war）；此前7月袭击中，阿美曾表示"未造成实质性运营或财务影响"（Instagram转述阿美口径，日期为更早帖文）。
+- \textbf{2026-09-06}：胡塞宣称"数十枚"弹道导弹和无人机袭击吉赞阿美石油设施（Facebook帖文转述，单方宣称）。
+- \textbf{2026-09-08}：胡塞发动"重大行动"（"dozens of ballistic missiles"）；同日沙特指控胡塞无人机袭击麦加，胡塞坚决否认；也门境内冲突致73名以上平民受伤（此前轮次检索）。
+- \textbf{202
+
+
+## 时间线 / Timeline
+
+（结构自动补全）原文缺少独立时间线章节；请勿将此占位视为已核实时间表。
+
+
+## 已确认 vs 未确认 / Confirmed vs Unconfirmed
+
+- **已确认**：见正文有明确多源支持的陈述（若无则标注“无”）。
+- **未确认**：单方宣称、无法交叉核验或来源冲突的陈述。
+（结构自动补全占位；禁止据此伪造确定性。）
+
+
+## Evidence（证据含来源与日期）
+
+（结构自动补全）原文缺少独立 Evidence / 证据 标题；以下为从正文抽取的来源线索，禁止据此伪造确定性。
+
+\section*{一、事件概况与双方原始口径}
+1. 胡塞方（萨雷亚声明，经路透/AP/AFP/BBC等多家转述）：
+- 两次行动：利雅得"敏感目标"+ 延布阿美设施；
+- 武器："大量弹道导弹、巡航导弹和无人机"（英媒多为 cruise and ballistic missiles as well as drones）；
+- 战果宣称：两次均"取得成功"、目标区域"大规模火灾"；部分后续报道称其宣称"所有目标均被成功命中"（CGTN Europe转述口径：针对吉赞与延布，使用数十枚弹道导弹、巡航导弹和无人机）；
+- 动机：回应沙特"试图打击"也门首都萨那（未给细节）。
+2. 沙特方（联军发言人马利基声明，经AP/NPR/路透转述）：
+- 确认当天凌晨\textbf{一枚}弹道导弹射向利雅得、\textbf{被拦截}——这是7月胡塞升级对沙特袭击以来利雅得\textbf{首次}被导弹瞄准、首次拉响防空警报；
+- 称胡塞对延布（红海港口城市，沙特一条关键输油管道的终点——NPR原文"where a key Saudi pipeline ends"）、以及塔伊夫、拜什、法拉桑的袭击企图"
+
+\section*{二、冲突与不确定 / Conflicts & Uncertainties（硬性必填章节，逐条并列，不消抹分歧）}
+1. \textbf{规模冲突（最典型的"罗生门"）}：胡塞称"大量/数十枚"弹道导弹、巡航导弹和无人机、两波行动；沙特只承认\textbf{1枚}。差距悬殊，AP明确表示"The Associated Press couldn't independently verify the claims"（无法独立核实胡塞说法）。无法核实，单方宣称 vs 单方否认。
+2. \textbf{延布阿美设施是否中弹——头号悬念}：胡塞称成功打击并起"大火"；沙特称"企图已被挫败"；阿美对置评请求"未予回应"（NPR原文"Aramco, the world's largest oil company, did not respond to a request for comment"）；无延布现场独立影像或损害评估。\textbf{完全矛盾，无裁定}。
+3. \textbf{利雅得"敏感目标"为何物}：胡塞未具体说明、宣称命中；沙特只谈拦截。\textbf{无法核实}。
+
+\section*{三、时间线 / Timeline（绝对日期锚定）}
+- \textbf{2026年7月}：胡塞升级对沙特的封锁与袭击，开启"伊朗战争"的新前线（AP/NPR背景表述：the escalation…has opened a new front in the Iran war）；此前7月袭击中，阿美曾表示"未造成实质性运营或财务影响"（Instagram转述阿美口径，日期为更早帖文）。
+- \textbf{2026-09-06}：胡塞宣称"数十枚"弹道导弹和无人机袭击吉赞阿美石油设施（Facebook帖文转述，单方宣称）。
+- \textbf{2026-09-08}：胡塞发动"重大行动"（"dozens of ballistic missiles"）；同日沙特指控胡塞无人机袭击麦加，胡塞坚决否认；也门境内冲突致73名以上平民受伤（此前轮次检索）。
+- \textbf{2026-09-10（周四）}：无人机袭击打坏沙特\textbf{东西输油管道}（East-West Pipeline）泵站，管道停输（CNBC：drone attack launched from Ira
+
+\section*{四、Evidence / 证据（含来源与日期）}
+1. \textbf{NPR全文（2026-
+
+
+## References
+
+（结构自动补全）请参见正文内联来源与链接。
+
+
+
+-------------------- Extracted Result --------------------
+\section*{TL;DR / 结论（标明置信度）}
+当地时间2026年9月19日（周六），也门胡塞武装（Ansar Allah）军事发言人叶海亚·萨雷亚（Yahya Saree，准将）宣布发动"两次军事行动"：第一次打击沙特首都利雅得的"敏感目标"，第二次打击红海港口城市延布的沙特阿美（Aramco）油气设施，宣称使用"大量弹道导弹、巡航导弹和无人机"，两次行动均"取得成功"并造成目标区域"大规模火灾"，理由是回应"沙特敌方"对萨那的"罪恶打击"（并称上周沙特在也门发动约300次空袭）。沙特主导联军发言人图尔基·马利基（Turki al-Malki）则只承认拦截了一枚当天凌晨射向利雅得的弹道导弹，称胡塞对延布、塔伊夫、拜什、法拉桑等地的袭击"企图"均已被挫败，并将胡塞行动定性为"企图袭击平民和民用设施"，未证实任何损失或伤亡。
+\textbf{核心判断（置信度标注）}：
+- 可确认（高置信度，多源交叉）：9/19凌晨确有一枚弹道导弹袭向利雅得并被拦截；利雅得两次传出爆炸声；哈立德国王国际机场（KKIA）附近一个阿美品牌储油罐起火并产生巨大黑色烟柱；机场航班一度严重延误/取消后恢复；沙特对延布等地发布"挫败"声明；美方发布安全警报。
+- 不可确认（低置信度/无裁定）：胡塞宣称的袭击规模（"数十枚/大量"弹体）、利雅得"敏感目标"为何物及是否命中、延布阿美设施9/19当天是否实际中弹受损、机场油罐起火归因、双方伤亡数字、胡塞"300次空袭"等动机叙事。阿美公司对媒体置评请求"未予回应"（NPR原文），是延布问题上的关键沉默。
+
+\section*{一、事件概况与双方原始口径}
+1. 胡塞方（萨雷亚声明，经路透/AP/AFP/BBC等多家转述）：
+- 两次行动：利雅得"敏感目标"+ 延布阿美设施；
+- 武器："大量弹道导弹、巡航导弹和无人机"（英媒多为 cruise and ballistic missiles as well as drones）；
+- 战果宣称：两次均"取得成功"、目标区域"大规模火灾"；部分后续报道称其宣称"所有目标均被成功命中"（CGTN Europe转述口径：针对吉赞与延布，使用数十枚弹道导弹、巡航导弹和无人机）；
+- 动机：回应沙特"试图打击"也门首都萨那（未给细节）。
+2. 沙特方（联军发言人马利基声明，经AP/NPR/路透转述）：
+- 确认当天凌晨\textbf{一枚}弹道导弹射向利雅得、\textbf{被拦截}——这是7月胡塞升级对沙特袭击以来利雅得\textbf{首次}被导弹瞄准、首次拉响防空警报；
+- 称胡塞对延布（红海港口城市，沙特一条关键输油管道的终点——NPR原文"where a key Saudi pipeline ends"）、以及塔伊夫、拜什、法拉桑的袭击企图"均已被挫败"，\textbf{未给任何细节}；
+- 将胡塞行动定性为"企图袭击平民和民用设施"——注意NPR全文中沙特用的是"civilian infrastructure"（民用基础设施）而非"能源命脉"的表述，这一措辞差异本身是口径问题；
+- 声明发布时间严重滞后：NPR明确指出联军声明"came long after the dawn attempt"（在凌晨袭击很久之后才发布）；
+- 强调有权依国际人道法采取反制，并谴责胡塞"持续升级行动"。
+
+\section*{二、冲突与不确定 / Conflicts & Uncertainties（硬性必填章节，逐条并列，不消抹分歧）}
+1. \textbf{规模冲突（最典型的"罗生门"）}：胡塞称"大量/数十枚"弹道导弹、巡航导弹和无人机、两波行动；沙特只承认\textbf{1枚}。差距悬殊，AP明确表示"The Associated Press couldn't independently verify the claims"（无法独立核实胡塞说法）。无法核实，单方宣称 vs 单方否认。
+2. \textbf{延布阿美设施是否中弹——头号悬念}：胡塞称成功打击并起"大火"；沙特称"企图已被挫败"；阿美对置评请求"未予回应"（NPR原文"Aramco, the world's largest oil company, did not respond to a request for comment"）；无延布现场独立影像或损害评估。\textbf{完全矛盾，无裁定}。
+3. \textbf{利雅得"敏感目标"为何物}：胡塞未具体说明、宣称命中；沙特只谈拦截。\textbf{无法核实}。
+4. \textbf{机场储油罐起火归因}：现象可确认，但AFP/ABC45原文均写"The cause of the fire was not immediately established independently"（起火原因未获独立确定）。可能性包括：胡塞弹体/无人机直接命中、拦截残骸坠落、其他事故——沙特未公布调查结论。\textbf{归因未定}。
+5. \textbf{媒体自身口径分裂}：airlive.net直接写"Houthi Drone Strike Hits Fuel Depot…striking main jet fuel storage tanks"（断言击中）；NDTV Profit标题写"Fuel Depot Hit…In Houthi Missile Barrage"；而AFP、NPR、Straits Times等只描述火灾现象、不作归因。媒体层面同样存在"先行归因"与"审慎不归因"两条线，不可偏信。
+6. \textbf{追加宣称的"宣称膨胀"问题}（均无独立战果证据）：
+- 9月14日（周一）：胡塞宣称以"数十枚弹道导弹和无人机"打击沙特西南部\textbf{哈立德国王空军基地}（King Khalid Air Base，海米斯穆谢特，Middle East Monitor 2026-09-14；CGTN转述"dozens of ballistic missiles"）；
+- 9月16日（周三）：宣称打击\textbf{阿卜哈、奈季兰、吉赞}的阿美设施及机场（Siasat Daily/Instagram转述"dozens of ballistic missiles and drones targeted Saudi Aramco facilities in Abha, Najran and Jizan, alongside an airport"）；
+- 更早（9月6日/9月8日）：宣称"数十枚"打击吉赞阿美设施、吉赞与延布（Facebook/posts转述，自称9/6命中吉赞油设施）；
+- 9/19胡塞第二轮口径：对吉赞与延布使用"数十枚"弹体并"全部命中"（CGTN Europe）。
+这些宣称共同构成一组持续的、不可核验的"数十枚+全部命中"话术，与沙特"仅拦截一枚/悉数挫败"形成系统性对立。
+7. \textbf{麦加指控的针锋相对}：9月17日（周三）沙特指控胡塞企图用无人机袭击伊斯兰圣城麦加并将其定性为"红线"（"red line"）；胡塞"坚决否认"（fiercely denied）。又一处各执一词、无独立裁定。
+8. \textbf{动机叙事不可核实}：胡塞称上周沙特在也门发动"约300次空袭"（其宣称），未获独立核实；沙特则谴责胡塞"持续升级行动"。
+9. \textbf{伤亡不可核实}：本轮9/19–20袭击沙特零伤亡通报，胡塞说法无从核实；AFP所报也门境内当日48人死亡（胡塞方面31人、政府军17人）被BBC明确标注为"未经确认"（unconfirmed）。另有背景：9月18日（周四）沙特民防称被拦截胡塞无人机的残骸在沙特境内砸死一名也门裔居民——这是本轮升级中首例被报出的平民死亡（AP/NPR）。
+
+\section*{三、时间线 / Timeline（绝对日期锚定）}
+- \textbf{2026年7月}：胡塞升级对沙特的封锁与袭击，开启"伊朗战争"的新前线（AP/NPR背景表述：the escalation…has opened a new front in the Iran war）；此前7月袭击中，阿美曾表示"未造成实质性运营或财务影响"（Instagram转述阿美口径，日期为更早帖文）。
+- \textbf{2026-09-06}：胡塞宣称"数十枚"弹道导弹和无人机袭击吉赞阿美石油设施（Facebook帖文转述，单方宣称）。
+- \textbf{2026-09-08}：胡塞发动"重大行动"（"dozens of ballistic missiles"）；同日沙特指控胡塞无人机袭击麦加，胡塞坚决否认；也门境内冲突致73名以上平民受伤（此前轮次检索）。
+- \textbf{2026-09-10（周四）}：无人机袭击打坏沙特\textbf{东西输油管道}（East-West Pipeline）泵站，管道停输（CNBC：drone attack launched from Iraq damaged the Saudi pipeline last Thursday——注意CNBC口径称袭击"发自伊拉克"，与胡塞主导叙事存在出入，本身是又一处归属分歧）；AGSI：沙特自9/10起暂停延布的石油与成品油出口。
+- \textbf{2026-09-13（周六，报道日）}：路透：管道中断威胁全球约\textbf{4\%}石油供应；沙特在各港口保有5–7天出口库存。
+- \textbf{2026-09-14（周一）}：胡塞宣称"数十枚"打击哈立德国王空军基地（MEMO 2026-09-14）；同日油价大涨，The Hill：布伦特收于105.66美元、涨4\%；Yahoo Finance：布伦特一度涨4.68美元（4.5\%）至109.29美元（16周高位）；Guardian：油价破108美元、美国借贷成本自2023年以来首触5\%，引发通胀担忧；WSJ报道管道关闭与胡塞收紧对曼德海峡控制。
+- \textbf{2026-09-15（周一）}：阿美确认暂停红海延布港装船（X/proshare：Saudi Arabia's export disruption widened on 15 September）；oilprice.com：延布装运暂停+东西管道停输，布伦特回到108美元；AIRA：布伦特涨约3\%至105美元附近（盘中一度涨达29\%后回落的说法国外帖文有出现，需谨慎）。
+- \textbf{2026-09-16（周三）}：胡塞宣称打击阿卜哈、奈季兰、吉赞的阿美设施及机场（"dozens"）；沙特指控胡塞无人机袭麦加（NPR时间线将麦加指控记为"周三"，即9/16，与上文9/17表述合并以NPR为准：Wednesday=9/16）。
+- \textbf{2026-09-17（周三）}：Al Jazeera：追踪沙特替代输油路线（延布→苏哈尔），确认上周无人机袭击致东西管道部分瘫痪、油流中断。
+- \textbf{2026-09-18（周四）}：沙特民防通报被拦截无人机残骸致死一名在沙也门裔居民（本轮升级首例平民死亡）；路透：油价回落，布伦特收104.87美元（跌0.95美元/0.93\%），WTI收100.30美元（跌——此前CNBC口径：自管道袭击以来油价累计涨超5\%）；诱因之一是\textbf{中国要求伊朗约束胡塞对沙特的袭击}（Reuters 2026-09-18标题：Oil slides after China asks Iran to limit Houthi attacks）。
+- \textbf{2026-09-19（周六）凌晨}：\textbf{本轮核心事件}：利雅得防空警报首次拉响（7月以来首次）；导弹来袭被拦截；凌晨与上午利雅得两次传出爆炸声（路透记者+多名居民）；沙特民防向利雅得与哈尔杰（Al-Kharj）发手机预警后于周六上午解除；KKIA旁阿美储油罐起火，巨大黑色烟柱与火焰（路透视频、法新社记者目击消防员扑救）；机场航班一度严重延误/取消（Flightradar24记录、AeroCorner称当日为该机场"最严重中断"）后逐步恢复；随后萨雷亚宣布"两次行动"；\textbf{很久之后}联军才发布声明承认拦截一枚、宣布挫败对延布/塔伊夫/拜什/法拉桑的袭击图谋；美方（国务院及驻耶路撒冷、阿曼、伊拉克使馆）发布安全警报；美方表态"目前与胡塞没有战事"（no current fight with the Houthis）。
+- \textbf{2026-09-20（周日，即"今天"）}：双方各执一词持续；延布9/19是否受损仍无独立证据。
+
+\section*{四、Evidence / 证据（含来源与日期）}
+1. \textbf{NPR全文（2026-
+
+(Note: model did not use \boxed{} format; using full answer text as fallback.)
+
+-------------------- Token Usage --------------------
+Total Input Tokens: 187101
+Total Cache Input Tokens: 0
+Total Output Tokens: 20811
+-----------------------------------------------------
+Pricing is disabled - no cost information available
+-----------------------------------------------------
+
+## 线索追踪 / Lead Trail
+
+以下是研究过程中追踪的关键线索及其发现：
+
+
+### Lead 1: What are the most important unresolved or contested aspects of: 2026年9月胡塞武装称袭击沙特首都及延布能源设施：胡塞宣称与沙特官方说法有何分歧？目前能确认什么、不能确认什么？?
+**来源**: query_seed (Turn 0)
+**优先级**: 0.65
+**状态**: followed
+**追踪轮次**: Turn 5
+
+**发现**:
+正在追踪中...

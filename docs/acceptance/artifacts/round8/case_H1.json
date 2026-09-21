@@ -1,0 +1,156 @@
+{
+  "case_id": "H1",
+  "query": "智谱 ZCode 被指静默上传代码仓库：上传了哪些内容？是否跨境？官方如何回应？各方说法有何冲突？",
+  "overrides": [
+    "agent=mirothinker_v1.5_keep5_max200",
+    "llm=glm-flash",
+    "agent.main_agent.max_turns=12",
+    "++agent.research_intensity=deep",
+    "++agent.research_report_mode=true",
+    "+agent.main_agent.research_mode=verified",
+    "+output_formatter.detail_level=detailed",
+    "++agent.output_detail_level=detailed",
+    "+agent.main_agent.verification_min_search_rounds=3",
+    "+agent.main_agent.enable_lead_tracking=true",
+    "++agent.max_lead_follow_ups=2",
+    "++agent.max_scrape_per_task=8",
+    "++agent.deep_early_stop_on_agreement=true",
+    "++agent.parallel_tool_calls=true",
+    "++agent.deep_exit_on_early_stop=true",
+    "++agent.deep_post_early_stop_turns=1",
+    "++agent.max_final_answer_retries=1",
+    "++agent.oneshot_final_report=true",
+    "++agent.summary_keep_tool_result=2",
+    "++agent.summary_max_tokens_cap=4096",
+    "++llm.summary_max_tokens=4096"
+  ],
+  "env_patch": {
+    "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+    "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_ORDER_STRICT": "0",
+    "SEARCH_RESULT_NUM": "20",
+    "SEARXNG_BASE_URL": ""
+  },
+  "effective_config": {
+    "mode": "verified",
+    "search_profile": "parallel-trusted",
+    "search_result_num": 20,
+    "verification_min_search_rounds": 3,
+    "output_detail_level": "detailed",
+    "research_intensity": "deep"
+  },
+  "tracker_enabled_at_compose": true,
+  "tracker_max_follow_ups": 2,
+  "status": "completed",
+  "duration_seconds": 293.358645,
+  "final_boxed_answer": "ZCode 被多名开发者独立证实会在登录状态下静默将整个工作区（含约 86.6% 的完整 Git 历史、LFS 缓存与全局配置）加密直传阿里云 OSS 且开关无效，智谱致歉称系默认开启的“代码库索引/Repo Wiki”功能所致并已修复、承诺开源，而“是否经新加坡子公司跨境处理数据”目前仅是承明科技单方质疑、智谱未回应、无法核实。",
+  "final_summary_excerpt": "\n============================== Final Answer ==============================\n## TL;DR / 结论（标明置信度）\n\n2026年9月18日，开发者 ferstar 发文揭露智谱旗下 AI 编程工具 ZCode 在用户登录状态下静默将整个工作区（含完整 Git 历史）加密打包上传至阿里云 OSS（置信度：高——多篇独立技术取证与多家媒体报道相互印证）。智谱当晚致歉，称问题源于默认开启的“代码库索引/Repo Wiki”功能，已修复并承诺开源。9月19—20日风波扩大：太原承明科技发函质疑，指出英文版协议显示数据处理主体为智谱注册于新加坡的子公司，质疑数据是否跨境存储（置信度：中——跨境问题目前仅为承明科技单方质疑，智谱未回应，无独立复核）。\n\n## Conclusions\n\n**上传了什么（技术侧，置信度高）**：ferstar 清理磁盘时发现 `~/.zcode/v2/checkpoints` 内一个 313MB 的 `.enc` 加密文件，状态元数据显示为某商业项目（排除 node_modules 后 345MB）的“全量基线快照”，已失败重试 564 次。逆向 Electron 客户端 `app.asar` 后还原上传链路：客户端向 `zcode.z.ai` 申请上传凭证，服务端下发 RSA 公钥与阿里云 OSS 表单签名；本地 tar.gz 打包后用 AES-256-CTR 加密、RSA-OAEP-SHA256 包裹密钥，直传 OSS，OSS 回调注册快照。信封加密的私钥只在 Z.ai 云端，用户连自己磁盘上的密文都解不开。一份 42,411 文件的快照清单显示：`.git/lfs` 196.1MB（56.8%）、`.git/objects` 102.2MB（29.6%）、`.git/logs`（reflog）0.6MB，`.git` 合计占 86.6%，源码与文档仅 13.4%。附加清单还包含全局配置（`mcp.json`、`settings.behavior.json`，常含服务令牌）及触发快照的 prompt 原文。UI 中的开关经代码比对均不控制本地打包上传；删除归档后约半小时即重新打包。\n\n**是否跨境（置信度低，单方质疑）**：上传目的地是阿里云 OSS（存储节点地域未见披露）；但承明科技指出 ZCode 网络请求指向 `zcode.z.ai` / `cdn-zcode.z.ai`，而 Z.AI 英文版平台的缔约主体与个人数据控制者为注册于新加坡的 JINGSHENG HENGXING TECHNOLOGY PTE.LTD，隐私政策载明“服务通常自新加坡提供、个人数据通常在新加坡处理”；中文版协议与隐私政策则写明主体为北京智谱华章，且承诺境内个人信息存储于境内、不跨境传输。承明科技要求智谱说明是否存在跨境传输或境外存储，智谱暂未回应。此问题截至现有证据**无法定论**。\n\n**官方回应**：9月18日下午，智谱在 ZCode 用户群致歉：问题源于“代码库索引”功能（支持会话检查点恢复、历史回退及 Repo Wiki），Repo Wiki 生成页面时可能触发仓库数据上传；该功能上线初期默认开启；Wiki 页面云端生成后上传数据“立即销毁，不会保存”；问题已修复。补偿措施包括近期开源 ZCode、引入第三方评估、全体用户一次额外周额度重置。9月19日发布 3.14.0 版本，更新日志称“修复仓库百科异常上传的问题”。\n\n## 冲突与不确定 / Conflicts & Uncertainties\n\n| 议题 | 一方说法 | 另一方说法 | 冲突点 / 口径原因 |\n|---|---|---|---|\n| 上传内容范围 | 智谱：Repo Wiki 功能触发的仓库数据上传，“立即销毁”；oschina 早前报道口径接近“代码片段/索引” | ferstar 及复现者：全量基线快照，86.6% 为 `.git` 历史，含 LFS、reflog、全局配置、prompt | 官方口径窄、取证口径宽；“发给模型的上下文”与“快照直传 OSS”是两条链路、两套承诺 |\n| 开关有效性 | 官方：可在设置中控制 | issue #707 实测关闭 `repoSnapshotIndexingEnabled` 后上传痕迹仍在；Gavin 还原代码中上传链路不读该开关 | 开关文案只字未提“上传” |\n| 修复时间点 | 官方：9月18日傍晚称“已修复” | 用户陈骁 9月18日中午后台仍在生成快照并签发凭证 | 修复的“具体口径”无公开可复核版本 |\n| 数据销毁 | 官方：云端生成后立即销毁 | 开发者：私钥在云端、无删除渠道、无回执，用户无法验证 | 单方承诺 vs 不可验证 |\n| 数据处理主体/跨境 | 中文版 ZCode 协议：主体为北京智谱华章，个人信息存储境内、不跨境 | 承明科技：英文版协议与隐私政策指向新加坡子公司 JINGSHENG HENGXING，“服务自新加坡提供” | 中英文协议主体不一致；跨境与否智谱未回应，**无法核实**（承明科技单方主张） |\n| 上传是否成功过 | — | ferstar 的包失败 564 次仍在本地；但 Gavin 机器 `lastAcceptedManifestHash` 非空证明至少成功上传过一次；陈骁一个轻量子工作区“已写入成功标记” | 各人环境不同，不能以失败案例推断“从未上传” |\n\n## 时间线 / Timeline\n\n- **2026-06-15**：现行 ZCode 隐私政策更新，收集范围列“对话中提交的文本和文件”，未提整包工作区快照（smzdm，2026-09-19）。\n- **2026-08-28 至 09-14**：承明科技自测期间，超过 6 个工作区被上传云端，最大 391.94MB（观察者网/新浪财经，2026-09-20）。\n- **2026-09-11 00:39:35**：Gavin 机器上一次快照实际成功上传（smzdm 取证）。\n- **2026-09-18 凌晨**：ferstar 发布逆向分析文章；多名开发者当天独立复现。\n- **2026-09-18 中午**：陈骁机器仍在生成快照（682MB 包，失败 4 次）。\n- **2026-09-18 17:43 前后**：智谱在用户群致歉，称已修复、承诺开源、补偿周额度重置。\n- **2026-09-19**：ZCode 3.14.0 发布，更新日志“修复仓库百科异常上传的问题”；媒体与社区大量跟进。\n- **2026-09-19 晚**：承明科技公开致智谱函件，提出 11 项要求，限 10 月 10 日前书面答复。\n- **截至 2026-09-20**：智谱对承明科技函件未作进一步回应。\n\n## Evidence\n\n1. ferstar 逆向取证（2026-09-18 原文，经 cnblogs fox_charon 2026-09-19 复盘转述）：313MB `.enc` 文件、`failureCount: 564`、workspace 345,549,173 字节；快照清单 42,411 文件——`.git/lfs` 196.1MB（56.8%）、`.git/objects` 102.2MB（29.6%）、`.git/logs` 0.6MB、源码文档 46.2MB（13.4%）；单会话日志最多 62 次捕获事件；信封加密 AES-256-CTR + RSA-OAEP-SHA256，公钥由服务端下发、私钥不下发。\n2. smzdm 汇总（2026-09-19）：Gavin 在 Windows v3.11.2 上取证，755 文件 manifest 中 557 个在 `.git/` 下，`lastAcceptedManifestHash` 非空证明 2026-09-11 00:39:35 上传成功；陈骁两天新装用户，2026-09-18 中午仍生成 682MB 快照、失败 4 次，轻量子工作区已成功上传；知乎主问题一天浏览量 130 万+。\n3. 观察者网/新浪财经（2026-09-20）：承明科技函件——8月28日至9月14日超过 6 个工作区被上传，最大 391.94MB，另一项目上传失败 32 次；英文版平台缔约主体为新加坡 JINGSHENG HENGXING TECHNOLOGY PTE.LTD（智谱招股书显示为 2023 年 11 月注册的间接全资子公司），其隐私政策称“服务通常自新加坡提供、个人数据通常在新加坡处理”；中文版规定主体为北京智谱华章且承诺境内存储；提出 11 项要求、限 10 月 10 日答复；智谱暂未回应。\n4. 官方回应（9月18日用户群声明，经 smzdm 及观察者网转述）：“代码库索引”功能、上线初期默认开启、Wiki 云端生成后数据立即销毁、已修复；ZCode 3.14.0 更新日志（2026-09-19）“修复仓库百科异常上传的问题”。\n\n## 已确认 vs 未确认 / Confirmed vs Unconfirmed\n\n- **已确认**：登录状态下 ZCode 存在静默打包并直传阿里云 OSS 的工作区快照机制（多人独立复现）；上传内容含完整 `.git` 历史、LFS 缓存、reflog、全局配置、触发 prompt；加密私钥仅在云端；UI 开关实际不能关闭上传；智谱官方致歉、发布 3.14.0 修复版本、承诺开源与第三方审查。\n- **未确认 / 无法确认**：数据是否跨境传输或",
+  "final_summary_chars": 5654,
+  "summary_file": "/workspace/docs/acceptance/artifacts/round8/case_H1_summary.md",
+  "has_lead_trail": true,
+  "log_file": "/workspace/docs/acceptance/artifacts/round8/logs/task_acceptance_h1_20260920_090559_2026-09-20-17-05-59.json",
+  "metrics": {
+    "rate_limit_429_count": 0,
+    "timeout_count": 2,
+    "http_timeout_count": 2,
+    "wall_timeout_count": 0,
+    "llm_retry_count": 1,
+    "summary_passes": 1,
+    "key_switch_count": 0,
+    "model_route_hits": {
+      "glm-5.3-flash": {
+        "glm-5.3-flash": 5
+      }
+    },
+    "search_rounds": 4,
+    "search_attempts": 10,
+    "search_provider_hits": {
+      "serper": 4
+    },
+    "scrape_count": 6,
+    "follow_up_searches": 0,
+    "early_stop_triggered": true,
+    "early_stop_turn": 3,
+    "total_duration_ms": 293355,
+    "stage_durations": {
+      "pipeline.llm_client_init": 18,
+      "pipeline.orchestrator_init": 0,
+      "llm.request.main": 36476,
+      "answer_generator.llm_call.main": 36478,
+      "llm.request.final_summary": 61879,
+      "answer_generator.llm_call.final_summary": 61879,
+      "pipeline.main_agent_run": 293333,
+      "pipeline.total": 293355
+    },
+    "failback_activated": false,
+    "failback_model": "",
+    "effective_config": {
+      "mode": "verified",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 20,
+      "verification_min_search_rounds": 3,
+      "output_detail_level": "detailed",
+      "research_intensity": "deep"
+    }
+  },
+  "route_traces": [],
+  "lead_steps_count": 8,
+  "gate_evaluation": {
+    "gates": "hotspot_detailed",
+    "detail_level": "detailed",
+    "pass": true,
+    "failures": [],
+    "structure_valid": true,
+    "structure_issues": [
+      "insufficient_citations"
+    ],
+    "structure_metadata": {
+      "found_sections": [
+        "tldr",
+        "conclusion",
+        "conflicts",
+        "timeline",
+        "evidence",
+        "confirmed",
+        "references"
+      ],
+      "missing_required": [],
+      "section_lengths": {
+        "tldr": 264,
+        "conclusion": 1100,
+        "conflicts": 811,
+        "timeline": 546,
+        "evidence": 897,
+        "confirmed": 343,
+        "references": 1020
+      },
+      "citation_count": 0,
+      "has_conflicts_section": true,
+      "unsourced_number_warnings": [
+        "2026",
+        "42,411",
+        "196.1",
+        "56.8%",
+        "102.2",
+        "29.6%",
+        "0.6",
+        "86.6%"
+      ]
+    },
+    "summary_chars": 5654,
+    "has_confidence_marker": true,
+    "has_conflicts_heading": true,
+    "unsourced_number_warnings": [
+      "2026",
+      "42,411",
+      "196.1",
+      "56.8%",
+      "102.2",
+      "29.6%",
+      "0.6",
+      "86.6%"
+    ]
+  },
+  "error": null
+}

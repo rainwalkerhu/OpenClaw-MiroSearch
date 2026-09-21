@@ -1,0 +1,302 @@
+{
+  "H3": {
+    "case_id": "H3",
+    "query": "2026年9月胡塞武装称袭击沙特首都及延布能源设施：胡塞宣称与沙特官方说法有何分歧？目前能确认什么、不能确认什么？",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=12",
+      "++agent.research_intensity=deep",
+      "++agent.research_report_mode=true",
+      "+agent.main_agent.research_mode=verified",
+      "+output_formatter.detail_level=detailed",
+      "++agent.output_detail_level=detailed",
+      "+agent.main_agent.verification_min_search_rounds=3",
+      "+agent.main_agent.enable_lead_tracking=true",
+      "++agent.max_lead_follow_ups=2",
+      "++agent.max_scrape_per_task=8",
+      "++agent.deep_early_stop_on_agreement=true",
+      "++agent.parallel_tool_calls=true",
+      "++agent.deep_exit_on_early_stop=true",
+      "++agent.deep_post_early_stop_turns=1",
+      "++agent.max_final_answer_retries=1",
+      "++agent.oneshot_final_report=true",
+      "++agent.summary_keep_tool_result=2",
+      "++agent.summary_max_tokens_cap=4096",
+      "++llm.summary_max_tokens=4096"
+    ],
+    "env_patch": {
+      "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+      "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+      "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+      "SEARCH_PROVIDER_ORDER_STRICT": "0",
+      "SEARCH_RESULT_NUM": "20",
+      "SEARXNG_BASE_URL": ""
+    },
+    "effective_config": {
+      "mode": "verified",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 20,
+      "verification_min_search_rounds": 3,
+      "output_detail_level": "detailed",
+      "research_intensity": "deep"
+    },
+    "tracker_enabled_at_compose": true,
+    "tracker_max_follow_ups": 2,
+    "status": "completed",
+    "duration_seconds": 479.415329,
+    "final_boxed_answer": "9月19日胡塞对利雅得和延布的袭击与沙特拦截行动确凿发生，但胡塞宣称的“大规模命中成功”与沙特宣称的“仅1枚导弹、全部挫败、零损失”相互矛盾，除机场附近储油罐起火外，几乎所有战果细节目前均无法独立确认。",
+    "final_summary_excerpt": "\n============================== Final Answer ==============================\n## TL;DR / 结论（标明置信度）\n\n2026年9月19日（周六）拂晓，也门胡塞武装宣称对沙特首都利雅得的“敏感目标”和延布的沙特阿美（Aramco）设施发动了“大规模”导弹与无人机袭击并称“行动成功”；沙特主导多国联军则承认仅拦截了**一枚**射向利雅得的弹道导弹，并称对利雅得、比沙、塔伊夫、法拉桑和延布的其他袭击图谋“均被挫败”，无伤亡无损失。**双方在袭击规模、命中效果、延布是否受损上说法直接冲突，且多数关键战果声称目前无法独立核实**（置信度：高——事件发生本身有多方独立来源交叉证实；分歧细节的“不可确认”判断置信度亦为高，因路透/法新/美联社均明示无法核实）。\n\n## Conclusions / 详细结论\n\n1. **事件确凿发生**：这是自2026年7月沙特—胡塞冲突升级以来，利雅得**首次**拉响防空警报；沙特全境连夜通过手机推送“敌对空中威胁”紧急警报，周六上午解除 [1][2]。利雅得居民听到爆炸声、机场附近出现大火与浓烟，有AFP记者现场目击 [2]。\n2. **叙事框架对立**：胡塞将其定性为对沙特一周内约300次空袭也门（含萨那）的报复性打击，宣称“两次成功军事行动”；沙特将其定性为对“平民及民用基础设施”的袭击，并强调自身的拦截成功与零损失 [1][2]。\n3. **唯一经双方/多方印证的“硬事实”**：一枚射向利雅得的弹道导弹于拂晓被沙特皇家防空部队拦截摧毁（沙特联军发言人图尔基·马利基官方声明，新华社、法新、半岛电视台均报道）[1][3][4]。利雅得机场（哈立德国王国际机场）附近一处带阿美标志的储油罐起火，后被扑灭（AFP记者目击+视频核实）[2]。\n4. **背景升级态势属实**：7月初以来冲突为2022年4月停火以来最激烈；胡塞已控制曼德海峡咽喉佩里姆岛；联合国称新一轮战斗已致超过11.2万人流离失所、近3000人渡海逃往吉布提 [1][2]。也门境内同日在马里卜、塔伊夫、拉赫季等地激战继续 [1]。\n5. **信息战特征明显**：媒体对比分析（Newscord对比14家媒体）显示NBC等反复强调胡塞声明“未提供证据”，而法新以沙特拦截通报为既定事实框架 [2]——双方均在进行叙事管理，中间地带（实际命中数、损失程度）成为争夺焦点。\n\n## 冲突与不确定 / Conflicts & Uncertainties\n\n| 议题 | 胡塞说法（叶海亚·萨雷亚，Telegram声明） | 沙特官方说法（联军发言人图尔基·马利基，X平台） | 冲突点与口径原因 | 可核状态 |\n|---|---|---|---|---|\n| 袭击规模 | 使用“大量”弹道导弹、巡航导弹和无人机 | 仅承认拦截**1枚**射向利雅得的弹道导弹 | 胡塞夸大战果以示威慑；沙特淡化以维稳、护油价 | **无法核实**（单方宣称） |\n| 打击效果 | 两次行动“均取得成功”，目标区域起大火 | 所有其他袭击“图谋被挫败”；无伤亡无损失 | 直接矛盾；双方均有政治动机 | **无法核实** |\n| 延布阿美设施 | 直接命中并致起火 | 延布仅遭遇“未遂袭击” | 沙特未确认火灾；无独立画面确认延布现场 | **无法核实** |\n| 目标定性 | 打击军事/能源“敏感目标”（报复沙特空袭） | 袭击“平民及民用基础设施”（利雅得机场为民用） | 定性服务于各自的国际法叙事 | 部分可核（机场储油罐确有火情[2]，但归因不明） |\n| 机场附近火灾原因 | 暗示为其打击战果 | 未解释、未归因 | 可能是命中，也可能是拦截残骸坠落引燃 | **无法确认** |\n| 延布港导弹 | 未单独详述 | 沙特通讯社（SPA）另有“一枚射向延布港的弹道导弹被拦截摧毁”的发言人通报（检索摘要所见，日期字段显示异常，原文未核）[5] | 若属实则沙特实际确认了不止1枚导弹，与“仅1枚”叙事存在内部张力 | **待核实**（仅见摘要，未读全文） |\n\n## 时间线 / Timeline\n\n- **2022年4月**：也门停战协议达成，此后相对平静（背景）[1]。\n- **2026年7月初**：沙特—胡塞冲突新一轮升级开始，为停战以来最激烈 [1]。\n- **2026年7月—9月中旬**：胡塞对沙特多地（吉赞、海米斯穆谢特等）多次导弹/无人机袭击；沙特对也门持续空袭 [6]。\n- **2026年9月15—16日**：胡塞曾宣称袭击阿美设施与海米斯穆谢特空军基地 [6]；沙特联军9月16日通报拦截一架飞往麦加的胡塞无人机（新华社）[7]；美国国务院发布对沙特旅行警示 [2]。\n- **2026年9月19日（周六）拂晓前**：沙特全境连夜手机推送“敌对空中威胁”警报 [1][2]。\n- **2026年9月19日拂晓**：联军称拦截并摧毁1枚射向利雅得的弹道导弹；马利基称胡塞对比沙、塔伊夫、法拉桑、延布的袭击图谋亦被挫败 [1][3][4]。\n- **2026年9月19日清晨—上午**：利雅得居民听到爆炸声；机场附近阿美储油罐起火、黑烟冲天，AFP记者目击消防员扑救；机场航班短暂混乱 [2]。\n- **2026年9月19日（稍后）**：萨雷亚发表声明认领对利雅得与延布的两次“成功”袭击 [1][2]。\n- **2026年9月19日**：同日，也门政府军在马里卜al-Fuliahan地区称击毙12名胡塞武装人员；政府军称两日内13名士兵在塔伊兹、拉赫季阵亡 [1]。\n- **2026年9月20日**：中文与英文媒体集中报道；新华社、纽约邮报等确认“沙特证实拦截射向利雅得的导弹、无伤亡” [3][4][8]。\n\n## Evidence / 证据\n\n1. **沙特联军官方声明**：联军发言人图尔基·马利基少将于9月19日在X平台称，沙特空军“成功拦截并摧毁”拂晓射向利雅得的1枚弹道导弹，并称胡塞还试图袭击比沙、塔伊夫、法拉桑和延布 [1][3]。新华社利雅得9月19日电同日报道 [3][4]。\n2. **半岛电视台（2026-09-19）**：确认为利雅得7月升级以来首次警报；居民目击机场附近黑烟；萨雷亚声明细节；Sana'a Center研究员Yasmeen al-Eryani分析称“胡塞在掌控升级节奏与层级” [1]。\n3. **Newscord媒体对比（2026-09-20，汇总AFP/Reuters/NBC/BBC）**：AFP记者在利雅得目击并核实机场附近带阿美标志储油罐起火、黑烟视频；居民称“警报后窗户震动”；联合国数字：超过11.2万人流离失所、近3000人逃往吉布提；NBC明确指出胡塞声明“未提供证据” [2]。\n4. **沙特通讯社SPA检索摘要**：国防部发言人称“一枚射向延布港的弹道导弹被拦截并摧毁”（日期字段显示异常，未读全文，谨慎采信）[5]。\n5. **纽约邮报（2026-09-20）**：标题确认“沙特证实拦截射向利雅得的导弹，无伤亡无损失报告” [8]。\n6. **The Media Line / Addis Standard（检索摘要）**：胡塞认领利雅得与延布阿美设施袭击；明确注明“沙特未确认袭击或所报损失，说法无法独立核实” [6][9]。\n\n**关键数字溯源**：拦截导弹数=1枚（沙特联军声明，9月19日[1][3]）；空袭次数“一周约300次”（胡塞单方宣称，见财联社转述，9月20日，未独立核实）；流离失所11.2万人、渡海近3000人（联合国，经Newscord引述，9月20日[2]）；马里卜击毙12名胡塞（也门政府军单方宣称，9月19日[1]）；政府军两日阵亡13人（也门政府军单方宣称，9月19日[1]）。\n\n## 已确认 vs 未确认 / Confirmed vs Unconfirmed\n\n- **已确认**（多方独立来源或当事双方均承认）：\n  1. 9月19日拂晓有弹道导弹射向利雅得并被沙特防空拦截（沙特官方声明+多家媒体报道）[1][3][4]；\n  2. 胡塞公开认领对利雅得与延布的袭击 [1][2]；\n  3. 利雅得哈立德国王国际机场附近储油罐起火、爆炸声（AFP记者目击+视频核实）[2]；\n  4. 沙特官方通报“无伤亡无损失”；利雅得首次拉响警报、全境紧急推送 [1][2][8]；\n  5. 7月以来冲突升级、也门境内人道危机加剧（联合国数字）[1][2]。\n- **未确认 / 无法确认**：\n  1. 胡塞宣称的“大量”导弹/无人机规模——单方宣称，无证据 [2][9]；\n  2. 延布阿美设施是否被击中、是否起火及损失程度——沙特否认/未确认，媒体明示无法独立核实 [6][9]；\n  3. 机场火灾的直接原因（命中 vs 拦截残骸）——无官方归因 [2]；\n  4. 除1枚导弹外是否有其他导弹/无人机实际突防；\n  5. 任何一方的人员伤亡（双方均未报告经核实的伤亡）；\n  6. 延布石油出口是否受实际影响；\n  7. SPA关于延布港拦截通报的准确日期与细节（仅见摘要）[5]。\n\n## Gaps in Knowledge\n\n- 缺少延布与利雅得机场的**卫星图像**或第三方现场核查，是判定战果真伪的关键缺口。\n- 沙特官方对机场起火原因保持沉默，归因链条断裂。\n- 胡塞所称“约300次/周”沙特空袭次数无独立统计验证。\n- SPA延布港通报全文未读取，可能改变“沙特仅承认1枚导弹”的叙事，需原文核实。\n- 未获取沙特国防部/阿美公司关于延布生产与出口状况的",
+    "final_summary_chars": 6216,
+    "summary_file": "/workspace/docs/acceptance/artifacts/round8/case_H3_summary.md",
+    "has_lead_trail": true,
+    "log_file": "/workspace/docs/acceptance/artifacts/round8/logs/task_acceptance_h3_20260920_085800_2026-09-20-16-58-00.json",
+    "metrics": {
+      "rate_limit_429_count": 0,
+      "timeout_count": 3,
+      "http_timeout_count": 3,
+      "wall_timeout_count": 0,
+      "llm_retry_count": 2,
+      "summary_passes": 1,
+      "key_switch_count": 0,
+      "model_route_hits": {
+        "glm-5.3-flash": {
+          "glm-5.3-flash": 8
+        }
+      },
+      "search_rounds": 4,
+      "search_attempts": 8,
+      "search_provider_hits": {
+        "serper": 4
+      },
+      "scrape_count": 4,
+      "follow_up_searches": 0,
+      "early_stop_triggered": true,
+      "early_stop_turn": 6,
+      "total_duration_ms": 479411,
+      "stage_durations": {
+        "pipeline.llm_client_init": 67,
+        "pipeline.orchestrator_init": 0,
+        "llm.request.main": 118213,
+        "answer_generator.llm_call.main": 210311,
+        "llm.request.final_summary": 75412,
+        "answer_generator.llm_call.final_summary": 75412,
+        "pipeline.main_agent_run": 479339,
+        "pipeline.total": 479411
+      },
+      "failback_activated": false,
+      "failback_model": "",
+      "effective_config": {
+        "mode": "verified",
+        "search_profile": "parallel-trusted",
+        "search_result_num": 20,
+        "verification_min_search_rounds": 3,
+        "output_detail_level": "detailed",
+        "research_intensity": "deep"
+      }
+    },
+    "route_traces": [],
+    "lead_steps_count": 11,
+    "gate_evaluation": {
+      "gates": "hotspot_detailed",
+      "detail_level": "detailed",
+      "pass": true,
+      "failures": [],
+      "structure_valid": true,
+      "structure_issues": [],
+      "structure_metadata": {
+        "found_sections": [
+          "tldr",
+          "conclusion",
+          "conflicts",
+          "timeline",
+          "evidence",
+          "confirmed",
+          "references"
+        ],
+        "missing_required": [],
+        "section_lengths": {
+          "tldr": 269,
+          "conclusion": 645,
+          "conflicts": 683,
+          "timeline": 679,
+          "evidence": 823,
+          "confirmed": 542,
+          "references": 1952
+        },
+        "citation_count": 65,
+        "has_conflicts_section": true,
+        "unsourced_number_warnings": [
+          "68239",
+          "0",
+          "7750"
+        ]
+      },
+      "summary_chars": 6216,
+      "has_confidence_marker": true,
+      "has_conflicts_heading": true,
+      "unsourced_number_warnings": [
+        "68239",
+        "0",
+        "7750"
+      ]
+    },
+    "error": null
+  },
+  "H1": {
+    "case_id": "H1",
+    "query": "智谱 ZCode 被指静默上传代码仓库：上传了哪些内容？是否跨境？官方如何回应？各方说法有何冲突？",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=12",
+      "++agent.research_intensity=deep",
+      "++agent.research_report_mode=true",
+      "+agent.main_agent.research_mode=verified",
+      "+output_formatter.detail_level=detailed",
+      "++agent.output_detail_level=detailed",
+      "+agent.main_agent.verification_min_search_rounds=3",
+      "+agent.main_agent.enable_lead_tracking=true",
+      "++agent.max_lead_follow_ups=2",
+      "++agent.max_scrape_per_task=8",
+      "++agent.deep_early_stop_on_agreement=true",
+      "++agent.parallel_tool_calls=true",
+      "++agent.deep_exit_on_early_stop=true",
+      "++agent.deep_post_early_stop_turns=1",
+      "++agent.max_final_answer_retries=1",
+      "++agent.oneshot_final_report=true",
+      "++agent.summary_keep_tool_result=2",
+      "++agent.summary_max_tokens_cap=4096",
+      "++llm.summary_max_tokens=4096"
+    ],
+    "env_patch": {
+      "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+      "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+      "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+      "SEARCH_PROVIDER_ORDER_STRICT": "0",
+      "SEARCH_RESULT_NUM": "20",
+      "SEARXNG_BASE_URL": ""
+    },
+    "effective_config": {
+      "mode": "verified",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 20,
+      "verification_min_search_rounds": 3,
+      "output_detail_level": "detailed",
+      "research_intensity": "deep"
+    },
+    "tracker_enabled_at_compose": true,
+    "tracker_max_follow_ups": 2,
+    "status": "completed",
+    "duration_seconds": 293.358645,
+    "final_boxed_answer": "ZCode 被多名开发者独立证实会在登录状态下静默将整个工作区（含约 86.6% 的完整 Git 历史、LFS 缓存与全局配置）加密直传阿里云 OSS 且开关无效，智谱致歉称系默认开启的“代码库索引/Repo Wiki”功能所致并已修复、承诺开源，而“是否经新加坡子公司跨境处理数据”目前仅是承明科技单方质疑、智谱未回应、无法核实。",
+    "final_summary_excerpt": "\n============================== Final Answer ==============================\n## TL;DR / 结论（标明置信度）\n\n2026年9月18日，开发者 ferstar 发文揭露智谱旗下 AI 编程工具 ZCode 在用户登录状态下静默将整个工作区（含完整 Git 历史）加密打包上传至阿里云 OSS（置信度：高——多篇独立技术取证与多家媒体报道相互印证）。智谱当晚致歉，称问题源于默认开启的“代码库索引/Repo Wiki”功能，已修复并承诺开源。9月19—20日风波扩大：太原承明科技发函质疑，指出英文版协议显示数据处理主体为智谱注册于新加坡的子公司，质疑数据是否跨境存储（置信度：中——跨境问题目前仅为承明科技单方质疑，智谱未回应，无独立复核）。\n\n## Conclusions\n\n**上传了什么（技术侧，置信度高）**：ferstar 清理磁盘时发现 `~/.zcode/v2/checkpoints` 内一个 313MB 的 `.enc` 加密文件，状态元数据显示为某商业项目（排除 node_modules 后 345MB）的“全量基线快照”，已失败重试 564 次。逆向 Electron 客户端 `app.asar` 后还原上传链路：客户端向 `zcode.z.ai` 申请上传凭证，服务端下发 RSA 公钥与阿里云 OSS 表单签名；本地 tar.gz 打包后用 AES-256-CTR 加密、RSA-OAEP-SHA256 包裹密钥，直传 OSS，OSS 回调注册快照。信封加密的私钥只在 Z.ai 云端，用户连自己磁盘上的密文都解不开。一份 42,411 文件的快照清单显示：`.git/lfs` 196.1MB（56.8%）、`.git/objects` 102.2MB（29.6%）、`.git/logs`（reflog）0.6MB，`.git` 合计占 86.6%，源码与文档仅 13.4%。附加清单还包含全局配置（`mcp.json`、`settings.behavior.json`，常含服务令牌）及触发快照的 prompt 原文。UI 中的开关经代码比对均不控制本地打包上传；删除归档后约半小时即重新打包。\n\n**是否跨境（置信度低，单方质疑）**：上传目的地是阿里云 OSS（存储节点地域未见披露）；但承明科技指出 ZCode 网络请求指向 `zcode.z.ai` / `cdn-zcode.z.ai`，而 Z.AI 英文版平台的缔约主体与个人数据控制者为注册于新加坡的 JINGSHENG HENGXING TECHNOLOGY PTE.LTD，隐私政策载明“服务通常自新加坡提供、个人数据通常在新加坡处理”；中文版协议与隐私政策则写明主体为北京智谱华章，且承诺境内个人信息存储于境内、不跨境传输。承明科技要求智谱说明是否存在跨境传输或境外存储，智谱暂未回应。此问题截至现有证据**无法定论**。\n\n**官方回应**：9月18日下午，智谱在 ZCode 用户群致歉：问题源于“代码库索引”功能（支持会话检查点恢复、历史回退及 Repo Wiki），Repo Wiki 生成页面时可能触发仓库数据上传；该功能上线初期默认开启；Wiki 页面云端生成后上传数据“立即销毁，不会保存”；问题已修复。补偿措施包括近期开源 ZCode、引入第三方评估、全体用户一次额外周额度重置。9月19日发布 3.14.0 版本，更新日志称“修复仓库百科异常上传的问题”。\n\n## 冲突与不确定 / Conflicts & Uncertainties\n\n| 议题 | 一方说法 | 另一方说法 | 冲突点 / 口径原因 |\n|---|---|---|---|\n| 上传内容范围 | 智谱：Repo Wiki 功能触发的仓库数据上传，“立即销毁”；oschina 早前报道口径接近“代码片段/索引” | ferstar 及复现者：全量基线快照，86.6% 为 `.git` 历史，含 LFS、reflog、全局配置、prompt | 官方口径窄、取证口径宽；“发给模型的上下文”与“快照直传 OSS”是两条链路、两套承诺 |\n| 开关有效性 | 官方：可在设置中控制 | issue #707 实测关闭 `repoSnapshotIndexingEnabled` 后上传痕迹仍在；Gavin 还原代码中上传链路不读该开关 | 开关文案只字未提“上传” |\n| 修复时间点 | 官方：9月18日傍晚称“已修复” | 用户陈骁 9月18日中午后台仍在生成快照并签发凭证 | 修复的“具体口径”无公开可复核版本 |\n| 数据销毁 | 官方：云端生成后立即销毁 | 开发者：私钥在云端、无删除渠道、无回执，用户无法验证 | 单方承诺 vs 不可验证 |\n| 数据处理主体/跨境 | 中文版 ZCode 协议：主体为北京智谱华章，个人信息存储境内、不跨境 | 承明科技：英文版协议与隐私政策指向新加坡子公司 JINGSHENG HENGXING，“服务自新加坡提供” | 中英文协议主体不一致；跨境与否智谱未回应，**无法核实**（承明科技单方主张） |\n| 上传是否成功过 | — | ferstar 的包失败 564 次仍在本地；但 Gavin 机器 `lastAcceptedManifestHash` 非空证明至少成功上传过一次；陈骁一个轻量子工作区“已写入成功标记” | 各人环境不同，不能以失败案例推断“从未上传” |\n\n## 时间线 / Timeline\n\n- **2026-06-15**：现行 ZCode 隐私政策更新，收集范围列“对话中提交的文本和文件”，未提整包工作区快照（smzdm，2026-09-19）。\n- **2026-08-28 至 09-14**：承明科技自测期间，超过 6 个工作区被上传云端，最大 391.94MB（观察者网/新浪财经，2026-09-20）。\n- **2026-09-11 00:39:35**：Gavin 机器上一次快照实际成功上传（smzdm 取证）。\n- **2026-09-18 凌晨**：ferstar 发布逆向分析文章；多名开发者当天独立复现。\n- **2026-09-18 中午**：陈骁机器仍在生成快照（682MB 包，失败 4 次）。\n- **2026-09-18 17:43 前后**：智谱在用户群致歉，称已修复、承诺开源、补偿周额度重置。\n- **2026-09-19**：ZCode 3.14.0 发布，更新日志“修复仓库百科异常上传的问题”；媒体与社区大量跟进。\n- **2026-09-19 晚**：承明科技公开致智谱函件，提出 11 项要求，限 10 月 10 日前书面答复。\n- **截至 2026-09-20**：智谱对承明科技函件未作进一步回应。\n\n## Evidence\n\n1. ferstar 逆向取证（2026-09-18 原文，经 cnblogs fox_charon 2026-09-19 复盘转述）：313MB `.enc` 文件、`failureCount: 564`、workspace 345,549,173 字节；快照清单 42,411 文件——`.git/lfs` 196.1MB（56.8%）、`.git/objects` 102.2MB（29.6%）、`.git/logs` 0.6MB、源码文档 46.2MB（13.4%）；单会话日志最多 62 次捕获事件；信封加密 AES-256-CTR + RSA-OAEP-SHA256，公钥由服务端下发、私钥不下发。\n2. smzdm 汇总（2026-09-19）：Gavin 在 Windows v3.11.2 上取证，755 文件 manifest 中 557 个在 `.git/` 下，`lastAcceptedManifestHash` 非空证明 2026-09-11 00:39:35 上传成功；陈骁两天新装用户，2026-09-18 中午仍生成 682MB 快照、失败 4 次，轻量子工作区已成功上传；知乎主问题一天浏览量 130 万+。\n3. 观察者网/新浪财经（2026-09-20）：承明科技函件——8月28日至9月14日超过 6 个工作区被上传，最大 391.94MB，另一项目上传失败 32 次；英文版平台缔约主体为新加坡 JINGSHENG HENGXING TECHNOLOGY PTE.LTD（智谱招股书显示为 2023 年 11 月注册的间接全资子公司），其隐私政策称“服务通常自新加坡提供、个人数据通常在新加坡处理”；中文版规定主体为北京智谱华章且承诺境内存储；提出 11 项要求、限 10 月 10 日答复；智谱暂未回应。\n4. 官方回应（9月18日用户群声明，经 smzdm 及观察者网转述）：“代码库索引”功能、上线初期默认开启、Wiki 云端生成后数据立即销毁、已修复；ZCode 3.14.0 更新日志（2026-09-19）“修复仓库百科异常上传的问题”。\n\n## 已确认 vs 未确认 / Confirmed vs Unconfirmed\n\n- **已确认**：登录状态下 ZCode 存在静默打包并直传阿里云 OSS 的工作区快照机制（多人独立复现）；上传内容含完整 `.git` 历史、LFS 缓存、reflog、全局配置、触发 prompt；加密私钥仅在云端；UI 开关实际不能关闭上传；智谱官方致歉、发布 3.14.0 修复版本、承诺开源与第三方审查。\n- **未确认 / 无法确认**：数据是否跨境传输或",
+    "final_summary_chars": 5654,
+    "summary_file": "/workspace/docs/acceptance/artifacts/round8/case_H1_summary.md",
+    "has_lead_trail": true,
+    "log_file": "/workspace/docs/acceptance/artifacts/round8/logs/task_acceptance_h1_20260920_090559_2026-09-20-17-05-59.json",
+    "metrics": {
+      "rate_limit_429_count": 0,
+      "timeout_count": 2,
+      "http_timeout_count": 2,
+      "wall_timeout_count": 0,
+      "llm_retry_count": 1,
+      "summary_passes": 1,
+      "key_switch_count": 0,
+      "model_route_hits": {
+        "glm-5.3-flash": {
+          "glm-5.3-flash": 5
+        }
+      },
+      "search_rounds": 4,
+      "search_attempts": 10,
+      "search_provider_hits": {
+        "serper": 4
+      },
+      "scrape_count": 6,
+      "follow_up_searches": 0,
+      "early_stop_triggered": true,
+      "early_stop_turn": 3,
+      "total_duration_ms": 293355,
+      "stage_durations": {
+        "pipeline.llm_client_init": 18,
+        "pipeline.orchestrator_init": 0,
+        "llm.request.main": 36476,
+        "answer_generator.llm_call.main": 36478,
+        "llm.request.final_summary": 61879,
+        "answer_generator.llm_call.final_summary": 61879,
+        "pipeline.main_agent_run": 293333,
+        "pipeline.total": 293355
+      },
+      "failback_activated": false,
+      "failback_model": "",
+      "effective_config": {
+        "mode": "verified",
+        "search_profile": "parallel-trusted",
+        "search_result_num": 20,
+        "verification_min_search_rounds": 3,
+        "output_detail_level": "detailed",
+        "research_intensity": "deep"
+      }
+    },
+    "route_traces": [],
+    "lead_steps_count": 8,
+    "gate_evaluation": {
+      "gates": "hotspot_detailed",
+      "detail_level": "detailed",
+      "pass": true,
+      "failures": [],
+      "structure_valid": true,
+      "structure_issues": [
+        "insufficient_citations"
+      ],
+      "structure_metadata": {
+        "found_sections": [
+          "tldr",
+          "conclusion",
+          "conflicts",
+          "timeline",
+          "evidence",
+          "confirmed",
+          "references"
+        ],
+        "missing_required": [],
+        "section_lengths": {
+          "tldr": 264,
+          "conclusion": 1100,
+          "conflicts": 811,
+          "timeline": 546,
+          "evidence": 897,
+          "confirmed": 343,
+          "references": 1020
+        },
+        "citation_count": 0,
+        "has_conflicts_section": true,
+        "unsourced_number_warnings": [
+          "2026",
+          "42,411",
+          "196.1",
+          "56.8%",
+          "102.2",
+          "29.6%",
+          "0.6",
+          "86.6%"
+        ]
+      },
+      "summary_chars": 5654,
+      "has_confidence_marker": true,
+      "has_conflicts_heading": true,
+      "unsourced_number_warnings": [
+        "2026",
+        "42,411",
+        "196.1",
+        "56.8%",
+        "102.2",
+        "29.6%",
+        "0.6",
+        "86.6%"
+      ]
+    },
+    "error": null
+  }
+}

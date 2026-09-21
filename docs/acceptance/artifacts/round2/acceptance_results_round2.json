@@ -1,0 +1,51 @@
+{
+  "A": {
+    "case_id": "A",
+    "query": "What is the capital of France?",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=5",
+      "+agent.main_agent.research_intensity=light",
+      "+output_formatter.detail_level=compact"
+    ],
+    "status": "completed",
+    "final_summary": "\n============================== Final Answer ==============================\n\\boxed{Paris}\n\n-------------------- Extracted Result --------------------\nParis\n\n-------------------- Token Usage --------------------\nTotal Input Tokens: 8070\nTotal Cache Input Tokens: 0\nTotal Output Tokens: 43\n-----------------------------------------------------\nPricing is disabled - no cost information available\n-----------------------------------------------------",
+    "metrics": {},
+    "log_file": "../../logs/debug/task_acceptance_a_2026-09-20-10-53-34.json"
+  },
+  "B": {
+    "case_id": "B",
+    "query": "What were the global CO2 emissions in 2023?",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=10",
+      "+agent.main_agent.research_intensity=deep",
+      "+agent.main_agent.research_mode=verified",
+      "+output_formatter.detail_level=detailed",
+      "+agent.main_agent.verification_min_search_rounds=3"
+    ],
+    "status": "completed",
+    "final_summary": "\n============================== Final Answer ==============================\n## TL;DR\n\nThe conversation established, via the IEA's \"CO2 Emissions in 2023\" report, that global energy-related CO2 emissions reached a record high of 37.4 billion tonnes in 2023.\n\nThe conversation established, via the IEA's \"CO2 Emissions in 2023\" report, that global energy-related CO2 emissions reached a record high of 37.4 billion tonnes in 2023.\n\n\\boxed{37.4\\ \\text{Gt}}\n## Conclusion\n\nThe conversation established, via the IEA's \"CO2 Emissions in 2023\" report, that global energy-related CO2 emissions reached a record high of 37.4 billion tonnes in 2023.\n\n\n\n-------------------- Extracted Result --------------------\n37.4\\ \\text{Gt}\n\n-------------------- Token Usage --------------------\nTotal Input Tokens: 46541\nTotal Cache Input Tokens: 0\nTotal Output Tokens: 1106\n-----------------------------------------------------\nPricing is disabled - no cost information available\n-----------------------------------------------------",
+    "metrics": {},
+    "log_file": "../../logs/debug/task_acceptance_b_2026-09-20-10-53-42.json"
+  },
+  "C": {
+    "case_id": "C",
+    "query": "How did the discovery of DNA structure lead to CRISPR technology?",
+    "overrides": [
+      "agent=mirothinker_v1.5_keep5_max200",
+      "llm=glm-flash",
+      "agent.main_agent.max_turns=10",
+      "+agent.main_agent.research_intensity=deep",
+      "+agent.main_agent.enable_lead_tracking=true",
+      "+agent.main_agent.max_lead_follow_ups=2",
+      "+output_formatter.detail_level=balanced"
+    ],
+    "status": "completed",
+    "final_summary": "\n============================== Final Answer ==============================\n## TL;DR\n\n\\boxed{\\text{The 1953 discovery of the DNA double helix revealed that genetic information is stored in base sequences recognized by complementary base pairing (A-T, G-C). This insight enabled the tools of molecular biology — restriction enzymes, recombinant DNA, Sanger sequencing, PCR, and genome sequencing — which allowed scientists to discover CRISPR repeats in bacterial genomes (1987) and identify them as a bacterial adaptive immune system (2005-2007). CRISPR editing is itself programmable because of base pairing: a guide RNA targets a chosen DNA sequence by Watson-Crick complementarity, directing Cas9 to cut there (Doudna and Charpentier, 2012; Nobel Prize 2020)}}\n\n\\boxed{\\text{The 1953 discovery of the DNA double helix revealed that genetic information is stored in base sequences recognized by complementary base pairing (A-T, G-C). This insight enabled the tools of molecular biology — restriction enzymes, recombinant DNA, Sanger sequencing, PCR, and genome sequencing — which allowed scientists to discover CRISPR repeats in bacterial genomes (1987) and identify them as a bacterial adaptive immune system (2005-2007). CRISPR editing is itself programmable because of base pairing: a guide RNA targets a chosen DNA sequence by Watson-Crick complementarity, directing Cas9 to cut there (Doudna and Charpentier, 2012; Nobel Prize 2020)}}\n## Conclusion\n\n\\boxed{\\text{The 1953 discovery of the DNA double helix revealed that genetic information is stored in base sequences recognized by complementary base pairing (A-T, G-C). This insight enabled the tools of molecular biology — restriction enzymes, recombinant DNA, Sanger sequencing, PCR, and genome sequencing — which allowed scientists to discover CRISPR repeats in bacterial genomes (1987) and identify them as a bacterial adaptive immune system (2005-2007). CRISPR editing is itself programmable be\n\n\n\n-------------------- Extracted Result --------------------\n\\text{The 1953 discovery of the DNA double helix revealed that genetic information is stored in base sequences recognized by complementary base pairing (A-T, G-C). This insight enabled the tools of molecular biology — restriction enzymes, recombinant DNA, Sanger sequencing, PCR, and genome sequencing — which allowed scientists to discover CRISPR repeats in bacterial genomes (1987) and identify them as a bacterial adaptive immune system (2005-2007). CRISPR editing is itself programmable because of base pairing: a guide RNA targets a chosen DNA sequence by Watson-Crick complementarity, directing Cas9 to cut there (Doudna and Charpentier, 2012; Nobel Prize 2020)}\n\n-------------------- Token Usage --------------------\nTotal Input Tokens: 35224\nTotal Cache Input Tokens: 0\nTotal Output Tokens: 4822\n-----------------------------------------------------\nPricing is disabled - no cost information available\n-----------------------------------------------------",
+    "metrics": {},
+    "log_file": "../../logs/debug/task_acceptance_c_2026-09-20-10-54-56.json"
+  }
+}

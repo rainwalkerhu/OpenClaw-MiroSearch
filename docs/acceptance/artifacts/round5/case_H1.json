@@ -1,0 +1,137 @@
+{
+  "case_id": "H1",
+  "query": "智谱 ZCode 被指静默上传代码仓库：上传了哪些内容？是否跨境？官方如何回应？各方说法有何冲突？",
+  "overrides": [
+    "agent=mirothinker_v1.5_keep5_max200",
+    "llm=glm-flash",
+    "agent.main_agent.max_turns=12",
+    "++agent.research_intensity=deep",
+    "++agent.research_report_mode=true",
+    "+agent.main_agent.research_mode=verified",
+    "+output_formatter.detail_level=detailed",
+    "++agent.output_detail_level=detailed",
+    "+agent.main_agent.verification_min_search_rounds=3",
+    "+agent.main_agent.enable_lead_tracking=true"
+  ],
+  "env_patch": {
+    "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+    "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_ORDER_STRICT": "0",
+    "SEARCH_RESULT_NUM": "20",
+    "SEARXNG_BASE_URL": ""
+  },
+  "effective_config": {
+    "mode": "verified",
+    "search_profile": "parallel-trusted",
+    "search_result_num": 20,
+    "verification_min_search_rounds": 3,
+    "output_detail_level": "detailed",
+    "research_intensity": "deep"
+  },
+  "tracker_enabled_at_compose": true,
+  "tracker_max_follow_ups": 3,
+  "status": "completed",
+  "duration_seconds": 446.420246,
+  "final_boxed_answer": "ZCode在登录时静默打包全工作区快照（约87%为.git历史、LFS、reflogs及全局配置）加密直传阿里云OSS，官方称仅为Wiki生成“可能”上传且即用即毁、已修复并将开源审查，但博主逆向证明3.12.3版触发无条件、开关无效、“即毁”不可验证且与云端检查点恢复矛盾，跨境与否因OSS区域未明而无法确认",
+  "final_summary_excerpt": "\n============================== Final Answer ==============================\n\n## Conclusion\n\n\\boxed{ZCode在登录时静默打包全工作区快照（约87%为.git历史、LFS、reflogs及全局配置）加密直传阿里云OSS，官方称仅为Wiki生成“可能”上传且即用即毁、已修复并将开源审查，但博主逆向证明3.12.3版触发无条件、开关无效、“即毁”不可验证且与云端检查点恢复矛盾，跨境与否因OSS区域未明而无法确认}\n\n# 智谱 ZCode 静默上传代码仓库事件：深度研究报告\n\n## TL;DR / 结论（标明置信度）\n\n智谱（Z.ai）官方 AI 编程桌面应用 ZCode 被开发者 ferstar 逆向分析证实：在用户登录状态下，客户端会静默打包整个工作区——包括完整的 `.git` 历史、Git LFS 资产缓存、reflog 以及全局应用配置——用服务器下发的 RSA 公钥加密后，直接上传至阿里云 OSS（置信度：高，有本地抓包与文件系统证据链支撑，发布于 2026-09 博客并经社区广泛传播）。\n\n**上传了哪些内容**：完整工作区快照，其中约 87% 为 `.git` 目录（包含对象、LFS、reflogs），另有 LFS 资产缓存和全局配置。博主用一个 538 个文件的公开仓库做实验，快照被服务端成功接受（置信度：高，博主本地实验可复现）。\n\n**是否跨境**：证据指向数据上传至阿里云 OSS。博主文章英译版提到海外用户对应的 OSS 区域问题，但本次研究中沙箱创建失败（两次 401 授权错误）、LLM 摘要工具亦不可用，**无法从已获取文本中确证 OSS 具体区域（region）及是否存在跨境传输**。官方声明中未提及存储位置。此点标记为“未确认/信息缺口”（置信度：低）。\n\n**官方如何回应**：Z.ai 于 2026-09-18 17:44 在用户社区发布声明，要点为：(1) 问题源于“代码库索引”功能，用于本地索引、会话检查点恢复与 Repo Wiki；(2) 云端生成 Wiki 页面时“可能”触发仓库数据上传；(3) Wiki 生成后上传数据立即销毁、不存储；(4) 功能在早期上线期间默认开启，部分用户受影响，问题“已修复”；(5) ZCode 将开源并接受第三方审查，全体用户获得一次额外的每周额度重置（置信度：高，官方声明经 IT 之家等媒体报道，博主逐条转述核对）。\n\n**各方冲突核心**：官方称仅 Wiki 生成时“可能”上传且即用即毁；博主逆向显示 3.12.3 版本存在随登录常驻的上传 sidecar，`captureBeforePrompt`（每次提问前）与 `repo-wiki-update` 无条件触发上传，且关闭“优化体验”与“仓库快照索引”开关后仍会打包并尝试直传 OSS；“立即销毁”无法从外部验证，且与“会话检查点云端恢复”功能在逻辑上矛盾（置信度：高，冲突双方原文均已获取）。\n\n---\n\n## 冲突与不确定 / Conflicts & Uncertainties\n\n**1. 上传范围之争（官方 vs 逆向证据）——直接冲突**\n- 官方口径：仅“云端生成 Wiki 页面时可能触发上传仓库数据”，上传目的限于 Repo Wiki 生成。\n- 博主审计口径（3.12.3 受影响版本）：是全工作区快照，约 87% 体积为 `.git`；且不止 Wiki 一个触发点——`captureBeforePrompt` 在**每次用户提问之前**都会触发上传，`repo-wiki-update` 无条件触发。两者在范围与频率上严重不一致。\n- 不确定项：官方未公布上传的确切字段/文件清单，博主亦只能基于打包逻辑与流量观察推断，双方均无第三方审计。\n\n**2. 用户可控性之争（开关是否有效）——直接冲突**\n- 官方声明：未提及任何停止上传的开关（对该维度沉默）。\n- 博主证据：关闭“优化体验”和“仓库快照索引”后，客户端**仍会打包并尝试直传 OSS**，即开关形同虚设。\n- 补充事实：官方承认功能在早期上线期间**默认开启**，即默认状态即为上传状态，用户知情同意存疑。\n\n**3. “立即销毁、不存储”的可验证性——单方宣称，无法核实**\n- 官方宣称 Wiki 生成后数据立即销毁、不存储。\n- 博主反驳：(a) 云端行为外部无法验证；(b) 逻辑上与官方宣称的“会话检查点（checkpoint）恢复”功能矛盾——若数据即毁，检查点恢复从云端何来？\n- 博主实验：538 文件公开仓库的快照被服务端成功接受，服务端接受行为本身不证明“即毁”。\n- 3.14.0 版本审计显示云端 `upload-credential` 接口已下线（返回 404），但这**不能证明**历史上已上传的存量云端快照已被物理删除——博主明确指出此点外部不可验证。\n\n**4. 触发机制描述差异**\n- 官方用“可能（may）”描述上传触发；逆向证据表明在 3.12.3 中触发是**无条件的、随登录常驻**的。“可能”与“无条件”之间是显著口径差。\n\n**5. 是否跨境——无法核实**\n- 已确认数据上传目标是阿里云 OSS；英译版博客提及海外用户的 OSS 区域问题，但本次检索中该部分正文被截断，且沙箱（两次 401 失败）与 LLM 摘要工具（`SUMMARY_LLM_BASE_URL` 未配置报错）均不可用，未能补全区域细节。\n- 官方声明对存储地理位置只字未提。\n- 结论：**跨境与否暂无法下结论**，列为最高优先级信息缺口。补证方案：抓取博客完整 78,041 字符正文中 OSS region/endpoint 字段；查 ZCode 官方文档对海外版存储区域的说明。\n\n**6. 修复完整性的分歧**\n- 官方：“问题已修复”。\n- 博主对 3.14.0 的审计证实上传管线代码已被物理移除、仅保留本地检查点、云端凭证接口返回 404——即**客户端层面的修复属实**；但存量云端数据的删除与否、企业合规责任未决。\n\n---\n\n## 时间线 / Timeline\n\n| 日期 | 事件 |\n|---|---|\n| 2026-09 上旬（约） | 博主 ferstar 在清理磁盘时发现 `~/.zcode` 目录占用超过 700MB，随后间歇性展开逆向调查 |\n| 2026-09 中旬 | 博主完成证据链：确认 3.12.3 版本在登录状态下静默打包上传全工作区至阿里云 OSS；发布博客《Inside ZCode: Silently Uploading Your Entire Git History to the Cloud》 |\n| 2026-09-18 17:44 | Z.ai 在用户社区发布官方声明；当晚 IT 之家等科技媒体报道，社区关注扩大 |\n| 2026-09-19 | 博文更新，逐条比对官方声明与逆向证据；ZCode 3.14.0 发布，博主复审计确认上传管线被移除、`upload-credential` 接口 404 |\n| 2026-09-20（今日） | 事件仍在发酵；官方承诺的开源与第三方审查尚未落地 |\n\n---\n\n## Evidence（证据含来源与日期）\n\n1. **本地磁盘证据**：`~/.zcode` 目录超过 700MB（来源：ferstar 博客，2026-09）。\n2. **加密机制**：RSA 公钥由服务器动态下发，私钥仅存云端；用户磁盘上的数百 MB 密文用户自己无法解密，ZCode 客户端自身也无法解密（来源：ferstar 博客）。\n3. **上传目标**：阿里云 OSS 直传（来源：ferstar 博客；官方声明间接承认上传发生）。\n4. **内容构成**：全工作区快照，约 87% 为 `.git`（对象、LFS、reflogs），另含 LFS 缓存与全局配置（来源：ferstar 博客审计）。\n5. **触发点**：`captureBeforePrompt`（每次提问前）、`repo-wiki-update`（无条件）；上传 sidecar 随登录常驻（来源：ferstar 对 3.12.3 的逆向）。\n6. **开关无效实验**：关闭“优化体验”“仓库快照索引”后仍打包并尝试直传（来源：ferstar 博客）。\n7. **服务端接受实验**：538 文件公开仓库快照被服务端成功接受（来源：ferstar 博客）。\n8. **官方声明五要点**（2026-09-18 17:44，用户社区；IT 之家当晚报道，ferstar 博客 09-19 转述）：代码库索引用途；“可能”上传；即用即毁；早期默认开启、部分用户受影响、已修复；将开源接受第三方审查 + 补偿一次每周额度重置。\n9. **3.14.0 复审计**：上传管线代码物理移除；仅保留本地检查点；云端 `upload-credential` 返回 404；上传 sidecar 拆除（来源：ferstar 博客，2026-09-19）。\n10. **社区传播**：Hacker News 与 Reddit 均有讨论（本轮检索已定位，具体评论内容未在留存结果中完整保留，标注为弱证据）。\n\n---\n\n## 关键数字表\n\n| 数字 | 含义 | 来源 |\n|---|---|---|\n| 700MB+ | `~/.zcode` 本地占用 | ferstar 博客 |\n| ~87% | 快照中 `.git` 所占体积比例 | ferstar 博客审计 |\n| 538 |",
+  "final_summary_chars": 6229,
+  "summary_file": "/workspace/docs/acceptance/artifacts/round5/case_H1_summary.md",
+  "has_lead_trail": true,
+  "log_file": "/workspace/docs/acceptance/artifacts/round5/logs/task_acceptance_h1_20260920_063756_2026-09-20-14-37-56.json",
+  "metrics": {
+    "rate_limit_429_count": 0,
+    "timeout_count": 0,
+    "key_switch_count": 0,
+    "model_route_hits": {
+      "glm-5.3-flash": {
+        "glm-5.3-flash": 15
+      }
+    },
+    "search_rounds": 5,
+    "search_attempts": 18,
+    "search_provider_hits": {
+      "serper": 5
+    },
+    "scrape_count": 11,
+    "follow_up_searches": 0,
+    "total_duration_ms": 446415,
+    "stage_durations": {
+      "pipeline.llm_client_init": 17,
+      "pipeline.orchestrator_init": 0,
+      "llm.request.main": 134467,
+      "answer_generator.llm_call.main": 134478,
+      "llm.request.final_summary": 230944,
+      "answer_generator.llm_call.final_summary": 230947,
+      "pipeline.main_agent_run": 446392,
+      "pipeline.total": 446415
+    },
+    "failback_activated": false,
+    "failback_model": "",
+    "effective_config": {
+      "mode": "verified",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 20,
+      "verification_min_search_rounds": 3,
+      "output_detail_level": "detailed",
+      "research_intensity": "deep"
+    }
+  },
+  "route_traces": [],
+  "lead_steps_count": 15,
+  "gate_evaluation": {
+    "gates": "hotspot_detailed",
+    "detail_level": "detailed",
+    "pass": true,
+    "failures": [],
+    "structure_valid": true,
+    "structure_issues": [
+      "insufficient_citations"
+    ],
+    "structure_metadata": {
+      "found_sections": [
+        "tldr",
+        "conclusion",
+        "conflicts",
+        "timeline",
+        "evidence",
+        "confirmed",
+        "references"
+      ],
+      "missing_required": [],
+      "section_lengths": {
+        "tldr": 973,
+        "conclusion": 163,
+        "conflicts": 1262,
+        "timeline": 455,
+        "evidence": 819,
+        "confirmed": 490,
+        "references": 961
+      },
+      "citation_count": 0,
+      "has_conflicts_section": true,
+      "unsourced_number_warnings": [
+        "9",
+        "538",
+        "3.12",
+        "141587",
+        "0",
+        "12612",
+        "1"
+      ]
+    },
+    "summary_chars": 6229,
+    "has_confidence_marker": true,
+    "has_conflicts_heading": true,
+    "unsourced_number_warnings": [
+      "9",
+      "538",
+      "3.12",
+      "141587",
+      "0",
+      "12612",
+      "1"
+    ]
+  },
+  "error": null
+}
