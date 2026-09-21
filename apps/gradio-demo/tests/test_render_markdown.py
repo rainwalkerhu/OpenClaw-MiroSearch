@@ -722,3 +722,10 @@ def test_decorate_folds_evidence_and_deep():
     assert out.count('<details class="report-fold">') == 2
     assert "证据与来源" in out
     assert "深入了解" in out
+
+
+def test_normalize_output_detail_level_accepts_cn_labels():
+    demo_main = _load_demo_main()
+    assert demo_main._normalize_output_detail_level("精简") == "compact"
+    assert demo_main._normalize_output_detail_level("适中") == "balanced"
+    assert demo_main._normalize_output_detail_level("详细") == "detailed"

@@ -879,7 +879,26 @@ def _normalize_output_detail_level(level: Optional[str]) -> str:
         resolved_default = "detailed"
     if level is None:
         return resolved_default
-    normalized_level = str(level).strip().lower()
+    raw = str(level).strip()
+    alias = {
+        "compact": "compact",
+        "balanced": "balanced",
+        "detailed": "detailed",
+        "精简": "compact",
+        "适中": "balanced",
+        "详细": "detailed",
+        "详细（默认）": "detailed",
+    }
+    for key, label in (OUTPUT_DETAIL_LEVEL_LABELS or {}).items():
+        alias[str(label).strip()] = key
+        alias[str(label).strip().lower()] = key
+    # i18n dropdown may pass localized labels too
+    for lang_map in (I18N or {}).values():
+        labels = (lang_map or {}).get("output_detail_labels") or {}
+        for key, label in labels.items():
+            alias[str(label).strip()] = key
+            alias[str(label).strip().lower()] = key
+    normalized_level = alias.get(raw) or alias.get(raw.lower())
     if normalized_level in OUTPUT_DETAIL_LEVEL_CHOICES:
         return normalized_level
     logger.warning("未知输出篇幅档位 %s，回退到 %s", level, resolved_default)
@@ -2775,10 +2794,11 @@ def _decorate_report_for_web(markdown_text: str) -> str:
         conf_m = re.search(r"<!--\s*confidence:(high|mid|low)\s*-->", body)
         level = conf_m.group(1) if conf_m else "mid"
         body = re.sub(r"<!--\s*confidence:(?:high|mid|low)\s*-->\s*", "", body)
-        label_m = re.search(r"\*\*置信度：([高中低])\*\*", body)
+        label_m = re.search(r"\*\*?置信度：([高中低])\*\*?", body)
         if label_m:
             label = f"置信度：{label_m.group(1)}"
-            body = re.sub(r"\*\*置信度：[高中低]\*\*\s*", "", body).strip()
+            body = re.sub(r"\*\*?置信度：[高中低]\*\*?\s*", "", body).strip()
+            body = re.sub(r"(?m)^\s*置信度：[高中低]\s*$", "", body).strip()
         else:
             label = {"high": "置信度：高", "mid": "置信度：中", "low": "置信度：低"}.get(
                 level, "置信度：中"
