@@ -2826,9 +2826,11 @@ def _decorate_report_for_web(markdown_text: str, detail_level: Optional[str] = N
         answer_html = html.escape(answer, quote=False).replace("\n", "<br>")
         return (
             f'<div class="report-glance">'
-            f'<div class="report-glance-kicker">结论</div>'
-            f'<div class="report-glance-head">{conf}</div>'
-            f'<div class="report-glance-body">{answer_html}</div>'
+            f'<div class="report-glance-meta">'
+            f'<span class="report-glance-kicker">结论</span>'
+            f"{conf}"
+            f"</div>"
+            f'<p class="report-glance-body">{answer_html}</p>'
             f"</div>\n\n"
         )
 
@@ -4920,38 +4922,38 @@ def build_demo():
     custom_css = """
     /* ========== MiroThinker - Tech / Sci-Fi Dark ========== */
     
-    /* Base tokens */
-    .gradio-container {
-        --app-bg: #0b1220;
-        --app-bg-elevated: #0f172a;
-        --panel-bg: rgba(15, 23, 42, 0.72);
-        --panel-bg-solid: #111827;
-        --panel-border: rgba(34, 211, 238, 0.14);
-        --panel-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-        --glass-bg: rgba(15, 23, 42, 0.55);
-        --glass-border: rgba(148, 163, 184, 0.16);
+    /* Base tokens — also on :root so html/body wash can resolve vars */
+    :root, .gradio-container {
+        --app-bg: #1a2332;
+        --app-bg-elevated: #1e293b;
+        --panel-bg: rgba(30, 41, 59, 0.88);
+        --panel-bg-solid: #243044;
+        --panel-border: rgba(100, 180, 200, 0.18);
+        --panel-shadow: 0 8px 28px rgba(15, 23, 42, 0.28);
+        --glass-bg: rgba(30, 41, 59, 0.72);
+        --glass-border: rgba(148, 163, 184, 0.22);
         --ink-strong: #e2e8f0;
         --ink-body: #cbd5e1;
         --ink-soft: #94a3b8;
-        --accent: #22d3ee;
-        --accent-strong: #06b6d4;
-        --accent-soft: rgba(34, 211, 238, 0.12);
+        --accent: #38bdf8;
+        --accent-strong: #0ea5e9;
+        --accent-soft: rgba(56, 189, 248, 0.12);
         --accent-green: #34d399;
         --accent-emerald: #34d399;
-        --btn-gray: rgba(30, 41, 59, 0.9);
+        --btn-gray: rgba(36, 48, 68, 0.92);
         --btn-gray-hover: rgba(51, 65, 85, 0.95);
         --icon-muted: #94a3b8;
-        --icon-accent: #22d3ee;
-        --focus-ring: 0 0 0 2px rgba(34, 211, 238, 0.35);
+        --icon-accent: #38bdf8;
+        --focus-ring: 0 0 0 2px rgba(56, 189, 248, 0.32);
         max-width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
         font-family: __LOCAL_FONT_FAMILY_STACK__ !important;
         background:
-            radial-gradient(1200px 600px at 50% -10%, rgba(34, 211, 238, 0.08), transparent 55%),
-            radial-gradient(900px 500px at 90% 10%, rgba(52, 211, 153, 0.06), transparent 50%),
+            radial-gradient(1200px 600px at 50% -10%, rgba(56, 189, 248, 0.07), transparent 55%),
+            radial-gradient(900px 500px at 90% 10%, rgba(52, 211, 153, 0.05), transparent 50%),
             var(--app-bg) !important;
-        color: var(--ink-strong);
+        color: var(--ink-body);
         min-height: 100vh;
         position: relative;
     }
@@ -4960,9 +4962,22 @@ def build_demo():
         display: none;
     }
 
-    body, .gradio-container, .main {
-        background: transparent !important;
-        color: var(--ink-strong) !important;
+    /* Force full-page soft dark wash — never transparent (avoids white canvas) */
+    html, body {
+        background: #1a2332 !important;
+        color: #cbd5e1 !important;
+    }
+    html, body, .gradio-container, .main, .wrap, .app,
+    #layout-shell, .hero-section-parent, .hero-wrap,
+    #main-content-column, #top-utility-bar {
+        background: var(--app-bg, #1a2332) !important;
+        color: var(--ink-body, #cbd5e1) !important;
+    }
+    .gradio-container {
+        background:
+            radial-gradient(1200px 600px at 50% -10%, rgba(56, 189, 248, 0.07), transparent 55%),
+            radial-gradient(900px 500px at 90% 10%, rgba(52, 211, 153, 0.05), transparent 50%),
+            var(--app-bg) !important;
     }
 
     /* 强力清除 Gradio 默认包装盒的丑陋背景与边框 */
@@ -5008,33 +5023,34 @@ def build_demo():
 
     #input-section #question-input textarea,
     #input-section textarea {
-        background: var(--glass-bg) !important;
-        border: 1px solid var(--glass-border) !important;
+        background: rgba(36, 48, 68, 0.92) !important;
+        border: 1px solid rgba(148, 163, 184, 0.18) !important;
         border-radius: 999px !important;
-        min-height: 48px !important;
+        min-height: 52px !important;
         max-height: 96px !important;
-        padding: 12px 22px !important;
+        padding: 14px 24px !important;
         font-size: 16px !important;
-        line-height: 1.4 !important;
-        color: var(--ink-strong) !important;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.03) !important;
+        line-height: 1.45 !important;
+        color: var(--ink-body) !important;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255,255,255,0.04) !important;
         backdrop-filter: blur(12px);
         resize: none !important;
         text-align: left !important;
-        transition: box-shadow 0.15s ease, border-color 0.15s ease !important;
+        transition: box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease !important;
     }
 
     #input-section #question-input textarea:hover,
     #input-section textarea:hover {
-        border-color: rgba(34, 211, 238, 0.35) !important;
-        box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.12) !important;
+        border-color: rgba(56, 189, 248, 0.32) !important;
+        background: rgba(42, 56, 78, 0.95) !important;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(56, 189, 248, 0.08) !important;
     }
 
     #input-section #question-input textarea:focus,
     #input-section textarea:focus {
-        border-color: rgba(34, 211, 238, 0.55) !important;
-        box-shadow: var(--focus-ring), 0 0 24px rgba(34, 211, 238, 0.12) !important;
-        background: rgba(15, 23, 42, 0.82) !important;
+        border-color: rgba(56, 189, 248, 0.45) !important;
+        box-shadow: var(--focus-ring), 0 8px 22px rgba(15, 23, 42, 0.25) !important;
+        background: rgba(42, 56, 78, 0.98) !important;
         outline: none !important;
     }
 
@@ -5058,14 +5074,14 @@ def build_demo():
     #export-open-btn,
     #stop-btn,
     #run-btn {
-        height: 36px !important;
-        min-height: 36px !important;
-        padding: 0 16px !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        padding: 0 18px !important;
         font-size: 14px !important;
         font-weight: 500 !important;
-        letter-spacing: 0 !important;
-        border-radius: 4px !important;
-        line-height: 36px !important;
+        letter-spacing: 0.01em !important;
+        border-radius: 12px !important;
+        line-height: 38px !important;
         box-shadow: none !important;
         transform: none !important;
     }
@@ -5075,32 +5091,33 @@ def build_demo():
     #stop-btn {
         min-width: auto !important;
         max-width: none !important;
-        border: 1px solid var(--glass-border) !important;
-        background: var(--btn-gray) !important;
-        color: var(--ink-body) !important;
+        border: 1px solid rgba(148, 163, 184, 0.2) !important;
+        background: rgba(36, 48, 68, 0.85) !important;
+        color: var(--ink-soft) !important;
     }
 
     #settings-open-btn:hover,
     #export-open-btn:hover,
     #stop-btn:hover {
-        background: var(--btn-gray-hover) !important;
-        border-color: rgba(34, 211, 238, 0.35) !important;
-        color: var(--accent) !important;
-        box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.12) !important;
+        background: rgba(51, 65, 85, 0.9) !important;
+        border-color: rgba(148, 163, 184, 0.32) !important;
+        color: var(--ink-body) !important;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2) !important;
     }
 
     #run-btn {
         min-width: auto !important;
         max-width: none !important;
-        border: 1px solid rgba(34, 211, 238, 0.45) !important;
-        background: linear-gradient(135deg, rgba(6, 182, 212, 0.95), rgba(52, 211, 153, 0.85)) !important;
-        color: #04101a !important;
+        border: 1px solid rgba(45, 180, 170, 0.35) !important;
+        background: linear-gradient(135deg, rgba(14, 165, 180, 0.88), rgba(45, 180, 140, 0.82)) !important;
+        color: #0b1a1c !important;
         font-weight: 600 !important;
+        box-shadow: 0 4px 14px rgba(14, 165, 180, 0.18) !important;
     }
 
     #run-btn:hover {
-        background: linear-gradient(135deg, rgba(34, 211, 238, 1), rgba(52, 211, 153, 0.95)) !important;
-        box-shadow: 0 0 20px rgba(34, 211, 238, 0.25) !important;
+        background: linear-gradient(135deg, rgba(20, 180, 190, 0.95), rgba(52, 190, 150, 0.9)) !important;
+        box-shadow: 0 6px 18px rgba(14, 165, 180, 0.22) !important;
         transform: none !important;
     }
 
@@ -5124,7 +5141,7 @@ def build_demo():
         inset: 0 !important;
         z-index: 1000 !important;
         cursor: pointer !important;
-        background: rgba(15, 23, 42, 0.45) !important;
+        background: rgba(15, 23, 42, 0.55) !important;
         align-items: center !important;
         justify-content: center !important;
         padding: 24px !important;
@@ -5136,12 +5153,12 @@ def build_demo():
     #settings-modal .modal-card,
     #export-modal .modal-card {
         cursor: default !important;
-        background: rgba(15, 23, 42, 0.92) !important;
-        border-radius: 14px !important;
+        background: rgba(30, 41, 59, 0.96) !important;
+        border-radius: 16px !important;
         max-width: 420px !important;
         width: min(420px, 100%) !important;
         padding: 18px 22px 20px !important;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(34, 211, 238, 0.12) !important;
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(148, 163, 184, 0.12) !important;
         border: 1px solid var(--panel-border) !important;
         backdrop-filter: blur(16px);
         /* Self-discovered: uncapped height swallows the viewport on settings */
@@ -5200,7 +5217,7 @@ def build_demo():
         min-height: 36px !important;
         font-size: 14px !important;
         font-weight: 500 !important;
-        border-radius: 4px !important;
+        border-radius: 10px !important;
     }
 
     /* Corner icon close — full-width footer "关闭" was the wrong pattern */
@@ -5325,7 +5342,7 @@ def build_demo():
     }
 
     #log-view p {
-        color: #64748b !important;
+        color: #94a3b8 !important;
         font-size: 0.95em !important;
         max-width: 36em;
     }
@@ -5338,7 +5355,7 @@ def build_demo():
         justify-content: center;
         padding: 12px 8px 24px;
         background:
-            radial-gradient(1200px 240px at 10% 0%, rgba(34,211,238,0.08), transparent 60%),
+            radial-gradient(1200px 240px at 10% 0%, rgba(56,189,248,0.06), transparent 60%),
             var(--panel-bg-solid);
         border-radius: 16px;
     }
@@ -5503,14 +5520,14 @@ def build_demo():
     }
     
     #log-view {
-        padding: 28px 36px !important;
-        min-height: 260px;
+        padding: 8px 4px 28px !important;
+        min-height: 120px;
         height: auto !important;
         overflow: visible !important;
-        background: var(--panel-bg) !important;
+        background: transparent !important;
         border: none !important;
-        border-radius: 28px !important;
-        box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.03) !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
     }
 
     #export-row {
@@ -5521,10 +5538,10 @@ def build_demo():
 
     #export-btn {
         border-radius: 12px !important;
-        border: 1px solid rgba(16, 185, 129, 0.18) !important;
-        color: #047857 !important;
-        background: #ecfdf5 !important;
-        font-weight: 700 !important;
+        border: 1px solid rgba(52, 211, 153, 0.28) !important;
+        color: #a7f3d0 !important;
+        background: rgba(6, 78, 59, 0.45) !important;
+        font-weight: 600 !important;
     }
 
     .export-hint {
@@ -5560,13 +5577,13 @@ def build_demo():
     
     /* Thought details card */
     .thought-card {
-        background: linear-gradient(180deg, rgba(248, 250, 252, 0.94), rgba(255, 255, 255, 0.98));
-        border: 1px solid rgba(15, 23, 42, 0.06);
-        border-left: 3px solid #10b981;
-        border-radius: 14px;
-        padding: 12px 16px;
-        margin: 12px 0;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.015);
+        background: transparent;
+        border: none;
+        border-left: 2px solid rgba(52, 211, 153, 0.45);
+        border-radius: 0;
+        padding: 4px 0 4px 12px;
+        margin: 10px 0;
+        box-shadow: none;
     }
     
     .thought-card > summary {
@@ -5592,12 +5609,13 @@ def build_demo():
     
     /* Tool card */
     .tool-card {
-        background: linear-gradient(180deg, rgba(246, 248, 250, 0.94), rgba(255, 255, 255, 0.98));
-        border: 1px solid rgba(15, 23, 42, 0.07);
-        border-radius: 18px;
-        padding: 14px 16px;
-        margin: 14px 0;
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+        background: transparent;
+        border: none;
+        border-left: 2px solid rgba(148, 163, 184, 0.28);
+        border-radius: 0;
+        padding: 4px 0 4px 12px;
+        margin: 10px 0;
+        box-shadow: none;
     }
     
     .tool-header {
@@ -6230,7 +6248,7 @@ def build_demo():
 
     .hero-section {
         text-align: center;
-        padding: 48px 16px 18px;
+        padding: 56px 16px 22px;
         max-width: 584px;
         margin: 0 auto 0;
         position: relative;
@@ -6262,9 +6280,9 @@ def build_demo():
     .hero-title {
         font-size: 22px;
         font-weight: 500;
-        color: #f1f5f9;
+        color: #e2e8f0;
         background: none;
-        -webkit-text-fill-color: #f1f5f9;
+        -webkit-text-fill-color: #e2e8f0;
         margin: 4px 0 6px 0;
         letter-spacing: 0.01em;
         line-height: 1.3;
@@ -6275,7 +6293,7 @@ def build_demo():
         align-items: center;
         justify-content: center;
         gap: 8px;
-        color: #94a3b8;
+        color: #b8c5d6;
         font-size: 13px;
         font-weight: 400;
         letter-spacing: 0.02em;
@@ -6295,26 +6313,28 @@ def build_demo():
 
     #output-section {
         max-width: 680px !important;
-        margin: 28px auto 0 !important;
+        margin: 36px auto 0 !important;
+        padding-bottom: 48px !important;
     }
 
     .output-label {
         font-size: 11px !important;
         font-weight: 500 !important;
-        color: #5f6368 !important;
+        color: #94a3b8 !important;
         letter-spacing: 0.06em !important;
     }
 
     #log-view {
-        padding: 20px 22px !important;
-        min-height: 180px !important;
-        border-radius: 14px !important;
-        border: 1px solid var(--panel-border) !important;
-        background: var(--panel-bg) !important;
-        box-shadow: var(--panel-shadow) !important;
-        backdrop-filter: blur(12px);
-        font-size: 14px !important;
+        padding: 8px 4px 24px !important;
+        min-height: 120px !important;
+        border-radius: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        backdrop-filter: none;
+        font-size: 15px !important;
         color: var(--ink-body) !important;
+        line-height: 1.7 !important;
     }
 
     #log-view h3 {
@@ -6342,7 +6362,7 @@ def build_demo():
     .nav-brand-text {
         font-size: 14px !important;
         font-weight: 500 !important;
-        color: #5f6368 !important;
+        color: #94a3b8 !important;
     }
 
     .skills-top-link {
@@ -6353,7 +6373,7 @@ def build_demo():
 
     .app-footer {
         font-size: 12px !important;
-        color: #80868b !important;
+        color: #94a3b8 !important;
     }
 
     #main-content-column {
@@ -6550,12 +6570,12 @@ def build_demo():
         display: flex !important;
         align-items: center !important;
         gap: 10px !important;
-        margin: 14px 0 6px !important;
-        padding: 10px 14px !important;
+        margin: 16px 0 10px !important;
+        padding: 12px 14px !important;
         border-radius: 12px !important;
-        border: 1px solid rgba(34, 211, 238, 0.22) !important;
-        background: rgba(8, 47, 73, 0.45) !important;
-        color: #a5f3fc !important;
+        border: 1px solid rgba(100, 180, 200, 0.2) !important;
+        background: rgba(36, 52, 72, 0.7) !important;
+        color: #bae6fd !important;
         font-size: 13px !important;
     }
     .runtime-spinner {
@@ -6573,10 +6593,14 @@ def build_demo():
     #log-view .tool-card,
     #log-view .process-details,
     #log-view .search-step-board {
-        background: rgba(15, 23, 42, 0.72) !important;
-        border: 1px solid rgba(34, 211, 238, 0.14) !important;
+        background: transparent !important;
+        border: none !important;
+        border-left: 2px solid rgba(148, 163, 184, 0.22) !important;
+        border-radius: 0 !important;
         color: #cbd5e1 !important;
         box-shadow: none !important;
+        padding: 6px 0 6px 12px !important;
+        margin: 10px 0 !important;
     }
     #log-view .thought-card > summary,
     #log-view .process-details > summary,
@@ -6596,8 +6620,8 @@ def build_demo():
         font-size: 13px !important;
     }
     #log-view h1, #log-view h2, #log-view h3 {
-        color: #f8fafc !important;
-        border-color: rgba(34, 211, 238, 0.18) !important;
+        color: #e2e8f0 !important;
+        border-color: rgba(100, 180, 200, 0.2) !important;
     }
     #log-view blockquote {
         background: rgba(34, 211, 238, 0.08) !important;
@@ -6605,7 +6629,7 @@ def build_demo():
         color: #e2e8f0 !important;
     }
     #log-view pre {
-        background: #020617 !important;
+        background: #1e293b !important;
         color: #e2e8f0 !important;
         border: 1px solid rgba(34, 211, 238, 0.15) !important;
     }
@@ -6614,100 +6638,175 @@ def build_demo():
         color: #a5f3fc !important;
     }
 
-    .report-glance {
-        margin: 8px 0 18px !important;
-        padding: 16px 18px !important;
-        border-radius: 14px !important;
-        border: 1px solid rgba(34, 211, 238, 0.32) !important;
-        background: linear-gradient(180deg, rgba(8,47,73,0.62), rgba(15,23,42,0.78)) !important;
-        box-shadow: 0 10px 28px rgba(2, 6, 23, 0.35) !important;
-    }
-    .report-glance-kicker {
-        font-size: 11px !important;
-        letter-spacing: 0.12em !important;
-        text-transform: uppercase !important;
-        color: #67e8f9 !important;
-        margin-bottom: 6px !important;
+    /* ===== Document-style report (compact, not card wall) ===== */
+    /* Document typography in report body */
+    #log-view h1 {
+        font-size: 1.45rem !important;
         font-weight: 700 !important;
+        color: #e2e8f0 !important;
+        margin: 1.4em 0 0.55em !important;
+        letter-spacing: -0.01em !important;
+        border: none !important;
+        padding: 0 !important;
     }
-    .report-glance-head {
+    #log-view h2 {
+        font-size: 1.15rem !important;
+        font-weight: 650 !important;
+        color: #e2e8f0 !important;
+        margin: 1.35em 0 0.45em !important;
+        border: none !important;
+        padding: 0 !important;
+        border-bottom: none !important;
+    }
+    #log-view h3 {
+        font-size: 1.02rem !important;
+        font-weight: 600 !important;
+        color: #cbd5e1 !important;
+        margin: 1.15em 0 0.4em !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+    #log-view p {
+        margin: 0 0 0.85em !important;
+        line-height: 1.75 !important;
+        color: #cbd5e1 !important;
+        max-width: none !important;
+    }
+    #log-view li {
+        margin: 0.25em 0 !important;
+        line-height: 1.65 !important;
+        color: #cbd5e1 !important;
+    }
+    #log-view strong, #log-view b {
+        color: #e2e8f0 !important;
+        font-weight: 650 !important;
+    }
+    #log-view a {
+        color: #7dd3fc !important;
+        text-decoration: underline !important;
+        text-underline-offset: 2px !important;
+        text-decoration-color: rgba(125, 211, 252, 0.35) !important;
+    }
+    #log-view blockquote {
+        background: transparent !important;
+        border: none !important;
+        border-left: 3px solid rgba(56, 189, 248, 0.4) !important;
+        padding: 2px 0 2px 14px !important;
+        margin: 0.9em 0 !important;
+        border-radius: 0 !important;
+        color: #94a3b8 !important;
+        font-style: normal !important;
+    }
+
+    .report-glance {
+        margin: 4px 0 20px !important;
+        padding: 0 0 14px !important;
+        border: none !important;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.16) !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    .report-glance-meta {
         display: flex !important;
         align-items: center !important;
-        justify-content: flex-end !important;
+        justify-content: flex-start !important;
+        flex-wrap: wrap !important;
         gap: 10px !important;
-        margin-bottom: 10px !important;
-        color: #f8fafc !important;
+        margin: 0 0 8px !important;
+    }
+    .report-glance-kicker {
+        font-size: 12px !important;
+        letter-spacing: 0.08em !important;
+        text-transform: uppercase !important;
+        color: #94a3b8 !important;
+        margin: 0 !important;
+        font-weight: 600 !important;
+    }
+    .report-glance-head {
+        display: none !important; /* legacy */
     }
     .report-glance-body {
         display: block !important;
         margin: 0 !important;
         padding: 0 !important;
         color: #e2e8f0 !important;
-        font-size: 1.12rem !important;
-        font-weight: 600 !important;
-        line-height: 1.7 !important;
+        font-size: 1.15rem !important;
+        font-weight: 650 !important;
+        line-height: 1.65 !important;
         white-space: pre-wrap !important;
         word-break: break-word !important;
     }
     .report-fold {
-        margin: 12px 0 16px !important;
+        margin: 10px 0 12px !important;
         padding: 0 !important;
-        border-radius: 12px !important;
-        border: 1px solid rgba(148, 163, 184, 0.22) !important;
-        background: rgba(2, 6, 23, 0.45) !important;
-        overflow: hidden !important;
+        border-radius: 0 !important;
+        border: none !important;
+        border-top: 1px solid rgba(148, 163, 184, 0.12) !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        overflow: visible !important;
     }
     .report-fold > summary {
         cursor: pointer !important;
         list-style: none !important;
-        padding: 12px 14px !important;
-        color: #cbd5e1 !important;
-        font-weight: 600 !important;
+        padding: 10px 0 !important;
+        color: #94a3b8 !important;
+        font-weight: 550 !important;
+        font-size: 0.92rem !important;
         user-select: none !important;
     }
     .report-fold > summary::-webkit-details-marker { display: none !important; }
     .report-fold > summary::before {
         content: "▸" !important;
         display: inline-block !important;
-        margin-right: 8px !important;
-        color: #67e8f9 !important;
+        margin-right: 6px !important;
+        color: #64748b !important;
+        opacity: 0.9 !important;
         transition: transform 0.15s ease !important;
     }
     .report-fold[open] > summary::before {
         transform: rotate(90deg) !important;
     }
     .report-fold[open] > summary {
-        border-bottom: 1px solid rgba(148, 163, 184, 0.18) !important;
-        color: #e2e8f0 !important;
-    }
-    .report-fold > *:not(summary) {
-        padding: 0 14px 12px !important;
+        border-bottom: none !important;
         color: #cbd5e1 !important;
     }
+    .report-fold > *:not(summary) {
+        padding: 0 0 8px 14px !important;
+        color: #cbd5e1 !important;
+        border-left: 2px solid rgba(148, 163, 184, 0.18) !important;
+        margin-left: 4px !important;
+    }
     .report-tldr {
-        margin: 8px 0 18px !important;
-        padding: 14px 16px !important;
-        border-radius: 14px !important;
-        border: 1px solid rgba(34, 211, 238, 0.28) !important;
-        background: linear-gradient(180deg, rgba(8,47,73,0.55), rgba(15,23,42,0.72)) !important;
+        margin: 4px 0 18px !important;
+        padding: 0 0 12px !important;
+        border-radius: 0 !important;
+        border: none !important;
+        border-left: 3px solid rgba(56, 189, 248, 0.45) !important;
+        padding-left: 14px !important;
+        background: transparent !important;
+        box-shadow: none !important;
     }
     .report-tldr-head {
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;
         gap: 10px !important;
-        margin-bottom: 8px !important;
-        color: #f8fafc !important;
+        margin-bottom: 6px !important;
+        color: #e2e8f0 !important;
+        font-size: 0.95rem !important;
     }
     .confidence-badge {
         display: inline-flex !important;
         align-items: center !important;
-        padding: 2px 10px !important;
-        border-radius: 999px !important;
-        font-size: 12px !important;
+        padding: 1px 8px !important;
+        border-radius: 6px !important;
+        font-size: 11px !important;
         font-weight: 600 !important;
         border: 1px solid transparent !important;
         white-space: nowrap !important;
+        letter-spacing: 0.02em !important;
     }
     .confidence-high { background: rgba(16,185,129,0.18) !important; color: #6ee7b7 !important; border-color: rgba(16,185,129,0.35) !important; }
     .confidence-mid { background: rgba(234,179,8,0.16) !important; color: #fde68a !important; border-color: rgba(234,179,8,0.35) !important; }
@@ -7143,10 +7242,10 @@ def build_demo():
     body > ul.options,
     body ul[role="listbox"] {
         z-index: 5000 !important;
-        background: #0f172a !important;
-        border: 1px solid rgba(34, 211, 238, 0.25) !important;
+        background: #1e293b !important;
+        border: 1px solid rgba(100, 180, 200, 0.25) !important;
         border-radius: 10px !important;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55) !important;
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.35) !important;
         color: #e2e8f0 !important;
         max-height: 240px !important;
         overflow-y: auto !important;
@@ -7212,13 +7311,13 @@ def build_demo():
     /* Progress cards on dark */
     .thought-card,
     .tool-card {
-        background: rgba(15, 23, 42, 0.65) !important;
-        border-color: var(--glass-border) !important;
+        background: transparent !important;
+        border-color: transparent !important;
         color: var(--ink-body) !important;
     }
 
     #log-view pre {
-        background: #0b1220 !important;
+        background: #1e293b !important;
         color: #e2e8f0 !important;
         border: 1px solid var(--glass-border) !important;
     }
@@ -7235,9 +7334,53 @@ def build_demo():
 
     #settings-modal,
     #export-modal {
-        background: rgba(2, 6, 23, 0.72) !important;
+        background: rgba(26, 35, 50, 0.78) !important;
     }
 
+
+
+    /* ===== Aesthetic polish: document + compact emphasis ===== */
+    #layout-shell {
+        gap: 4px !important;
+    }
+    #btn-row {
+        padding: 20px 4px 8px !important;
+        gap: 12px !important;
+    }
+    .report-glance-body p,
+    .report-glance-body {
+        color: #e2e8f0 !important;
+    }
+    #log-view hr,
+    #log-view .prose hr {
+        border: none !important;
+        border-top: 1px solid rgba(148, 163, 184, 0.12) !important;
+        margin: 1.25em 0 !important;
+    }
+    #top-utility-bar {
+        padding: 10px 16px 0 !important;
+    }
+    .skills-top-link {
+        color: #7dd3fc !important;
+        font-weight: 500 !important;
+    }
+    .skills-top-link:hover {
+        color: #bae6fd !important;
+    }
+    #output-section {
+        max-width: 680px !important;
+        margin: 28px auto 0 !important;
+    }
+    .output-label {
+        margin-bottom: 6px !important;
+        opacity: 0.85 !important;
+    }
+    /* Kill leftover hard boxes on progress empty state */
+    .progress-empty-wrap {
+        background: transparent !important;
+        min-height: 100px !important;
+        padding: 8px 0 16px !important;
+    }
 
     #gr-task-id-bridge { position: absolute !important; left: -9999px !important; top: -9999px !important; width: 1px !important; height: 1px !important; opacity: 0 !important; pointer-events: none !important; }
     """
@@ -7573,7 +7716,24 @@ def build_demo():
     with gr.Blocks(
         css=custom_css,
         title=I18N[DEFAULT_LANG]["page_title"],
-        theme=gr.themes.Base(),
+        theme=gr.themes.Soft(
+            primary_hue="sky",
+            neutral_hue="slate",
+            text_size="md",
+        ).set(
+            body_background_fill="#1a2332",
+            body_background_fill_dark="#1a2332",
+            background_fill_primary="#1e293b",
+            background_fill_primary_dark="#1e293b",
+            background_fill_secondary="#243044",
+            background_fill_secondary_dark="#243044",
+            block_background_fill="#1e293b",
+            block_background_fill_dark="#1e293b",
+            border_color_primary="#334155",
+            border_color_primary_dark="#334155",
+            body_text_color="#cbd5e1",
+            body_text_color_dark="#cbd5e1",
+        ),
         head=demo_head,
     ) as demo:
         lang_state = gr.State(DEFAULT_LANG)
