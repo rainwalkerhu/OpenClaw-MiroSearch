@@ -374,7 +374,7 @@ I18N = {
         "progress_output": "Output",
         "progress_executed": "Executed",
         "progress_untitled": "Untitled",
-        "progress_process_summary": "View search process (intermediate steps)",
+        "progress_process_summary": "Thinking & search process (done — click to expand)",
         "btn_settings_title": "Settings",
         "btn_export_title": "Export",
         "btn_stop_title": "Stop research",
@@ -429,7 +429,7 @@ I18N = {
         "progress_output": "输出",
         "progress_executed": "已执行",
         "progress_untitled": "无标题",
-        "progress_process_summary": "查看检索过程（中间步骤）",
+        "progress_process_summary": "思考与检索过程（已完成，点击展开）",
         "btn_settings_title": "设置",
         "btn_export_title": "导出",
         "btn_stop_title": "停止研究",
@@ -2847,17 +2847,43 @@ def _build_summary_section(
     return lines
 
 
-def _build_process_details_section(process_lines: List[str]) -> List[str]:
+def _set_thought_cards_expanded(process_lines: List[str], *, expanded: bool) -> List[str]:
+    """Streaming: keep thoughts open. Finished: fold them shut inside process panel."""
+    out: List[str] = []
+    for line in process_lines:
+        text = str(line or "")
+        if expanded:
+            text = text.replace(
+                '<details class="thought-card">',
+                '<details class="thought-card" open>',
+            )
+        else:
+            text = text.replace(
+                '<details class="thought-card" open>',
+                '<details class="thought-card">',
+            )
+        out.append(text)
+    return out
+
+
+def _build_process_details_section(
+    process_lines: List[str],
+    *,
+    step_count: Optional[int] = None,
+) -> List[str]:
     if not process_lines:
         return []
+    label = _progress_copy("progress_process_summary")
+    if step_count and step_count > 0:
+        label = f"{label} · {step_count}"
     lines = [
-        "\n\n---\n\n",
+        "\n\n",
         (
             '<details class="process-details">\n'
-            f'<summary>🧭 {_progress_copy("progress_process_summary")}</summary>\n\n'
+            f"<summary>🧭 {html.escape(label, quote=False)}</summary>\n\n"
         ),
     ]
-    lines.extend(process_lines)
+    lines.extend(_set_thought_cards_expanded(process_lines, expanded=False))
     lines.append("\n</details>\n")
     return lines
 
@@ -3279,26 +3305,67 @@ def _render_markdown_inner(
     has_final_summary = bool(merged_final_summary_blocks)
 
     if has_final_summary and COLLAPSE_PROCESS_AFTER_SUMMARY:
-        lines.extend(_build_search_steps_section(search_step_lines))
-        lines.extend(_build_summary_section(merged_final_summary_blocks, output_detail_level=resolved_output_detail_level))
-        lines.extend(_build_process_details_section(process_lines))
+        # Answer-first (ChatGPT/Claude style): final report on top, process folded below.
+        lines.extend(
+            _build_summary_section(
+                merged_final_summary_blocks,
+                output_detail_level=resolved_output_detail_level,
+            )
+        )
+        folded_process: List[str] = []
+        folded_process.extend(_build_search_steps_section(search_step_lines))
+        folded_process.extend(process_lines)
+        lines.extend(
+            _build_process_details_section(
+                folded_process,
+                step_count=len(search_step_lines) or None,
+            )
+        )
     elif resolved_render_mode == "full":
-        lines.extend(process_lines)
+        # Live / no-collapse: expand thoughts while work is streaming.
+        live_process = (
+            _set_thought_cards_expanded(process_lines, expanded=True)
+            if not has_final_summary
+            else process_lines
+        )
+        lines.extend(live_process)
         if has_final_summary:
             lines.append("\n\n---\n\n")
-            lines.extend(_build_summary_section(merged_final_summary_blocks, output_detail_level=resolved_output_detail_level))
+            lines.extend(
+                _build_summary_section(
+                    merged_final_summary_blocks,
+                    output_detail_level=resolved_output_detail_level,
+                )
+            )
     elif resolved_render_mode == "summary_only":
         if has_final_summary:
-            lines.extend(_build_summary_section(merged_final_summary_blocks, output_detail_level=resolved_output_detail_level))
+            lines.extend(
+                _build_summary_section(
+                    merged_final_summary_blocks,
+                    output_detail_level=resolved_output_detail_level,
+                )
+            )
         else:
-            lines.extend(process_lines)
+            lines.extend(_set_thought_cards_expanded(process_lines, expanded=True))
     else:
         if has_final_summary:
-            lines.extend(_build_search_steps_section(search_step_lines))
-            lines.extend(_build_summary_section(merged_final_summary_blocks, output_detail_level=resolved_output_detail_level))
-            lines.extend(_build_process_details_section(process_lines))
+            lines.extend(
+                _build_summary_section(
+                    merged_final_summary_blocks,
+                    output_detail_level=resolved_output_detail_level,
+                )
+            )
+            folded_process = []
+            folded_process.extend(_build_search_steps_section(search_step_lines))
+            folded_process.extend(process_lines)
+            lines.extend(
+                _build_process_details_section(
+                    folded_process,
+                    step_count=len(search_step_lines) or None,
+                )
+            )
         else:
-            lines.extend(process_lines)
+            lines.extend(_set_thought_cards_expanded(process_lines, expanded=True))
 
     if lines:
         return "\n".join(lines)
@@ -5481,6 +5548,33 @@ def build_demo():
         margin: 0 0 14px;
     }
 
+    /* Finished-run process bar: quiet, clickable, answer stays above */
+    #log-view .process-details {
+        margin: 14px 0 8px !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(148, 163, 184, 0.22) !important;
+        background: rgba(15, 23, 42, 0.55) !important;
+        padding: 0 !important;
+    }
+    #log-view .process-details > summary {
+        cursor: pointer !important;
+        list-style: none !important;
+        padding: 10px 14px !important;
+        color: #94a3b8 !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        user-select: none !important;
+    }
+    #log-view .process-details > summary::-webkit-details-marker { display: none !important; }
+    #log-view .process-details[open] > summary {
+        color: #e2e8f0 !important;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.14) !important;
+    }
+    #log-view .process-details .search-step-board,
+    #log-view .process-details .thought-card,
+    #log-view .process-details .tool-card {
+        margin: 8px 12px !important;
+    }
     #log-view .process-details {
         margin-top: 14px;
         border: 1px solid rgba(15, 23, 42, 0.08);

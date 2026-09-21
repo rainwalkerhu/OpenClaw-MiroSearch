@@ -96,8 +96,10 @@ def test_render_markdown_collapses_full_process_after_final_summary():
     summary_pos = markdown.index("## 📋 研究总结")
     details_pos = markdown.index("<details class=\"process-details\">")
     search_card_pos = markdown.index('<div class="search-card">')
-    assert search_steps_pos < summary_pos < details_pos
+    # Answer-first: summary above folded process; search steps live inside the fold.
+    assert summary_pos < details_pos < search_steps_pos
     assert search_card_pos > details_pos
+    assert "思考与检索过程（已完成，点击展开）" in markdown or "Thinking & search process" in markdown
 
 
 def test_render_markdown_does_not_show_step_board_without_final_summary():
@@ -622,10 +624,8 @@ def test_build_summary_section_normalizes_latex_heavy_block():
         assert marker not in rendered
 
 
-def test_summary_section_has_blank_line_after_html_block():
-    """避免回归：search-step-board </div> 与 ## 📋 研究总结 之间必须有空行，
-    否则 CommonMark 会把 `##` 视为 HTML block 的延续，标题无法渲染。
-    """
+def test_summary_section_comes_before_folded_process():
+    """答案优先：研究总结在折叠过程区之前；过程区内 HTML 与后续内容保持可展开。"""
     demo_main = _load_demo_main()
     state = demo_main._init_render_state()
     events = [
@@ -633,18 +633,19 @@ def test_summary_section_has_blank_line_after_html_block():
         {"event": "tool_call", "data": {"tool_call_id": "t1", "tool_name": "google_search", "tool_input": {"q": "demo"}}},
         {"event": "tool_call", "data": {"tool_call_id": "t1", "tool_name": "google_search", "tool_input": {"q": "demo", "result": {"organic": []}}}},
         {"event": "start_of_agent", "data": {"agent_id": "a2", "agent_name": "Final Summary"}},
-        {"event": "tool_call", "data": {"tool_call_id": "fs1", "tool_name": "show_text", "tool_input": {"text": "# 关键结论\n本研究表明..."}}},
+        {"event": "tool_call", "data": {"tool_call_id": "fs1", "tool_name": "show_text", "tool_input": {"text": "# 最终结论\n本研究表明..."}}},
     ]
     for e in events:
         state = demo_main._update_state_with_event(state, e)
     md = demo_main._render_markdown(state)
-    # `</div>` 与 `## 📋 研究总结` 之间应有至少一个空行（即 `\n\n`）
-    idx_div = md.rfind("</div>", 0, md.find("## 📋 研究总结"))
     idx_h2 = md.find("## 📋 研究总结")
-    between = md[idx_div + len("</div>"):idx_h2]
-    assert "\n\n" in between, (
-        f"HTML block 与下一个 markdown 标题之间必须空行，实际 between={between!r}"
-    )
+    idx_details = md.find('<details class="process-details">')
+    assert idx_h2 != -1 and idx_details != -1
+    assert idx_h2 < idx_details
+    assert "思考与检索过程（已完成，点击展开）" in md
+    # Folded panel must not start open
+    assert '<details class="process-details" open>' not in md
+
 
 
 def test_update_state_with_final_output_renders_summary():
