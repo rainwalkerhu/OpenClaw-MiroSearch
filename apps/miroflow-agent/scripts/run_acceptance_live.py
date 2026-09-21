@@ -87,6 +87,23 @@ def _evaluate_hotspot_gates(
             result["failures"].append("missing_conflicts_section")
         if not result["has_confidence_marker"]:
             result["failures"].append("missing_confidence_marker")
+        # Presentation UX (layout round)
+        if re.search(r"(?i)Token Usage|Pricing is disabled|Total Input Tokens", summary):
+            result["failures"].append("diagnostic_noise_leaked")
+        if re.search(r"(?m)https?://www\.?\s*$", summary):
+            result["failures"].append("truncated_url_stub")
+        if re.search(r"(?im)^\*\*状态\*\*:\s*pending\s*$", summary):
+            result["failures"].append("raw_pending_lead_status")
+        result["has_content_analysis"] = bool(
+            re.search(r"(?i)内容分析|Content Analysis", summary)
+        )
+        result["has_mermaid_topology"] = ("```mermaid" in summary) or (
+            "flowchart" in summary
+        )
+        if not result["has_content_analysis"]:
+            result["failures"].append("missing_content_analysis")
+        if not result["has_mermaid_topology"]:
+            result["failures"].append("missing_mermaid_topology")
         if (meta.get("citation_count") or 0) < 1 and "http" not in summary.lower():
             # Accept Chinese named-source cues (据…报道 / 来源 / 官方声明)
             named = re.search(
@@ -518,6 +535,149 @@ CASES: Dict[str, Dict[str, Any]] = {
         },
         "gates": "profile_compare",
     },
+
+    # --- Layout live topics: celebrity / opinion / tech rumor ---
+    "L1": {
+        "query": (
+            "请锁定一条近两周娱乐圈多源冲突明显的明星恋情/分手/复合八卦热搜："
+            "营销号与主流娱乐媒体说法有何冲突？当事人或工作室如何回应？"
+            "目前能确认什么、不能确认什么？请标明置信度，并做内容分析与关系拓扑。"
+        ),
+        "effective_config": {
+            "mode": "verified",
+            "search_profile": "parallel-trusted",
+            "search_result_num": 20,
+            "verification_min_search_rounds": 3,
+            "output_detail_level": "detailed",
+            "research_intensity": "deep",
+        },
+        "overrides": [
+            "agent=mirothinker_v1.5_keep5_max200",
+            "llm=glm-flash",
+            "agent.main_agent.max_turns=12",
+            "++agent.research_intensity=deep",
+            "++agent.research_report_mode=true",
+            "+agent.main_agent.research_mode=verified",
+            "+output_formatter.detail_level=detailed",
+            "++agent.output_detail_level=detailed",
+            "+agent.main_agent.verification_min_search_rounds=3",
+            "+agent.main_agent.enable_lead_tracking=true",
+            "++agent.max_lead_follow_ups=2",
+            "++agent.max_scrape_per_task=8",
+            "++agent.deep_early_stop_on_agreement=true",
+            "++agent.parallel_tool_calls=true",
+            "++agent.deep_exit_on_early_stop=true",
+            "++agent.deep_post_early_stop_turns=1",
+            "++agent.max_final_answer_retries=1",
+            "++agent.oneshot_final_report=true",
+            "++agent.summary_keep_tool_result=2",
+            "++agent.summary_max_tokens_cap=4096",
+            "++llm.summary_max_tokens=4096",
+        ],
+        "env": {
+            "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+            "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+            "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+            "SEARCH_PROVIDER_ORDER_STRICT": "0",
+            "SEARCH_RESULT_NUM": "20",
+            "SEARXNG_BASE_URL": "",
+        },
+        "gates": "hotspot_detailed",
+    },
+    "L2": {
+        "query": (
+            "请锁定一则近两周有明显对立叙事的中文网络舆情事件（非娱乐八卦）："
+            "官方通报或主流媒体与自媒体/网民转载说法的冲突点是什么？"
+            "哪些数字或因果尚未核实？请标明置信度，并输出内容分析与 Mermaid 关系拓扑。"
+        ),
+        "effective_config": {
+            "mode": "verified",
+            "search_profile": "parallel-trusted",
+            "search_result_num": 20,
+            "verification_min_search_rounds": 3,
+            "output_detail_level": "detailed",
+            "research_intensity": "deep",
+        },
+        "overrides": [
+            "agent=mirothinker_v1.5_keep5_max200",
+            "llm=glm-flash",
+            "agent.main_agent.max_turns=12",
+            "++agent.research_intensity=deep",
+            "++agent.research_report_mode=true",
+            "+agent.main_agent.research_mode=verified",
+            "+output_formatter.detail_level=detailed",
+            "++agent.output_detail_level=detailed",
+            "+agent.main_agent.verification_min_search_rounds=3",
+            "+agent.main_agent.enable_lead_tracking=true",
+            "++agent.max_lead_follow_ups=2",
+            "++agent.max_scrape_per_task=8",
+            "++agent.deep_early_stop_on_agreement=true",
+            "++agent.parallel_tool_calls=true",
+            "++agent.deep_exit_on_early_stop=true",
+            "++agent.deep_post_early_stop_turns=1",
+            "++agent.max_final_answer_retries=1",
+            "++agent.oneshot_final_report=true",
+            "++agent.summary_keep_tool_result=2",
+            "++agent.summary_max_tokens_cap=4096",
+            "++llm.summary_max_tokens=4096",
+        ],
+        "env": {
+            "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+            "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+            "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+            "SEARCH_PROVIDER_ORDER_STRICT": "0",
+            "SEARCH_RESULT_NUM": "20",
+            "SEARXNG_BASE_URL": "",
+        },
+        "gates": "hotspot_detailed",
+    },
+    "L3": {
+        "query": (
+            "请锁定一条近期科技/AI 领域流传较广的谣言或夸大宣称（产品造假、数据注水或政策误读均可）："
+            "谣言版本、官方/权威媒体澄清、第三方测评之间有何冲突？"
+            "证据链到哪一步仍断？请给置信度，并附内容分析与关系拓扑。"
+        ),
+        "effective_config": {
+            "mode": "verified",
+            "search_profile": "parallel-trusted",
+            "search_result_num": 20,
+            "verification_min_search_rounds": 3,
+            "output_detail_level": "detailed",
+            "research_intensity": "deep",
+        },
+        "overrides": [
+            "agent=mirothinker_v1.5_keep5_max200",
+            "llm=glm-flash",
+            "agent.main_agent.max_turns=12",
+            "++agent.research_intensity=deep",
+            "++agent.research_report_mode=true",
+            "+agent.main_agent.research_mode=verified",
+            "+output_formatter.detail_level=detailed",
+            "++agent.output_detail_level=detailed",
+            "+agent.main_agent.verification_min_search_rounds=3",
+            "+agent.main_agent.enable_lead_tracking=true",
+            "++agent.max_lead_follow_ups=2",
+            "++agent.max_scrape_per_task=8",
+            "++agent.deep_early_stop_on_agreement=true",
+            "++agent.parallel_tool_calls=true",
+            "++agent.deep_exit_on_early_stop=true",
+            "++agent.deep_post_early_stop_turns=1",
+            "++agent.max_final_answer_retries=1",
+            "++agent.oneshot_final_report=true",
+            "++agent.summary_keep_tool_result=2",
+            "++agent.summary_max_tokens_cap=4096",
+            "++llm.summary_max_tokens=4096",
+        ],
+        "env": {
+            "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+            "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+            "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+            "SEARCH_PROVIDER_ORDER_STRICT": "0",
+            "SEARCH_RESULT_NUM": "20",
+            "SEARXNG_BASE_URL": "",
+        },
+        "gates": "hotspot_detailed",
+    },
 }
 
 
@@ -772,6 +932,8 @@ async def main_async(args: argparse.Namespace) -> int:
             expanded.extend(["H1", "H2", "H3", "H4", "H5A", "H5B"])
         elif c == "H5":
             expanded.extend(["H5A", "H5B"])
+        elif c == "L":
+            expanded.extend(["L1", "L2", "L3"])
         else:
             expanded.append(c)
 
@@ -835,7 +997,7 @@ def main() -> None:
     parser.add_argument(
         "--cases",
         default="H",
-        help="Comma-separated case ids (A–E, H, H1–H4, H5/H5A/H5B)",
+        help="Comma-separated case ids (A–E, H, H1–H4, H5/H5A/H5B, L/L1–L3)",
     )
     args = parser.parse_args()
     raise SystemExit(asyncio.run(main_async(args)))
