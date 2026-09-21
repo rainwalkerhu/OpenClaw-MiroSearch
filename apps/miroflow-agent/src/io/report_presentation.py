@@ -5,14 +5,19 @@ from __future__ import annotations
 import re
 from typing import List, Optional
 
-_DIAGNOSTIC_BLOCK_RE = re.compile(
-    r"(?ms)"
-    r"(?:^|\n)[=\-]{5,}\s*(?:Final Answer|Extracted Result|Token Usage(?:\s*&\s*Cost)?)\s*[=\-]{5,}.*?"
-    r"(?=(?:\n[=\-]{5,}|\n##\s|\Z))"
+# Final Answer header only — keep the body text that follows.
+_FINAL_ANSWER_HEADER_RE = re.compile(
+    r"(?m)^\s*={5,}\s*Final Answer\s*={5,}\s*\n?"
+)
+# Truncate from Extracted Result / Token Usage section headers through EOF
+# (those sections duplicate or are CLI/billing noise).
+_DIAGNOSTIC_TAIL_RE = re.compile(
+    r"\n?[=\-]{5,}\s*(?:Extracted Result|Token Usage(?:\s*&\s*Cost)?)\s*[=\-]{5,}.*\Z",
+    re.DOTALL,
 )
 _PRICING_NOISE_RE = re.compile(
     r"(?ms)"
-    r"(?:^|\n)-{5,}.*?(?:Token Usage|Pricing is disabled|Total Input Tokens).*?(?=\n##\s|\Z)"
+    r"(?:^|\n)-{5,}.*?\b(?:Pricing is disabled|Total Input Tokens)\b.*"
 )
 _EXTRACTED_NOTE_RE = re.compile(
     r"(?m)^\(Note: model did not use "
@@ -31,14 +36,19 @@ _PENDING_LEAD_BLOCK_RE = re.compile(
 
 
 def strip_diagnostic_noise(text: str) -> str:
-    """Remove CLI/eval diagnostic wrappers from a final summary."""
+    """Remove CLI/eval diagnostic wrappers from a final summary.
+
+    Keeps the Final Answer *body* (the actual report). Only strips the
+    ``===== Final Answer =====`` banner, then truncates from
+    Extracted Result / Token Usage tails (duplicates + billing noise).
+    """
     if not text:
         return text
-    cleaned = text
-    cleaned = _DIAGNOSTIC_BLOCK_RE.sub("\n", cleaned)
+    cleaned = _FINAL_ANSWER_HEADER_RE.sub("", text, count=1)
+    cleaned = _DIAGNOSTIC_TAIL_RE.sub("", cleaned)
     cleaned = _PRICING_NOISE_RE.sub("\n", cleaned)
     cleaned = _EXTRACTED_NOTE_RE.sub("", cleaned)
-    # Common leftover headers
+    # Leftover bare headers if tail regex missed a variant
     cleaned = re.sub(
         r"(?m)^\s*={5,}\s*Final Answer\s*={5,}\s*$", "", cleaned
     )
@@ -233,6 +243,30 @@ def ensure_content_analysis_and_topology(
     return text[:insert_at].rstrip() + "\n\n" + block + text[insert_at:].lstrip()
 
 
+
+def strip_duplicate_trailing_conclusion(text: str) -> str:
+    """Remove a second Conclusion/结论 block that appears after References.
+
+    Live Gradio runs sometimes append another ## Conclusion that mostly
+    repeats the citation list (and may truncate the last URL). Keep the
+    first conclusion body; drop trailing duplicates after References.
+    """
+    if not text:
+        return text
+    # Find References / 参考文献 heading
+    ref_m = re.search(r"(?im)^##\s*(References|参考文献)\b.*$", text)
+    if not ref_m:
+        return text
+    after = text[ref_m.end():]
+    # Any Conclusion after References is treated as duplicate trailer
+    dup = re.search(r"(?im)^##\s*(Conclusion|结论|总结)\b.*$", after)
+    if not dup:
+        return text
+    # Keep References section up to (not including) the duplicate conclusion
+    kept = text[: ref_m.end() + dup.start()].rstrip() + "\n"
+    return kept
+
+
 def prepare_user_facing_report(
     text: str, *, detail_level: str = "detailed"
 ) -> str:
@@ -243,6 +277,7 @@ def prepare_user_facing_report(
     out = drop_incomplete_reference_lines(out)
     out = compact_pending_lead_trail(out)
     out = ensure_content_analysis_and_topology(out, detail_level=detail_level)
+    out = strip_duplicate_trailing_conclusion(out)
     # collapse excessive blank lines
     out = re.sub(r"\n{3,}", "\n\n", out).strip() + "\n"
     return out

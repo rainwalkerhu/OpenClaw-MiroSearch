@@ -1,0 +1,159 @@
+{
+  "case_id": "L2",
+  "query": "请锁定一则近两周有明显对立叙事的中文网络舆情事件（非娱乐八卦）：官方通报或主流媒体与自媒体/网民转载说法的冲突点是什么？哪些数字或因果尚未核实？请标明置信度，并输出内容分析与 Mermaid 关系拓扑。",
+  "overrides": [
+    "agent=mirothinker_v1.5_keep5_max200",
+    "llm=glm-flash",
+    "agent.main_agent.max_turns=12",
+    "++agent.research_intensity=deep",
+    "++agent.research_report_mode=true",
+    "+agent.main_agent.research_mode=verified",
+    "+output_formatter.detail_level=detailed",
+    "++agent.output_detail_level=detailed",
+    "+agent.main_agent.verification_min_search_rounds=3",
+    "+agent.main_agent.enable_lead_tracking=true",
+    "++agent.max_lead_follow_ups=2",
+    "++agent.max_scrape_per_task=8",
+    "++agent.deep_early_stop_on_agreement=true",
+    "++agent.parallel_tool_calls=true",
+    "++agent.deep_exit_on_early_stop=true",
+    "++agent.deep_post_early_stop_turns=1",
+    "++agent.max_final_answer_retries=1",
+    "++agent.oneshot_final_report=true",
+    "++agent.summary_keep_tool_result=2",
+    "++agent.summary_max_tokens_cap=4096",
+    "++llm.summary_max_tokens=4096"
+  ],
+  "env_patch": {
+    "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+    "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_ORDER_STRICT": "0",
+    "SEARCH_RESULT_NUM": "20",
+    "SEARXNG_BASE_URL": ""
+  },
+  "effective_config": {
+    "mode": "verified",
+    "search_profile": "parallel-trusted",
+    "search_result_num": 20,
+    "verification_min_search_rounds": 3,
+    "output_detail_level": "detailed",
+    "research_intensity": "deep"
+  },
+  "tracker_enabled_at_compose": true,
+  "tracker_max_follow_ups": 2,
+  "status": "failed",
+  "duration_seconds": 252.404681,
+  "final_boxed_answer": "No \\boxed{} content found in the final answer.",
+  "final_summary_excerpt": "## 线索追踪 / Lead Trail\n\n本轮未实际跟进额外线索（种子线索仍为 pending，不视为报告未写完）。\n\n### 未跟进线索（摘要）\n\n1. What are the most important unresolved or contested aspects of: 请锁定一则近两周有明显对立… — **未跟进**\n2. 事件时间窗口（9月7日–21日）与对立叙事的强度，继续定向检索 — **未跟进**\n",
+  "final_summary_chars": 213,
+  "summary_file": "/workspace/repos/OpenClaw-MiroSearch/docs/acceptance/artifacts/layout_live_L/case_L2_summary.md",
+  "has_lead_trail": true,
+  "log_file": "/workspace/repos/OpenClaw-MiroSearch/docs/acceptance/artifacts/layout_live_L/logs/task_acceptance_l2_20260921_014734_2026-09-21-09-47-34.json",
+  "metrics": {
+    "rate_limit_429_count": 2,
+    "timeout_count": 2,
+    "http_timeout_count": 2,
+    "wall_timeout_count": 0,
+    "llm_retry_count": 4,
+    "summary_passes": 1,
+    "key_switch_count": 0,
+    "model_route_hits": {
+      "glm-5.3-flash": {
+        "glm-5.3-flash": 3
+      }
+    },
+    "search_rounds": 6,
+    "search_attempts": 6,
+    "search_provider_hits": {
+      "serper": 6
+    },
+    "scrape_count": 0,
+    "follow_up_searches": 0,
+    "early_stop_triggered": true,
+    "early_stop_turn": 2,
+    "total_duration_ms": 252402,
+    "stage_durations": {
+      "pipeline.llm_client_init": 10,
+      "pipeline.orchestrator_init": 0,
+      "llm.request.main": 50911,
+      "answer_generator.llm_call.main": 62344,
+      "pipeline.main_agent_run": 252387,
+      "pipeline.total": 252402
+    },
+    "failback_activated": false,
+    "failback_model": "",
+    "effective_config": {
+      "mode": "verified",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 20,
+      "verification_min_search_rounds": 3,
+      "output_detail_level": "detailed",
+      "research_intensity": "deep"
+    }
+  },
+  "route_traces": [],
+  "lead_steps_count": 7,
+  "gate_evaluation": {
+    "gates": "hotspot_detailed",
+    "detail_level": "detailed",
+    "pass": false,
+    "failures": [
+      "missing_tldr",
+      "missing_conclusion",
+      "missing_conflicts",
+      "missing_timeline",
+      "missing_evidence",
+      "missing_confirmed",
+      "missing_conflicts_section",
+      "missing_confidence_marker",
+      "missing_content_analysis",
+      "missing_mermaid_topology",
+      "no_source_attribution"
+    ],
+    "structure_valid": false,
+    "structure_issues": [
+      "missing_tldr",
+      "missing_conclusion",
+      "missing_conflicts",
+      "missing_timeline",
+      "missing_evidence",
+      "missing_confirmed",
+      "insufficient_citations",
+      "missing_references_section",
+      "missing_conflicts_section"
+    ],
+    "structure_metadata": {
+      "found_sections": [],
+      "missing_required": [
+        "tldr",
+        "conclusion",
+        "conflicts",
+        "timeline",
+        "evidence",
+        "confirmed"
+      ],
+      "section_lengths": {},
+      "citation_count": 0,
+      "has_conflicts_section": false,
+      "unsourced_number_warnings": [
+        "1",
+        "2",
+        "9",
+        "21"
+      ]
+    },
+    "summary_chars": 213,
+    "has_confidence_marker": false,
+    "has_conflicts_heading": false,
+    "has_content_analysis": false,
+    "has_mermaid_topology": false,
+    "unsourced_number_warnings": [
+      "1",
+      "2",
+      "9",
+      "21"
+    ]
+  },
+  "error": "Final summary produced no usable answer."
+}

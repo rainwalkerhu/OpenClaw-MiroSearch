@@ -71,7 +71,7 @@ async def test_reconnect_or_init_first_frame_uses_running_placeholder(monkeypatc
 
     request = SimpleNamespace(query_params={"task_id": "task-running-1"})
     agen = demo_main.reconnect_or_init({}, request)
-    first_markdown, run_update, stop_update, ui_state, task_id_bridge = await agen.__anext__()
+    first_markdown, run_update, stop_update, ui_state, task_id_bridge, output_visible = await agen.__anext__()
     await agen.aclose()
 
     assert "等待开始研究" not in first_markdown
@@ -81,6 +81,7 @@ async def test_reconnect_or_init_first_frame_uses_running_placeholder(monkeypatc
     assert stop_update["interactive"] is True
     assert ui_state["task_id"] == "task-running-1"
     assert task_id_bridge == "task-running-1"
+    assert output_visible.get("visible") is True
 
 
 @pytest.mark.asyncio
@@ -125,7 +126,7 @@ async def test_reconnect_or_init_uses_task_id_bridge_when_request_has_no_query(
 
     request = SimpleNamespace(query_params={})
     agen = demo_main.reconnect_or_init({}, "task-from-bridge", request)
-    first_markdown, run_update, stop_update, ui_state, task_id_bridge = await agen.__anext__()
+    first_markdown, run_update, stop_update, ui_state, task_id_bridge, output_visible = await agen.__anext__()
     await agen.aclose()
 
     assert "等待开始研究" not in first_markdown
@@ -134,3 +135,4 @@ async def test_reconnect_or_init_uses_task_id_bridge_when_request_has_no_query(
     assert stop_update["interactive"] is True
     assert ui_state["task_id"] == "task-from-bridge"
     assert task_id_bridge == "task-from-bridge"
+    assert output_visible.get("visible") is True

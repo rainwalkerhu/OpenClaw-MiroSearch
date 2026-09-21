@@ -873,7 +873,7 @@ async def run_case(case_id: str, case: Dict[str, Any], out_dir: Path) -> Dict[st
             "status": result.get("status"),
             "duration_seconds": (ended - started).total_seconds(),
             "final_boxed_answer": boxed,
-            "final_summary_excerpt": summary[:4000],
+            "final_summary_excerpt": summary[:16000],
             "final_summary_chars": len(summary),
             "summary_file": str(summary_path) if summary else None,
             "has_lead_trail": has_trail,

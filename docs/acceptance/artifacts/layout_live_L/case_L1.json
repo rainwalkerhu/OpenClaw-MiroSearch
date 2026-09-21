@@ -1,0 +1,156 @@
+{
+  "case_id": "L1",
+  "query": "请锁定一条近两周娱乐圈多源冲突明显的明星恋情/分手/复合八卦热搜：营销号与主流娱乐媒体说法有何冲突？当事人或工作室如何回应？目前能确认什么、不能确认什么？请标明置信度，并做内容分析与关系拓扑。",
+  "overrides": [
+    "agent=mirothinker_v1.5_keep5_max200",
+    "llm=glm-flash",
+    "agent.main_agent.max_turns=12",
+    "++agent.research_intensity=deep",
+    "++agent.research_report_mode=true",
+    "+agent.main_agent.research_mode=verified",
+    "+output_formatter.detail_level=detailed",
+    "++agent.output_detail_level=detailed",
+    "+agent.main_agent.verification_min_search_rounds=3",
+    "+agent.main_agent.enable_lead_tracking=true",
+    "++agent.max_lead_follow_ups=2",
+    "++agent.max_scrape_per_task=8",
+    "++agent.deep_early_stop_on_agreement=true",
+    "++agent.parallel_tool_calls=true",
+    "++agent.deep_exit_on_early_stop=true",
+    "++agent.deep_post_early_stop_turns=1",
+    "++agent.max_final_answer_retries=1",
+    "++agent.oneshot_final_report=true",
+    "++agent.summary_keep_tool_result=2",
+    "++agent.summary_max_tokens_cap=4096",
+    "++llm.summary_max_tokens=4096"
+  ],
+  "env_patch": {
+    "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+    "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_ORDER_STRICT": "0",
+    "SEARCH_RESULT_NUM": "20",
+    "SEARXNG_BASE_URL": ""
+  },
+  "effective_config": {
+    "mode": "verified",
+    "search_profile": "parallel-trusted",
+    "search_result_num": 20,
+    "verification_min_search_rounds": 3,
+    "output_detail_level": "detailed",
+    "research_intensity": "deep"
+  },
+  "tracker_enabled_at_compose": true,
+  "tracker_max_follow_ups": 2,
+  "status": "completed",
+  "duration_seconds": 333.154665,
+  "final_boxed_answer": "鹿晗与关晓彤分手-复合传闻近两周再上热搜，但截至2026年9月17日双方从未官宣分手亦未官宣复合——\"已分手\"实为基于零互动超400天与商业切割的间接推断（高置信度确认\"未官宣\"，低置信度判定感情实际状态），营销号分手/复合说法互相矛盾且多次出现硬伤，当事人以事业内容替代回应、仅就具体谣言法律维权。",
+  "final_summary_excerpt": "## TL;DR / 结论（标明置信度）\n\n**核心事件**：鹿晗与关晓彤\"是否已分手/是否已复合\"的传闻自2025年起持续发酵，近两周（2026年9月中旬）因关晓彤29岁生日（9月17日）鹿晗连续第三年未公开送祝福而再度冲上热搜。**双方当事人及两家工作室从未正式确认分手，也从未确认复合**；2025年2月鹿晗工作室曾发维权声明否认\"造谣传谣\"，2026年1月双方工作室曾就司晓迪爆料同步发严正声明否认。分手说主要基于社交平台零互动超400天、生日祝福中断、联名商业体注销等**间接迹象**，均为推论而非官宣。\n\n**置信度：高（对\"分手未被官宣、传闻未被任何一方确认\"这一元事实）**——此结论由腾讯新闻[1]、新浪[2]、联合早报[10]等多家独立来源交叉印证，且口径一致。**对\"二人实际感情状态\"本身：低置信度**——无任何直接证据，所有判断均为粉丝/营销号基于行为痕迹的推测。\n\n## Conclusions\n\n1. **这是典型的\"沉默式分手罗生门\"**：2017年10月8日鹿晗微博高调官宣恋情（\"大家好，给大家介绍一下，这是我女朋友@关晓彤\"），二人此后保持每年互庆生日的仪式（鹿晗4月20日、关晓彤9月17日），该仪式持续七年[1]。\n2. **仪式断裂 + 商业切割构成\"软分手\"证据链**：2024年12月27日二人共同持股的清晗文化（厦门鹿彤影视）核准注销；联名奶茶\"一鹿彤行\"撤掉双人海报、线上账号停更[1]。2025年4月20日、9月17日及2026年4月20日、9月17日四轮生日互祝全部缺席[1][2][4]。\n3. **复合说反复被炒又反复崩盘**：2026年3月15日\"双顶流情侣已复合\"空降热搜第一，但爆料称\"双方均为三字姓名\"与\"鹿晗\"二字存在硬伤，开场即崩盘[搜索结果-微博智搜][3]；2026年8月17日13:14鹿晗发挪威极光视频被解读为\"一生一世\"，又有网友扒出关晓彤同期定位亦在挪威，但后续信息显示更像四人朋友小团，截至8月底双方工作室均未确认同游或回应复合[1]。\n4. **当事人的应对策略是\"以事业内容替代感情回应\"**：关晓彤以央视一套黄金档新剧《生逢其时》（2026年9月3日开播）为公开主线；鹿晗以音乐、综艺（《哈哈哈哈哈》第六季）、世界杯直播、公益项目为主要动态[1]。\n5. **周边谣言多次被官方否认**：2026年1月网红司晓迪点名包括鹿晗、王安宇在内的多位男艺人并配\"床照\"截图，鹿晗工作室1月3日凌晨连发两份声明并甩出区块链存证[6]；关晓彤与王安宇新恋情传闻被两家工作室同步声明否认，王安宇后在杨天真播客中称两人\"纯纯朋友\"[1]。\n\n## 冲突与不确定 / Conflicts & Uncertainties\n\n| 主体 | 说法 | 冲突点 | 可能的口径原因 |\n|---|---|---|---|\n| 营销号/狗仔（刘大锤等） | 二人已于2024年12月\"和平分手\"[4]；2026年3月爆料\"双顶流复合、女方恳求挽回\"[9][Threads/setnews] | 分手时间、是否复合说法前后矛盾（先说2024年12月已分，又说2026年求复合） | 流量驱动，爆料依赖匿名信源，硬伤频出（\"三字姓名\"细节与鹿晗二字名不符） |\n| 主流娱乐媒体（腾讯新闻等） | 仅陈述可核验事实：零互动超400天、工作室未发任何声明[1] | 与营销号\"坐实分手\"口径冲突——主流媒体强调\"传闻未获当事人官宣\" | 主流媒体需规避法律风险，只报道可验证事实 |\n| 鹿晗工作室 | 2025年2月25日发维权声明，称监测到\"针对鹿晗捏造发布虚假信息\"[10]；2026年1月3日就司晓迪爆料连发两份声明+区块链存证[6]；ETtoday报道其就\"买醉失态\"传闻表态\"已为不当行为承担\"，同时称将起诉[5] | 只维权针对具体谣言（床照、失态），**从未正面确认或否认与关晓彤的恋爱状态** | 法律上仅对可起诉的具体不实信息维权；感情状态沉默可能是有意保留空间 |\n| 关晓彤方面 | 2026年1月与王安宇绯闻由工作室声明否认[1] | 对分手/复合传闻完全沉默 | 同上；以剧宣填充舆论场 |\n| 部分自媒体（Facebook帖等） | \"陪着的男人竟然是他\"暗示庆生现场有第三方男性[Facebook帖] | 单方宣称，无法核实庆生现场细节 | 标题党引流 |\n| 台湾/海外媒体（SETN、HK01、文学城） | 转述\"女方主动低头挽回\"复合说[Threads][8][9] | 与\"已分手\"口径并存，同一媒体生态内自我矛盾 | 海外中文媒体多为二手转述，信源衰减严重 |\n\n**无法核实项**：分手的确切时间（\"2024年12月\"仅为狗仔单方宣称）；复合传闻真伪；挪威同游是否属实；\"1807万奶茶纠纷\"与恋情无关，属并行事件但被营销号捆绑叙事。\n\n## 时间线 / Timeline\n\n- **2017-10-08**：鹿晗微博官宣恋情，微博服务器一度瘫痪[1]\n- **2024-08**：日本街头被路人拍到同框，为可查到的最后一次公开同框[1]\n- **2024-11**：鹿晗转发关晓彤《小巷人家》宣传微博后数分钟删除；此后再无互动[1]\n- **2024-12-27**：清晗文化（厦门鹿彤影视）核准注销[1]\n- **2025-01（2026年初司晓迪事件为2026年1月）**：见下\n- **2025-02-25**：鹿晗工作室发维权声明[10]\n- **2025-04-20**：鹿晗35岁生日，关晓彤未发零点祝福（仪式首次断裂）[1]\n- **2025-09-17**：关晓彤28岁生日，鹿晗未发祝福[1]\n- **2026-01**：司晓迪点名鹿晗、范丞丞等十余男艺人配\"床照\"；鹿晗工作室1月3日凌晨连发两份声明[6]；关晓彤与王安宇绯闻，双方工作室声明否认[1]\n- **2026-03-15**：\"双顶流情侣已复合\"空降热搜第一，因\"三字姓名\"硬伤崩盘[微博智搜][3]\n- **2026-03-31前后**：文学城等媒体炒作\"女方求复合\"[8]\n- **2026-04-20**：鹿晗36岁生日，关晓彤无动静[1]\n- **2026-07**：王安宇上杨天真播客称与关晓彤\"纯纯朋友\"[1]\n- **2026-08-17 13:14**：鹿晗发挪威极光视频无配文，被解读\"一生一世\"；同期关晓彤定位亦在挪威；后续称四人朋友小团；工作室未回应[1]\n- **2026-09-03**：关晓彤主演《生逢其时》CCTV-1黄金档开播[1]\n- **2026-09-13**：腾讯新闻发文梳理\"早已拉开距离\"[1]\n- **2026-09-17**：关晓彤29岁生日，鹿晗连续第三年缺席祝福，话题再登热搜[2][4]\n\n## Evidence\n\n1. [1] 腾讯新闻《分手传闻一年多后，28岁关晓彤高调官宣喜讯》（2026-09-13）：零互动超400天（自2024年11月起算）；清晗文化2024-12-27核准注销；《生逢其时》2026-09-03于CCTV-1开播，28集（电视播26集）；鹿晗2026-08-17 13:14发挪威极光视频；截至8月底工作室未回应复合。\n2. [2] 新浪娱乐（2026-09-17）：关晓彤29岁生日鹿晗祝福缺席，零互动超400天。\n3. [4] 新浪（k.sina.com.cn）：狗仔刘大锤爆料称二人2024年12月和平分手——**单方宣称，无官方佐证**。\n4. [6] 搜狐（m.sohu.com）：2026年1月司晓迪点名鹿晗等十余男艺人；鹿晗工作室2026-01-03凌晨连发两份声明、区块链存证。\n5. [10] 联合早报（2025-02-26）：鹿晗工作室2025-02-25微博维权声明。\n6. [微博智搜]（2026-03-15热搜复盘）：\"曝双顶流情侣已复合\"因\"双方均为三字姓名\"与鹿晗二字名不符而崩盘。\n7. [9] HK01 / [Threads @setnews]（2026-03-16前后）：网传\"女方恳求复合\"——单方宣称，遭\"开场即崩盘\"评价[3]。\n\n## 已确认 vs 未确认 / Confirmed vs Unconfirmed\n\n- **已确认（高置信度，多源一致）**：\n  - 双方及两家工作室从未官宣分手，也从未官宣复合；2017年官宣微博仍保留[1]\n  - 社交平台零互动超400天、四轮生日祝福缺席[1][2]\n  - 清晗文化注销、联名奶茶双人物料撤除[1]\n  - 鹿晗工作室2025年2月及2026年1月的维权/辟谣声明均未涉及感情状态本身[6][10]\n  - 关晓彤与王安宇绯闻已被双方工作室否认[1]\n- **未确认 / 无法确认（低置信度）**：\n  - 是否实际已分手、\"2024年12月分手\"时间点（仅狗仔单方宣称）\n  - 3月复合传闻、8月挪威同游是否属实（工作室未确认，有\"四人小团\"说法）\n  - 庆生现场细节、\"女方求复合\"等衍生叙事\n\n## Gaps in Knowledge\n\n- 无法获取两家工作室微博原文全文以核对声明措辞是否隐晦提及感情状态。\n- 司晓迪爆料的法律诉讼进展无后续可查信息。\n- \"1807万奶茶纠纷\"具体司法文书未见，无法确认金额与责任归属。\n- 挪威行程的同行人员构成仅有\"后续信息显示\"的模糊表述，缺乏影像独立佐证。\n\n## 内容分析 / Content Analysis\n\n- **叙事机制**：本事件是\"仪式符号新闻学\"的典型——主流媒体与网友均以\"生日祝福是否出现\"作为感情状态代理指标，当事人沉默本身成为被报道的内容。\n- ",
+  "final_summary_chars": 6013,
+  "summary_file": "/workspace/repos/OpenClaw-MiroSearch/docs/acceptance/artifacts/layout_live_L/case_L1_summary.md",
+  "has_lead_trail": true,
+  "log_file": "/workspace/repos/OpenClaw-MiroSearch/docs/acceptance/artifacts/layout_live_L/logs/task_acceptance_l1_20260921_014201_2026-09-21-09-42-01.json",
+  "metrics": {
+    "rate_limit_429_count": 0,
+    "timeout_count": 2,
+    "http_timeout_count": 2,
+    "wall_timeout_count": 0,
+    "llm_retry_count": 1,
+    "summary_passes": 1,
+    "key_switch_count": 0,
+    "model_route_hits": {
+      "glm-5.3-flash": {
+        "glm-5.3-flash": 4
+      }
+    },
+    "search_rounds": 5,
+    "search_attempts": 6,
+    "search_provider_hits": {
+      "serper": 5
+    },
+    "scrape_count": 1,
+    "follow_up_searches": 0,
+    "early_stop_triggered": true,
+    "early_stop_turn": 2,
+    "total_duration_ms": 333152,
+    "stage_durations": {
+      "pipeline.llm_client_init": 80,
+      "pipeline.orchestrator_init": 0,
+      "llm.request.main": 70820,
+      "answer_generator.llm_call.main": 70825,
+      "llm.request.final_summary": 71459,
+      "answer_generator.llm_call.final_summary": 71461,
+      "pipeline.main_agent_run": 333067,
+      "pipeline.total": 333152
+    },
+    "failback_activated": false,
+    "failback_model": "",
+    "effective_config": {
+      "mode": "verified",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 20,
+      "verification_min_search_rounds": 3,
+      "output_detail_level": "detailed",
+      "research_intensity": "deep"
+    }
+  },
+  "route_traces": [],
+  "lead_steps_count": 7,
+  "gate_evaluation": {
+    "gates": "hotspot_detailed",
+    "detail_level": "detailed",
+    "pass": true,
+    "failures": [],
+    "structure_valid": true,
+    "structure_issues": [],
+    "structure_metadata": {
+      "found_sections": [
+        "tldr",
+        "conclusion",
+        "conflicts",
+        "timeline",
+        "evidence",
+        "confirmed",
+        "references"
+      ],
+      "missing_required": [],
+      "section_lengths": {
+        "tldr": 373,
+        "conclusion": 694,
+        "conflicts": 899,
+        "timeline": 786,
+        "evidence": 542,
+        "confirmed": 350,
+        "references": 1037
+      },
+      "citation_count": 55,
+      "has_conflicts_section": true,
+      "unsourced_number_warnings": [
+        "2026",
+        "9",
+        "2025",
+        "2026",
+        "1807",
+        "2017",
+        "2024",
+        "14"
+      ]
+    },
+    "summary_chars": 6013,
+    "has_confidence_marker": true,
+    "has_conflicts_heading": true,
+    "has_content_analysis": true,
+    "has_mermaid_topology": true,
+    "unsourced_number_warnings": [
+      "2026",
+      "9",
+      "2025",
+      "2026",
+      "1807",
+      "2017",
+      "2024",
+      "14"
+    ]
+  },
+  "error": null
+}

@@ -86,8 +86,8 @@ def test_render_markdown_collapses_full_process_after_final_summary():
 
     assert '<div class="search-step-board">' in markdown
     assert markdown.count('class="search-step-item"') == 1
-    assert 'Search: "海拉鲁大陆历史 塞尔达传说"' in markdown
-    assert "Found 1 results" in markdown
+    assert '检索: "海拉鲁大陆历史 塞尔达传说"' in markdown
+    assert "找到 1 条结果" in markdown
     assert "检索模式: fallback" in markdown
     assert "<details class=\"process-details\">" in markdown
     assert "## 📋 研究总结" in markdown
@@ -661,3 +661,45 @@ def test_update_state_with_final_output_renders_summary():
     assert "## \U0001f4cb 研究总结" in markdown
     assert "# 缓存结果" in markdown
     assert "等待开始研究" not in markdown
+
+
+def test_prepare_safe_threads_detail_level_compact_skips_auto_analysis():
+    """compact 档位不得自动注入内容分析 / Mermaid；detailed 可注入。"""
+    demo_main = _load_demo_main()
+    conflict_report = (
+        "## TL;DR\n传闻待核实。\n\n"
+        "## 冲突与不确定\n"
+        "- 说法 A 与官方通报矛盾\n"
+        "- 缺少权威信源二次确认\n\n"
+        "## References\n"
+        "[1] https://example.com/a\n"
+    )
+    compact = demo_main._prepare_user_facing_report_safe(
+        conflict_report, detail_level="compact"
+    )
+    assert "```mermaid" not in compact
+    assert "内容分析" not in compact
+
+    detailed = demo_main._prepare_user_facing_report_safe(
+        conflict_report, detail_level="detailed"
+    )
+    assert "内容分析" in detailed or "```mermaid" in detailed
+
+
+def test_build_summary_section_passes_compact_detail_level():
+    demo_main = _load_demo_main()
+    conflict_report = (
+        "## 结论\n短结论。\n\n"
+        "## 冲突与不确定\n"
+        "- 双方说法不一致\n\n"
+        "## References\n"
+        "[1] https://example.com/b\n"
+    )
+    rendered = "".join(
+        demo_main._build_summary_section(
+            [conflict_report], output_detail_level="compact"
+        )
+    )
+    assert "## 📋 研究总结" in rendered
+    assert "```mermaid" not in rendered
+    assert "report-tldr" in rendered or "结论" in rendered

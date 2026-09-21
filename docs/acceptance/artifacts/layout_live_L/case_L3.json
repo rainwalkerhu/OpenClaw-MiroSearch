@@ -1,0 +1,156 @@
+{
+  "case_id": "L3",
+  "query": "请锁定一条近期科技/AI 领域流传较广的谣言或夸大宣称（产品造假、数据注水或政策误读均可）：谣言版本、官方/权威媒体澄清、第三方测评之间有何冲突？证据链到哪一步仍断？请给置信度，并附内容分析与关系拓扑。",
+  "overrides": [
+    "agent=mirothinker_v1.5_keep5_max200",
+    "llm=glm-flash",
+    "agent.main_agent.max_turns=12",
+    "++agent.research_intensity=deep",
+    "++agent.research_report_mode=true",
+    "+agent.main_agent.research_mode=verified",
+    "+output_formatter.detail_level=detailed",
+    "++agent.output_detail_level=detailed",
+    "+agent.main_agent.verification_min_search_rounds=3",
+    "+agent.main_agent.enable_lead_tracking=true",
+    "++agent.max_lead_follow_ups=2",
+    "++agent.max_scrape_per_task=8",
+    "++agent.deep_early_stop_on_agreement=true",
+    "++agent.parallel_tool_calls=true",
+    "++agent.deep_exit_on_early_stop=true",
+    "++agent.deep_post_early_stop_turns=1",
+    "++agent.max_final_answer_retries=1",
+    "++agent.oneshot_final_report=true",
+    "++agent.summary_keep_tool_result=2",
+    "++agent.summary_max_tokens_cap=4096",
+    "++llm.summary_max_tokens=4096"
+  ],
+  "env_patch": {
+    "SEARCH_PROVIDER_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_MODE": "parallel_conf_fallback",
+    "SEARCH_PROVIDER_TRUSTED_ORDER": "serpapi,tavily,searxng,serper",
+    "SEARCH_PROVIDER_ORDER_STRICT": "0",
+    "SEARCH_RESULT_NUM": "20",
+    "SEARXNG_BASE_URL": ""
+  },
+  "effective_config": {
+    "mode": "verified",
+    "search_profile": "parallel-trusted",
+    "search_result_num": 20,
+    "verification_min_search_rounds": 3,
+    "output_detail_level": "detailed",
+    "research_intensity": "deep"
+  },
+  "tracker_enabled_at_compose": true,
+  "tracker_max_follow_ups": 2,
+  "status": "completed",
+  "duration_seconds": 432.13961,
+  "final_boxed_answer": "Astra 案例属\"数字为真、前提失真\"的软性数据注水：99% 分数依赖未公开的 provider-adapter harness，标准设置仅约 63%，证据链断在\"99% 结果不可独立复现\"与\"98.55%/99.9% 数字关系仅有单方转述\"两处，整体置信度：中。",
+  "final_summary_excerpt": "## TL;DR / 结论（标明置信度）\n\n**核心结论（置信度：中）**：本次锁定的事件是围绕 OpenAI \"GPT-6 Astra\" 在 ARC-AGI-3 基准上取得 **98.6%–99.9%** 分数的传播链。广泛流传的版本是\"Astra 在 ARC-AGI-3 上接近满分、基准已被刷穿（saturated）、超越人类表现、AGI 级突破\"；而原始评测方 ARC Prize 与 OpenAI 自己的博客都表明，99%+ 的分数依赖一个**非默认、不对公众发布的 \"provider-adapter\" 评测脚手架（harness）**，同一模型在标准设置下仅约 **62.7%–63%**。这不是典型的\"数据造假\"，而是\"技术上为真但口径极具误导性的指标表述\"（technically true but misleading metric reporting）。置信度为\"中\"的理由：多来源交叉指向同一结构性事实，但我仅能依据搜索摘要与部分被抓取页面，未能直接核验 ARC Prize 官方博客全文的完整数字口径，且多数关键帖子的确切发布日期无法核实。\n\n## Conclusions / 详细结论\n\n1. **事件性质**：属于\"数据注水/夸大宣称\"类案例，而非伪造分数。分数本身大概率真实（有 ARC Prize 半私有集验证运行），但传播中剥离了\"该分数依赖专用 harness\"这一关键限定条件。\n2. **三方立场**：\n   - **传播层（谣言/夸大版）**：社交平台流传\"Astra 99%/99.9% 刷穿 ARC-AGI-3、超越人类 96% 的任务、五个月前最好模型还不到 1%\"，被部分账号直接解读为\"AGI 已到/基准已死\"[5][3][7]。\n   - **官方层**：OpenAI 博客《How enabling two settings tripled our scores on the ARC-AGI-3》承认通过开启两个设置使分数提升约三倍，并披露此前模型在 ARC-AGI-3 上表现很差（GPT-5.6 Sol 仅 7.8%、GPT-5.5 约 0.4%）[6]；ARC Prize 官方博客则给出对照：Astra 标准设置约 63%，provider-adapter 设置 99%[2][5]。\n   - **第三方/独立评论层**：Hacker News、Reddit r/singularity 帖子直指 scorecard \"extremely misleading\"，因为官方计分板自身注明\"在 responses API harness 下我们估计 Sol…\"（即分数高度依赖 harness 口径）[1][4]；thenewstack 的分析标题点出核心矛盾：\"OpenAI 会卖给你 Astra，但不会卖给你刷出 98.6% 的那套系统——基准测的是系统，不是模型\"[10]；kingy.ai 的评论指出 OpenAI 官宣的 99.9% 实际对应 high-reasoning 的 99.95%，而 ARC Prize 验证过的最高是 max-reasoning 的 98.55%[8]。\n3. **成本口径也被质疑**：YouTube 解读视频给出\"provider-adapter 下约 $19K 拿到 99.9%（Semi-Private），同一测试标准设置约 $26K 只拿 62.7%\"[9]，说明高分的额外代价与口径切换同时存在。\n\n## 冲突与不确定 / Conflicts & Uncertainties\n\n| 主体 | 说法 | 冲突点 | 口径原因（推测，需标注） |\n|---|---|---|---|\n| 社媒传播者 | \"Astra 99%+，ARC-AGI-3 被刷穿，超人类表现\" [5][7] | 与标准设置 62.7%–63% 相差 36 个百分点以上 | 只引用 high-effort + provider-adapter 数字，剥离前置条件 |\n| OpenAI（官方） | \"开启两个设置使分数提升三倍\"；官宣 headline 99.9% [6][8] | 官方博客同时自曝低分历史（7.8%/0.4%），与宣传数字形成张力 | 营销叙事选择最优口径；\"technically true\" |\n| ARC Prize（评测方） | Astra 63% 标准设置 vs 99% provider-adapter；98.55% 为验证值 [2][5][8] | 与 OpenAI headline 99.9% 不一致（99.95% vs 98.55% 属不同 reasoning 档位） | 评测口径（max/high reasoning、harness 类型）未被传播层区分 |\n| HN/Reddit 评论者 | \"scorecard 极具误导性\" [1][4] | 认为连 ARC Prize 的呈现方式本身都有问题 | 认为计分板默认呈现掩盖了 harness 依赖性 |\n| thenewstack / kingy.ai | \"可购买的是模型，刷分的是系统；harness 不对公众提供\" [8][10] | 无法独立复现 99% 结果，因为 harness 未开放 | 商业保密 vs 可复现性冲突 |\n\n**无法核实/单方宣称**：① 99.95% headline 与 98.55% 验证值的关系仅见于 kingy.ai 单方转述[8]，未见 ARC Prize 原文直接核对；② $19K/$26K 成本数字仅来自 YouTube 视频标题[9]；③ \"超人类 96% 任务\" 的具体统计口径未见原始定义；④ 所有帖子/推文的**确切发布日期均无法从摘要中确认**。\n\n## 时间线 / Timeline\n\n> 说明：以下多数时间点仅能依据来源相对关系（如\"五个月前\"）推断，**绝对日期无法核实**，特此标注。\n\n- 早期（具体日期不可核实）：GPT-5.5 在 ARC-AGI-3 上约 0.4%，GPT-5.6 Sol 约 7.8%（OpenAI 博客转述）[6]。\n- 约五个月前（据 LinkedIn 帖子自述反推，绝对日期不可核实）：ARC-AGI-3 最好模型分数低于 1%[3]。\n- 2026 年（具体日期不可核实）：OpenAI 发布 Astra 相关结果；ARC Prize 发博客《OpenAI's GPT-6 Astra on ARC-AGI-3》给出 63%/99% 对照[2]；OpenAI 发博客解释\"两个设置\"的提分机制[6]；社区争议集中爆发（HN item id 49556467、Reddit 帖、X 帖、YouTube 视频等）[1][4][5][9][10]。\n\n## Evidence / 证据\n\n1. **62.7%/63% vs 99% 的双口径**：ARC Prize 官方 X 账号帖子\"Astra scores 63% on ARC-AGI-3, 99% via a new provider...\"[5]；X 用户 rohanpaul_ai 转述\"99% with a new provider-adapter harness...beats human performance on 96% of ARC-AGI-3\"[5]。（日期不可核实）\n2. **98.55%（验证）vs 99.95%（headline→宣传为99.9%）**：kingy.ai《Astra Scored 98.6% on ARC-AGI-3...》[8]。单方转述，需核对原文。\n3. **OpenAI 自述提分机制与历史低分**：openai.com 博客《How enabling two settings tripled our scores on the ARC-AGI-3》，含 GPT-5.6 Sol 7.8%、GPT-5.5 0.4%[6]。\n4. **成本**：约 $19K（99.9%，Semi-Private，provider-adapter）vs 约 $26K（62.7%），来自 YouTube 视频描述[9]；o3 时期同类争议中\"低算力版 $20/题、高算力 172 倍超 $3000/题\"有 r/MachineLearning 帖为旁证，说明该类争议有历史惯性。\n5. **社区指控\"误导性表述\"**：Reddit r/singularity 帖《The prevalent problem of misleading benchmark reporting (re: Astra)》称其为\"technically true metric...most egregious recent example\"[1]；HN 帖指 scorecard 自注 \"with [the responses API] harness, we estimate Sol...\"[4]。\n6. **harness 不对公众开放**：thenewstack《OpenAI will sell you Astra, but not the system that scored 98.6%...》，指出\"benchmark measures the system, not the model\"[10]。\n7. **历史同类先例**：Reflection 70B 被第三方 Artificial Analysis 无法复现、CEO 道歉（ifanr 报道，2024-09-08 前后）[B2][B3]；腾讯开发者社区总结四大跑",
+  "final_summary_chars": 7258,
+  "summary_file": "/workspace/repos/OpenClaw-MiroSearch/docs/acceptance/artifacts/layout_live_L/case_L3_summary.md",
+  "has_lead_trail": true,
+  "log_file": "/workspace/repos/OpenClaw-MiroSearch/docs/acceptance/artifacts/layout_live_L/logs/task_acceptance_l3_20260921_015146_2026-09-21-09-51-46.json",
+  "metrics": {
+    "rate_limit_429_count": 9,
+    "timeout_count": 2,
+    "http_timeout_count": 2,
+    "wall_timeout_count": 0,
+    "llm_retry_count": 10,
+    "summary_passes": 1,
+    "key_switch_count": 0,
+    "model_route_hits": {
+      "glm-5.3-flash": {
+        "glm-5.3-flash": 4
+      }
+    },
+    "search_rounds": 5,
+    "search_attempts": 6,
+    "search_provider_hits": {
+      "serper": 5
+    },
+    "scrape_count": 1,
+    "follow_up_searches": 0,
+    "early_stop_triggered": true,
+    "early_stop_turn": 6,
+    "total_duration_ms": 432137,
+    "stage_durations": {
+      "pipeline.llm_client_init": 10,
+      "pipeline.orchestrator_init": 0,
+      "llm.request.main": 96373,
+      "answer_generator.llm_call.main": 106771,
+      "llm.request.final_summary": 82421,
+      "answer_generator.llm_call.final_summary": 82423,
+      "pipeline.main_agent_run": 432122,
+      "pipeline.total": 432137
+    },
+    "failback_activated": false,
+    "failback_model": "",
+    "effective_config": {
+      "mode": "verified",
+      "search_profile": "parallel-trusted",
+      "search_result_num": 20,
+      "verification_min_search_rounds": 3,
+      "output_detail_level": "detailed",
+      "research_intensity": "deep"
+    }
+  },
+  "route_traces": [],
+  "lead_steps_count": 7,
+  "gate_evaluation": {
+    "gates": "hotspot_detailed",
+    "detail_level": "detailed",
+    "pass": true,
+    "failures": [],
+    "structure_valid": true,
+    "structure_issues": [],
+    "structure_metadata": {
+      "found_sections": [
+        "tldr",
+        "conclusion",
+        "conflicts",
+        "timeline",
+        "evidence",
+        "confirmed",
+        "references"
+      ],
+      "missing_required": [],
+      "section_lengths": {
+        "tldr": 461,
+        "conclusion": 958,
+        "conflicts": 929,
+        "timeline": 410,
+        "evidence": 1242,
+        "confirmed": 412,
+        "references": 1255
+      },
+      "citation_count": 55,
+      "has_conflicts_section": true,
+      "unsourced_number_warnings": [
+        "98.6%",
+        "99.9%",
+        "99%",
+        "5",
+        "99.9%",
+        "1%",
+        "4",
+        "6"
+      ]
+    },
+    "summary_chars": 7258,
+    "has_confidence_marker": true,
+    "has_conflicts_heading": true,
+    "has_content_analysis": true,
+    "has_mermaid_topology": true,
+    "unsourced_number_warnings": [
+      "98.6%",
+      "99.9%",
+      "99%",
+      "5",
+      "99.9%",
+      "1%",
+      "4",
+      "6"
+    ]
+  },
+  "error": null
+}
