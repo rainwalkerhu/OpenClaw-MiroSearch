@@ -2916,6 +2916,26 @@ def _decorate_report_for_web(markdown_text: str, detail_level: Optional[str] = N
 
 
 
+def _keep_last_report_glance(decorated_blocks: List[str]) -> List[str]:
+    """Keep a single consumer glance card when streamed summaries differ only by confidence.
+
+    Balanced/detailed merge uses ``all_unique``, so an early mid-confidence reshape and a
+    later high-confidence reshape can both survive. Rendering both produces duplicate
+    「结论 / 置信度」 chrome in the a11y tree. Prefer the latest glance-bearing block.
+    """
+    if len(decorated_blocks) <= 1:
+        return decorated_blocks
+    glance_indexes = [
+        idx
+        for idx, block in enumerate(decorated_blocks)
+        if 'class="report-glance"' in str(block or "")
+    ]
+    if len(glance_indexes) <= 1:
+        return decorated_blocks
+    drop = set(glance_indexes[:-1])
+    return [block for idx, block in enumerate(decorated_blocks) if idx not in drop]
+
+
 def _build_summary_section(
     final_summary_blocks: List[str],
     output_detail_level: Optional[str] = None,
@@ -2936,8 +2956,11 @@ def _build_summary_section(
     normalized = (_normalize_latex_like_markup(block) for block in sanitized)
     rewritten = (_humanize_pipeline_fallback(block) for block in normalized)
     # linkify first, then decorate so ref-chip class lands on citation anchors
-    linkified = (_linkify_reference_citations(block) for block in rewritten)
-    lines.extend(_decorate_report_for_web(block, detail_level=resolved_detail) for block in linkified)
+    linkified = [_linkify_reference_citations(block) for block in rewritten]
+    decorated = [
+        _decorate_report_for_web(block, detail_level=resolved_detail) for block in linkified
+    ]
+    lines.extend(_keep_last_report_glance(decorated))
     return lines
 
 
@@ -2970,10 +2993,13 @@ def _build_process_details_section(
     label = _progress_copy("progress_process_summary")
     if step_count and step_count > 0:
         label = f"{label} · {step_count}"
+    # data-collapsed + fingerprint: Gradio markdown morph can preserve a stale
+    # [open] from an earlier stream tick; fingerprint remounts and JS force-closes once.
+    fingerprint = abs(hash((label, len(process_lines), step_count or 0))) % 1_000_000_007
     lines = [
         "\n\n",
         (
-            '<details class="process-details">\n'
+            f'<details class="process-details" data-collapsed="1" data-fp="{fingerprint}">\n'
             f"<summary>🧭 {html.escape(label, quote=False)}</summary>\n\n"
         ),
     ]
@@ -7296,6 +7322,46 @@ def build_demo():
     })();
     </script>
     """
+    process_details_force_close_script = """
+    <script>
+    (() => {
+        const closeFinishedProcessPanels = (root) => {
+            const scope = root && root.querySelectorAll ? root : document;
+            scope.querySelectorAll('details.process-details[data-collapsed="1"]').forEach((el) => {
+                if (el.dataset.userToggled === '1') { return; }
+                if (el.open) { el.open = false; }
+                if (el.dataset.boundToggle === '1') { return; }
+                el.dataset.boundToggle = '1';
+                el.addEventListener('toggle', () => {
+                    if (el.open) { el.dataset.userToggled = '1'; }
+                });
+            });
+        };
+        const mo = new MutationObserver((mutations) => {
+            for (const m of mutations) {
+                if (m.type === 'childList' || m.type === 'attributes') {
+                    closeFinishedProcessPanels(document);
+                    break;
+                }
+            }
+        });
+        const start = () => {
+            closeFinishedProcessPanels(document);
+            mo.observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['open', 'data-collapsed', 'data-fp'],
+            });
+        };
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', start, { once: true });
+        } else {
+            start();
+        }
+    })();
+    </script>
+    """
     # 任务 ID URL 同步桥：把 ?task_id=xxx 写入 / 读取 URL。
     task_id_url_bridge_script = """
     <script>
@@ -7394,7 +7460,7 @@ def build_demo():
 })();
 </script>
 """
-    demo_head = f"{favicon_head}{skills_bind_script}{task_id_url_bridge_script}{miro_modal_js}"
+    demo_head = f"{favicon_head}{skills_bind_script}{process_details_force_close_script}{task_id_url_bridge_script}{miro_modal_js}"
 
     def _get_i18n(lang: str):
         return I18N.get(lang, I18N[DEFAULT_LANG])

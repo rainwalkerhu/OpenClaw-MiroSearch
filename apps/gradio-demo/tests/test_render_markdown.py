@@ -89,12 +89,12 @@ def test_render_markdown_collapses_full_process_after_final_summary():
     assert '检索: "海拉鲁大陆历史 塞尔达传说"' in markdown
     assert "找到 1 条结果" in markdown
     assert "检索模式: fallback" in markdown
-    assert "<details class=\"process-details\">" in markdown
+    assert '<details class="process-details"' in markdown
     assert "### 研究报告" in markdown
 
     search_steps_pos = markdown.index('<div class="search-step-board">')
     summary_pos = markdown.index("### 研究报告")
-    details_pos = markdown.index("<details class=\"process-details\">")
+    details_pos = markdown.index('<details class="process-details"')
     search_card_pos = markdown.index('<div class="search-card">')
     # Answer-first: summary above folded process; search steps live inside the fold.
     assert summary_pos < details_pos < search_steps_pos
@@ -639,7 +639,7 @@ def test_summary_section_comes_before_folded_process():
         state = demo_main._update_state_with_event(state, e)
     md = demo_main._render_markdown(state)
     idx_h2 = md.find("### 研究报告")
-    idx_details = md.find('<details class="process-details">')
+    idx_details = md.find('<details class="process-details"')
     assert idx_h2 != -1 and idx_details != -1
     assert idx_h2 < idx_details
     assert "思考与检索过程（已完成，点击展开）" in md
@@ -722,6 +722,36 @@ def test_decorate_folds_evidence_and_deep():
     assert out.count('<details class="report-fold">') == 2
     assert "证据与来源" in out
     assert "深入了解" in out
+
+
+
+
+def test_build_summary_section_keeps_single_glance_from_stream_dupes():
+    """Balanced all_unique merge can keep mid then high confidence reshapes."""
+    demo_main = _load_demo_main()
+    mid = (
+        "## 结论\n"
+        "1+1=2\n\n"
+        "<!-- confidence:mid -->\n"
+        "**置信度：中**\n\n"
+        "## 深入了解\n### 详细分析\n补充说明。\n"
+    )
+    high = (
+        "## 结论\n"
+        "1+1=2\n\n"
+        "<!-- confidence:high -->\n"
+        "**置信度：高**\n\n"
+        "## 深入了解\n### 详细分析\n补充说明。\n"
+    )
+    rendered = "".join(
+        demo_main._build_summary_section(
+            [mid, high], output_detail_level="balanced"
+        )
+    )
+    assert rendered.count('class="report-glance"') == 1
+    assert "置信度：高" in rendered
+    assert "置信度：中" not in rendered
+    assert "深入了解" in rendered
 
 
 def test_normalize_output_detail_level_accepts_cn_labels():
