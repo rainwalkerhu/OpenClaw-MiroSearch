@@ -267,6 +267,34 @@ def strip_duplicate_trailing_conclusion(text: str) -> str:
     return kept
 
 
+
+def renumber_citations(text: str) -> str:
+    """Compact citation numbers to 1..N by first-appearance order.
+
+    Keeps links usable when the model skips ids (e.g. missing [4]/[8]).
+    Rewrites both body markers like [3] and matching References list markers.
+    """
+    if not text:
+        return text
+    # Collect ids in order of first appearance (body + refs)
+    found: list[int] = []
+    seen: set[int] = set()
+    for m in re.finditer(r"\[(\d+)\]", text):
+        n = int(m.group(1))
+        if n not in seen:
+            seen.add(n)
+            found.append(n)
+    if not found or found == list(range(1, len(found) + 1)):
+        return text
+    mapping = {old: i for i, old in enumerate(found, 1)}
+
+    def _sub(m: re.Match[str]) -> str:
+        old = int(m.group(1))
+        return f"[{mapping.get(old, old)}]"
+
+    return re.sub(r"\[(\d+)\]", _sub, text)
+
+
 def prepare_user_facing_report(
     text: str, *, detail_level: str = "detailed"
 ) -> str:
@@ -278,6 +306,7 @@ def prepare_user_facing_report(
     out = compact_pending_lead_trail(out)
     out = ensure_content_analysis_and_topology(out, detail_level=detail_level)
     out = strip_duplicate_trailing_conclusion(out)
+    out = renumber_citations(out)
     # collapse excessive blank lines
     out = re.sub(r"\n{3,}", "\n\n", out).strip() + "\n"
     return out

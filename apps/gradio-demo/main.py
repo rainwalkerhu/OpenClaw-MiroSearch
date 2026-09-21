@@ -1,4 +1,5 @@
 import asyncio
+import contextvars
 import base64
 import io
 import html
@@ -326,6 +327,8 @@ LANG_EN = "en"
 LANG_CN = "cn"
 DEFAULT_LANG = LANG_CN
 
+_UI_LANG: "contextvars.ContextVar[str]" = contextvars.ContextVar("ui_lang", default=DEFAULT_LANG)
+
 I18N = {
     LANG_EN: {
         "page_title": "OpenClaw-MiroSearch - Deep Research",
@@ -371,6 +374,7 @@ I18N = {
         "progress_output": "Output",
         "progress_executed": "Executed",
         "progress_untitled": "Untitled",
+        "progress_process_summary": "View search process (intermediate steps)",
         "btn_settings_title": "Settings",
         "btn_export_title": "Export",
         "btn_stop_title": "Stop research",
@@ -425,6 +429,7 @@ I18N = {
         "progress_output": "输出",
         "progress_executed": "已执行",
         "progress_untitled": "无标题",
+        "progress_process_summary": "查看检索过程（中间步骤）",
         "btn_settings_title": "设置",
         "btn_export_title": "导出",
         "btn_stop_title": "停止研究",
@@ -594,8 +599,12 @@ def _tool_display_name(raw_name: str) -> str:
 
 
 def _progress_copy(key: str, *, lang: Optional[str] = None, **fmt) -> str:
-    """UI progress strings; default Chinese (DEFAULT_LANG)."""
-    resolved = lang if lang in I18N else DEFAULT_LANG
+    """UI progress strings; follow explicit lang, else current UI lang ContextVar."""
+    try:
+        current = _UI_LANG.get()
+    except LookupError:
+        current = DEFAULT_LANG
+    resolved = lang if lang in I18N else (current if current in I18N else DEFAULT_LANG)
     template = I18N.get(resolved, I18N[DEFAULT_LANG]).get(key) or I18N[DEFAULT_LANG].get(key) or key
     try:
         return str(template).format(**fmt)
@@ -2843,7 +2852,10 @@ def _build_process_details_section(process_lines: List[str]) -> List[str]:
         return []
     lines = [
         "\n\n---\n\n",
-        '<details class="process-details">\n<summary>🧭 查看检索过程（中间步骤）</summary>\n\n',
+        (
+            '<details class="process-details">\n'
+            f'<summary>🧭 {_progress_copy("progress_process_summary")}</summary>\n\n'
+        ),
     ]
     lines.extend(process_lines)
     lines.append("\n</details>\n")
@@ -3074,6 +3086,30 @@ def _render_markdown(
     render_mode: Optional[str] = None,
     final_summary_merge_strategy: Optional[str] = None,
     output_detail_level: Optional[str] = None,
+    ui_lang: Optional[str] = None,
+) -> str:
+    resolved_lang = ui_lang if ui_lang in I18N else (
+        (state or {}).get("ui_lang") if (state or {}).get("ui_lang") in I18N else DEFAULT_LANG
+    )
+    _lang_token = _UI_LANG.set(resolved_lang)
+    try:
+        return _render_markdown_inner(
+            state,
+            render_mode=render_mode,
+            final_summary_merge_strategy=final_summary_merge_strategy,
+            output_detail_level=output_detail_level,
+            ui_lang=resolved_lang,
+        )
+    finally:
+        _UI_LANG.reset(_lang_token)
+
+
+def _render_markdown_inner(
+    state: dict,
+    render_mode: Optional[str] = None,
+    final_summary_merge_strategy: Optional[str] = None,
+    output_detail_level: Optional[str] = None,
+    ui_lang: Optional[str] = None,
 ) -> str:
     resolved_render_mode = _normalize_render_mode(render_mode, DEFAULT_UI_RENDER_MODE)
     resolved_output_detail_level = _normalize_output_detail_level(output_detail_level)
@@ -3128,7 +3164,7 @@ def _render_markdown(
                         # Markdown emphasis/links still render after entity decode.
                         safe_content = html.escape(str(content), quote=False)
                         formatted_thought = (
-                            f'<details class="thought-card" open>\n'
+                            f'<details class="thought-card">\n'
                             f"  <summary>💭 {safe_name} 思考与规划</summary>\n"
                             f'  <div class="thought-content">\n\n{safe_content}\n\n</div>\n'
                             f"</details>\n"
@@ -3577,9 +3613,11 @@ def _build_initial_ui_state(
     output_detail_level: str,
     render_mode: str,
     summary_merge_strategy: str,
+    ui_lang: str = DEFAULT_LANG,
 ) -> dict:
     return {
         "task_id": task_id,
+        "ui_lang": ui_lang if ui_lang in I18N else DEFAULT_LANG,
         "mode": mode,
         "search_profile": search_profile,
         "search_result_num": search_result_num,
@@ -3724,6 +3762,7 @@ async def _render_stream_via_api(
         render_mode=resolved_ui_render_mode,
         final_summary_merge_strategy=resolved_summary_merge_strategy,
         output_detail_level=(ui_state or {}).get("output_detail_level"),
+        ui_lang=(ui_state or {}).get("ui_lang"),
     )
     yield _pack_ui_stream(
         initial_markdown + _spinner_markup(True, _format_runtime_status_label(state)),
@@ -3757,6 +3796,7 @@ async def _render_stream_via_api(
                     render_mode=resolved_ui_render_mode,
                     final_summary_merge_strategy=resolved_summary_merge_strategy,
         output_detail_level=(ui_state or {}).get("output_detail_level"),
+        ui_lang=(ui_state or {}).get("ui_lang"),
     )
                 yield _pack_ui_stream(
                     heartbeat_md + _spinner_markup(True, heartbeat_label),
@@ -3772,6 +3812,7 @@ async def _render_stream_via_api(
                 render_mode=resolved_ui_render_mode,
                 final_summary_merge_strategy=resolved_summary_merge_strategy,
         output_detail_level=(ui_state or {}).get("output_detail_level"),
+        ui_lang=(ui_state or {}).get("ui_lang"),
     )
             yield _pack_ui_stream(
                 md + _spinner_markup(True, _format_runtime_status_label(state)),
@@ -3817,6 +3858,7 @@ async def _render_stream_via_api(
         render_mode=resolved_ui_render_mode,
         final_summary_merge_strategy=resolved_summary_merge_strategy,
         output_detail_level=(ui_state or {}).get("output_detail_level"),
+        ui_lang=(ui_state or {}).get("ui_lang"),
     )
     yield _pack_ui_stream(
         final_md,
@@ -3893,6 +3935,7 @@ async def gradio_run(
     search_result_num: int = DEFAULT_SEARCH_RESULT_NUM,
     verification_min_search_rounds: int = DEFAULT_VERIFICATION_MIN_SEARCH_ROUNDS,
     output_detail_level: str = DEFAULT_OUTPUT_DETAIL_LEVEL,
+    lang: str = DEFAULT_LANG,
     ui_state: Optional[dict] = None,
 ):
     query = replace_chinese_punctuation(query or "")
@@ -3926,6 +3969,7 @@ async def gradio_run(
             output_detail_level=resolved_output_detail_level,
             render_mode=resolved_ui_render_mode,
             summary_merge_strategy=resolved_summary_merge_strategy,
+            ui_lang=resolved_ui_lang,
         )
         merged_state = {**base_state, **new_ui_state}
         async for tup in _gradio_run_via_api(
@@ -3954,6 +3998,7 @@ async def gradio_run(
             "verification_min_search_rounds": resolved_verification_min_rounds,
             "render_mode": resolved_ui_render_mode,
             "output_detail_level": resolved_output_detail_level,
+            "ui_lang": resolved_ui_lang,
             "final_summary_merge_strategy": resolved_summary_merge_strategy,
         }
     else:
@@ -3966,6 +4011,7 @@ async def gradio_run(
             "verification_min_search_rounds": resolved_verification_min_rounds,
             "render_mode": resolved_ui_render_mode,
             "output_detail_level": resolved_output_detail_level,
+            "ui_lang": resolved_ui_lang,
             "final_summary_merge_strategy": resolved_summary_merge_strategy,
         }
     state = _init_render_state()
@@ -4412,6 +4458,7 @@ async def reconnect_or_init(
         output_detail_level=resolved_output_detail_level,
         render_mode=resolved_ui_render_mode,
         summary_merge_strategy=resolved_summary_merge_strategy,
+        ui_lang=(base_state or {}).get("ui_lang") or DEFAULT_LANG,
     )
     new_ui_state = {**base_state, **new_ui_state}
 
@@ -4915,7 +4962,7 @@ def build_demo():
         overflow-y: auto !important;
         margin: auto !important;
         box-sizing: border-box !important;
-        gap: 12px !important;
+        gap: 10px !important;
         color: var(--ink-strong) !important;
         position: relative !important;
         z-index: 1 !important;
@@ -7289,6 +7336,15 @@ def build_demo():
                     elem_id="mode-selector",
                     filterable=False,
                 )
+
+                output_detail_level_selector = gr.Dropdown(
+                    label=I18N[DEFAULT_LANG]["output_detail_label"],
+                    choices=_build_output_detail_choices(DEFAULT_LANG),
+                    value=_normalize_output_detail_level(DEFAULT_OUTPUT_DETAIL_LEVEL),
+                    info=I18N[DEFAULT_LANG]["output_detail_info"],
+                    elem_id="output-detail-level-selector",
+                    filterable=False,
+                )
                 search_profile_selector = gr.Dropdown(
                     label=I18N[DEFAULT_LANG]["search_profile_label"],
                     choices=SEARCH_PROFILE_CHOICES,
@@ -7317,15 +7373,6 @@ def build_demo():
                     visible=_is_verified_mode(DEFAULT_RESEARCH_MODE),
                     elem_id="verification-rounds-selector",
                 )
-                output_detail_level_selector = gr.Dropdown(
-                    label=I18N[DEFAULT_LANG]["output_detail_label"],
-                    choices=_build_output_detail_choices(DEFAULT_LANG),
-                    value=_normalize_output_detail_level(DEFAULT_OUTPUT_DETAIL_LEVEL),
-                    info=I18N[DEFAULT_LANG]["output_detail_info"],
-                    elem_id="output-detail-level-selector",
-                    filterable=False,
-                )
-
         # Export modal overlay
         with gr.Column(visible=False, elem_id="export-modal") as export_modal:
             with gr.Column(elem_classes=["modal-card"]):
@@ -7393,6 +7440,7 @@ def build_demo():
         ui_state = gr.State(
             {
                 "task_id": None,
+                "ui_lang": DEFAULT_LANG,
                 "mode": _normalize_research_mode(DEFAULT_RESEARCH_MODE),
                 "search_profile": _normalize_search_profile(DEFAULT_SEARCH_PROFILE),
                 "search_result_num": _normalize_search_result_num(
@@ -7423,6 +7471,7 @@ def build_demo():
                 search_result_num_selector,
                 verification_min_rounds_selector,
                 output_detail_level_selector,
+                lang_state,
                 ui_state,
             ],
             outputs=[out_md, run_btn, stop_btn, ui_state, task_id_box, output_section],
