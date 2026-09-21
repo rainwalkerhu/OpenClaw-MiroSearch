@@ -151,3 +151,17 @@ def test_reshape_keeps_conflict_short():
     bullets = [ln for ln in conflict.splitlines() if ln.strip().startswith("-")]
     assert len(bullets) <= 3
 
+def test_reshape_prefers_bold_answer_over_fallback():
+    """**答案：** lines must not be mistaken for bullets (empty glance bug)."""
+    raw = """# 1+1 等于几？
+
+**答案：1+1 = 2**
+
+## 基本解释
+
+- 算术上 1+1=2
+"""
+    out = prepare_user_facing_report(raw, detail_level="compact")
+    assert "暂无法" not in out
+    conclusion = out.split("## 结论", 1)[1].split("##", 1)[0]
+    assert "1+1" in conclusion and "2" in conclusion

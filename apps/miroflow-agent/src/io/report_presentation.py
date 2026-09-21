@@ -347,20 +347,71 @@ def _guess_confidence(text: str) -> tuple[str, str]:
     return "mid", "置信度：中"
 
 
+def _is_list_item(line: str) -> bool:
+    """True for markdown list items; False for bold/italic that starts with *."""
+    s = (line or "").strip()
+    if not s:
+        return False
+    if s.startswith("**"):
+        return False
+    return bool(re.match(r"^([-•]|\*(?!\*)|\d+\.)\s+", s))
+
+
+def _extract_direct_answer(text: str) -> str:
+    """Prefer boxed / explicit 答案 lines over first-paragraph heuristics."""
+    if not text:
+        return ""
+    # \boxed{...} or $\boxed{...}$
+    m = re.search(r"\\boxed\{([^{}]+)\}", text)
+    if m:
+        return m.group(1).strip()
+    # **答案：...** / 答案：...
+    m = re.search(
+        r"(?:\*\*)?答案\s*[：:]\s*(.+?)(?:\*\*)?\s*$",
+        text,
+        re.M,
+    )
+    if m:
+        ans = m.group(1).strip().strip("*").strip()
+        if ans:
+            return ans
+    # leading **...** one-liner that looks like a verdict
+    m = re.search(r"^\*\*([^*]{2,120})\*\*\s*$", text, re.M)
+    if m:
+        return m.group(1).strip()
+    return ""
+
+
 def _first_paragraph(body: str, max_chars: int = 160) -> str:
+    direct = _extract_direct_answer(body)
+    if direct:
+        if len(direct) > max_chars:
+            return direct[: max_chars - 1].rstrip() + "…"
+        return direct
     lines = []
+    heading_fallback = ""
     for line in (body or "").splitlines():
         s = line.strip()
-        if not s or s.startswith("#") or s.startswith("```"):
+        if not s or s.startswith("```"):
             if lines:
                 break
             continue
-        if s.startswith(("-", "*", "•", "|")):
+        if s.startswith("#"):
+            if not lines and not heading_fallback:
+                heading_fallback = re.sub(r"^#+\s*", "", s).strip()
+            if lines:
+                break
+            continue
+        if _is_list_item(s) or s.startswith("|"):
             break
+        # unwrap bold wrappers for readability
+        s = re.sub(r"^\*\*(.+?)\*\*$", r"\1", s).strip()
+        if not s:
+            continue
         lines.append(s)
         if sum(len(x) for x in lines) >= max_chars:
             break
-    text = " ".join(lines).strip()
+    text = " ".join(lines).strip() or heading_fallback
     if len(text) > max_chars:
         text = text[: max_chars - 1].rstrip() + "…"
     return text
@@ -370,14 +421,17 @@ def _bullet_points(body: str, limit: int = 3) -> List[str]:
     bullets: List[str] = []
     for line in (body or "").splitlines():
         s = line.strip()
-        if s.startswith(("-", "*", "•")):
-            bullets.append(re.sub(r"^[-*•]\s*", "", s))
+        if _is_list_item(s):
+            bullets.append(re.sub(r"^([-•]|\*(?!\*)|\d+\.)\s*", "", s))
         if len(bullets) >= limit:
             break
     if bullets:
         return bullets
-    # fallback: first short sentences
+    # fallback: first short sentences (skip if body is just the direct answer)
     para = _first_paragraph(body, max_chars=240)
+    direct = _extract_direct_answer(body)
+    if direct and para == direct:
+        return []
     if not para:
         return []
     chunks = re.split(r"(?<=[。！？.!?])\s*", para)
@@ -449,8 +503,24 @@ def reshape_report_for_consumer(text: str, *, detail_level: str = "detailed") ->
         glance_text = re.sub(r"^##\s+.+\n+", "", first).strip()
 
     conf_level, conf_label = _guess_confidence(text)
-    answer = _first_paragraph(glance_text, max_chars=140 if level == "compact" else 180)
-    bullets = _bullet_points(glance_text, limit=2 if level == "compact" else 3)
+    if _extract_direct_answer(text) and not re.search(r"冲突|不确定|存疑|未证实|谣言", text):
+        # Clear arithmetic / factual one-liners should not stay mid by default
+        if conf_level == "mid" and not re.search(
+            r"(中\s*置信|confidence\s*[:=]?\s*medium)", text, re.I
+        ):
+            conf_level, conf_label = "high", "置信度：高"
+    if level == "compact":
+        answer = _first_paragraph(glance_text, max_chars=140)
+        bullets = _bullet_points(glance_text, limit=2)
+        conflict_limit = 2
+    elif level == "balanced":
+        answer = _first_paragraph(glance_text, max_chars=180)
+        bullets = _bullet_points(glance_text, limit=3)
+        conflict_limit = 3
+    else:  # detailed
+        answer = _first_paragraph(glance_text, max_chars=280)
+        bullets = _bullet_points(glance_text, limit=5)
+        conflict_limit = 5
 
     out: List[str] = []
     out.append("## 结论\n")
@@ -463,6 +533,8 @@ def reshape_report_for_consumer(text: str, *, detail_level: str = "detailed") ->
     out.append(f"**{conf_label}**")
     out.append("")
 
+    # Drop bullets that merely repeat the one-line conclusion
+    bullets = [b for b in bullets if b.strip() and b.strip() != answer.strip()]
     if bullets:
         out.append("## 要点\n")
         for b in bullets:
@@ -471,14 +543,14 @@ def reshape_report_for_consumer(text: str, *, detail_level: str = "detailed") ->
 
     if conflict_bodies:
         out.append("## 争议与不确定\n")
-        # keep at most 3 bullets total
+        # keep at most conflict_limit bullets total
         collected: List[str] = []
         for body in conflict_bodies:
-            for b in _bullet_points(body, limit=3):
+            for b in _bullet_points(body, limit=conflict_limit):
                 collected.append(b)
-                if len(collected) >= 3:
+                if len(collected) >= conflict_limit:
                     break
-            if len(collected) >= 3:
+            if len(collected) >= conflict_limit:
                 break
         if collected:
             for b in collected:
@@ -497,7 +569,6 @@ def reshape_report_for_consumer(text: str, *, detail_level: str = "detailed") ->
         return re.sub(r"(?m)^##\s+", "### ", block)
 
     if fold_evidence:
-        out.append("## 证据与来源\n")
         cleaned_bits: List[str] = []
         for block in fold_evidence:
             cleaned = re.sub(
@@ -509,18 +580,33 @@ def reshape_report_for_consumer(text: str, *, detail_level: str = "detailed") ->
             if cleaned:
                 cleaned_bits.append(_demote_headings(cleaned))
         if cleaned_bits:
+            out.append("## 证据与来源\n")
             out.append("\n\n".join(cleaned_bits))
-        out.append("")
+            out.append("")
 
     # Deep dive
     deep: List[str] = []
-    if level != "compact":
+    if level == "balanced":
+        deep.extend(analysis_parts)
+        # keep other detail shorter in balanced
+        for block in other_parts[:2]:
+            body = re.sub(r"^##\s+.+", "", block).strip()
+            if len(body) > 600:
+                body = body[:600].rstrip() + "…"
+                # reattach demoted heading if any
+                hm = re.match(r"(##\s+.+)", block)
+                deep.append((hm.group(1) + "\n\n" + body) if hm else body)
+            else:
+                deep.append(block)
+    elif level == "detailed":
         deep.extend(analysis_parts)
         deep.extend(other_parts)
     if deep:
-        out.append("## 深入了解\n")
-        out.append("\n\n".join(_demote_headings(b) for b in deep))
-        out.append("")
+        deep_bits = [_demote_headings(b) for b in deep if str(b).strip()]
+        if deep_bits:
+            out.append("## 深入了解\n")
+            out.append("\n\n".join(deep_bits))
+            out.append("")
 
     result = "\n".join(out).strip() + "\n"
     result = re.sub(r"\n{3,}", "\n\n", result)

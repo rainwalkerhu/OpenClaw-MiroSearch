@@ -2847,6 +2847,8 @@ def _decorate_report_for_web(markdown_text: str) -> str:
     def _fold_section(match: "re.Match[str]") -> str:
         heading = match.group(1).strip()
         body = (match.group(2) or "").strip()
+        if not body:
+            return ""  # never show an empty fold
         n_links = len(re.findall(r"https?://", body))
         n_items = len(re.findall(r"(?m)^\s*(?:\d+\.|[-*•])\s+", body))
         n = n_links or n_items
@@ -2867,7 +2869,7 @@ def _decorate_report_for_web(markdown_text: str) -> str:
         )
 
     text = re.sub(
-        r"(?ms)^(##\s*[^\n]*(?:证据与来源|深入了解)[^\n]*)\n+(.*?)(?=^##\s|\Z)",
+        r"(?ms)^(##\s*[^\n]*(?:证据与来源|证据和来源|深入了解|深入分析)[^\n]*)\n+(.*?)(?=^##\s|\Z)",
         _fold_section,
         text,
     )
@@ -2886,7 +2888,8 @@ def _build_summary_section(
     # 前置空字符串项：确保和上一个 HTML block（如 search-step-board 的 </div>）之间
     # 有一个空行，否则 CommonMark 会把 `## 📋 研究总结` 视为 HTML block 的延续，
     # 导致 `## ` 字面显示而非作为标题渲染。
-    lines = ["", "## 📋 研究总结\n\n"]
+    # Glance card already leads with 结论; keep a quieter label.
+    lines = ["", "### 研究报告\n\n"]
     resolved_detail = _normalize_output_detail_level(output_detail_level)
     # 先剥离 OutputFormatter 注入的调试分段标记，再做 LaTeX → Markdown 规范化
     sanitized = (

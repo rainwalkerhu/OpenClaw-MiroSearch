@@ -90,10 +90,10 @@ def test_render_markdown_collapses_full_process_after_final_summary():
     assert "找到 1 条结果" in markdown
     assert "检索模式: fallback" in markdown
     assert "<details class=\"process-details\">" in markdown
-    assert "## 📋 研究总结" in markdown
+    assert "### 研究报告" in markdown
 
     search_steps_pos = markdown.index('<div class="search-step-board">')
-    summary_pos = markdown.index("## 📋 研究总结")
+    summary_pos = markdown.index("### 研究报告")
     details_pos = markdown.index("<details class=\"process-details\">")
     search_card_pos = markdown.index('<div class="search-card">')
     # Answer-first: summary above folded process; search steps live inside the fold.
@@ -228,7 +228,7 @@ def test_build_summary_section_humanizes_fallback():
     demo_main = _load_demo_main()
     blocks = ["No \\boxed{} content found in the final answer."]
     rendered = "".join(demo_main._build_summary_section(blocks))
-    assert "## 📋 研究总结" in rendered
+    assert "### 研究报告" in rendered
     assert "未能" in rendered
     # 原始字符串不应直接展示
     assert "No \\boxed{} content found in the final answer." not in rendered
@@ -255,7 +255,7 @@ def test_build_summary_section_strips_output_formatter_diagnostics():
         "-----------------------------------------\n"
     )
     rendered = "".join(demo_main._build_summary_section([raw_block]))
-    assert "## 📋 研究总结" in rendered
+    assert "### 研究报告" in rendered
     assert "腾讯魔方工作室近期核心动态" in rendered
     # 调试分段标记与配套噪声不应出现在 UI 渲染输出中
     for marker in (
@@ -615,7 +615,7 @@ def test_build_summary_section_normalizes_latex_heavy_block():
         "\\item 要点一 \\item 要点二\\end{itemize}}"
     ]
     rendered = "".join(demo_main._build_summary_section(blocks))
-    assert "## 📋 研究总结" in rendered
+    assert "### 研究报告" in rendered
     assert "**结论标题**" in rendered
     assert "## 要点" in rendered
     assert "- 要点一" in rendered and "- 要点二" in rendered
@@ -638,7 +638,7 @@ def test_summary_section_comes_before_folded_process():
     for e in events:
         state = demo_main._update_state_with_event(state, e)
     md = demo_main._render_markdown(state)
-    idx_h2 = md.find("## 📋 研究总结")
+    idx_h2 = md.find("### 研究报告")
     idx_details = md.find('<details class="process-details">')
     assert idx_h2 != -1 and idx_details != -1
     assert idx_h2 < idx_details
@@ -659,8 +659,9 @@ def test_update_state_with_final_output_renders_summary():
     )
     markdown = demo_main._render_markdown(state)
 
-    assert "## \U0001f4cb 研究总结" in markdown
-    assert "# 缓存结果" in markdown
+    assert "### 研究报告" in markdown
+    # Consumer reshape turns the H1 into the glance conclusion body
+    assert "缓存结果" in markdown or "正文" in markdown
     assert "等待开始研究" not in markdown
 
 
@@ -701,7 +702,7 @@ def test_build_summary_section_passes_compact_detail_level():
             [conflict_report], output_detail_level="compact"
         )
     )
-    assert "## 📋 研究总结" in rendered
+    assert "### 研究报告" in rendered
     assert "```mermaid" not in rendered
     assert "report-glance" in rendered or "report-tldr" in rendered or "结论" in rendered
 
