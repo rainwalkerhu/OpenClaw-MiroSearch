@@ -69,7 +69,7 @@ def test_trail_includes_pending_leads():
     assert mgr.get_stats()["total_leads"] >= 1
     trail = mgr.get_trail_section()
     assert "Lead Trail" in trail
-    assert "pending" in trail or "followed" in trail
+    assert ("未跟进" in trail) or ("pending" in trail) or ("followed" in trail)
 
 
 def test_follow_up_marks_trail_and_stats():

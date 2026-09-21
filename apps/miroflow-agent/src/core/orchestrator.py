@@ -25,6 +25,7 @@ from omegaconf import DictConfig
 from ..config.settings import expose_sub_agents_as_tools
 from ..io.input_handler import process_input
 from ..io.output_formatter import OutputFormatter
+from ..io.report_presentation import prepare_user_facing_report
 from ..llm.base_client import BaseClient
 from ..logging.task_logger import TaskLog, get_utc_plus_8_time
 from ..utils.parsing_utils import extract_llm_response_text
@@ -2228,6 +2229,22 @@ class Orchestrator:
                         f"Followed up: {lead_stats['followed_up']}, "
                         f"Unfollowed: {lead_stats['unfollowed']}",
                     )
+
+        # User-facing cleanup: strip diagnostics, fix truncated refs, compact
+        # pending leads, and add analysis/topology when useful.
+        detail = getattr(self, "output_detail_level", None) or getattr(
+            getattr(self, "answer_generator", None), "output_detail_level", "detailed"
+        )
+        try:
+            final_summary = prepare_user_facing_report(
+                final_summary, detail_level=str(detail)
+            )
+        except Exception as exc:  # never block final emit on presentation
+            self.task_log.log_step(
+                "warning",
+                "Main Agent | Report Presentation",
+                f"prepare_user_facing_report failed: {exc}",
+            )
 
         final_output_emitted = await self._emit_final_output(
             final_summary,

@@ -645,6 +645,14 @@ class ReportStructureValidator:
 
 [研究中发现的知识空白]
 
+## 内容分析 / Content Analysis
+
+[可选] 角色/主张/时间线要点；有助于舆情与谣言交叉验证阅读。
+
+## 关系拓扑 / Relationship Map
+
+[可选] 用 mermaid flowchart 表达 主张→证据/反驳→缺口（无结构时可不生成）。
+
 ## References
 
 1. [来源1 - 完整引用信息与日期]

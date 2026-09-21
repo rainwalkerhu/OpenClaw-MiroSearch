@@ -2643,11 +2643,32 @@ _DIAGNOSTIC_FINAL_ANSWER_HEADER_RE = re.compile(
 
 
 def _strip_diagnostic_markers(text: str) -> str:
-    """剥离最终总结里来自 OutputFormatter 的调试分段（Final Answer / Extracted / Token Usage）。"""
+    """剥离最终总结里来自 OutputFormatter 的调试分段（Final Answer / Extracted / Token Usage）。
+
+    Also drops truncated ``https://www`` stub reference lines so Web export
+    does not look mid-cut.
+    """
     if not text:
         return text
     cleaned = _DIAGNOSTIC_FINAL_ANSWER_HEADER_RE.sub("", text, count=1)
     cleaned = _DIAGNOSTIC_TRUNCATE_RE.sub("", cleaned)
+    # Pricing / token dump variants that lack the exact header
+    cleaned = re.sub(
+        r"(?ms)\n?-{5,}.*?\b(?:Pricing is disabled|Total Input Tokens)\b.*",
+        "",
+        cleaned,
+    )
+    # Drop dangling incomplete URL stubs in References
+    kept = []
+    for line in cleaned.splitlines():
+        s = line.strip()
+        if re.fullmatch(r"(?:\d+\.\s*)?https?://(?:www\.)?", s):
+            continue
+        if re.search(r"https?://[\w\-]+$", s) and s.rstrip("/").count(".") == 0:
+            # e.g. https://www with no TLD
+            continue
+        kept.append(line)
+    cleaned = "\n".join(kept)
     return cleaned.rstrip()
 
 

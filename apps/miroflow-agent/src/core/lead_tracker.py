@@ -134,36 +134,48 @@ class LeadTrail:
     def format_trail_section(self) -> str:
         """Format the lead trail for inclusion in the final report.
 
-        Includes both followed and pending leads so deep-research reports always
-        show a trail once any lead was extracted or seeded.
+        Followed leads keep full detail. Pending seeds are collapsed into a short
+        Chinese summary so the report does not look truncated/unfinished.
         """
         if not self.leads:
             return ""
 
-        lines = ["## 线索追踪 / Lead Trail\n"]
-        lines.append("以下是研究过程中追踪的关键线索及其发现：\n")
-
         followed_leads = [l for l in self.leads if l.followed_up]
         pending_leads = [l for l in self.leads if not l.followed_up]
 
-        for i, lead in enumerate(followed_leads, 1):
-            lines.append(f"\n### Lead {i}: {lead.question}")
-            lines.append(f"**来源**: {lead.source} (Turn {lead.turn})")
-            lines.append(f"**优先级**: {lead.priority:.2f}")
-            lines.append("**状态**: followed")
-            if lead.follow_up_turn:
-                lines.append(f"**追踪轮次**: Turn {lead.follow_up_turn}")
-            if lead.findings:
-                lines.append(f"\n**发现**:\n{lead.findings}")
-            lines.append("")
-
-        start_idx = len(followed_leads) + 1
-        for i, lead in enumerate(pending_leads, start_idx):
-            lines.append(f"\n### Lead {i}: {lead.question}")
-            lines.append(f"**来源**: {lead.source} (Turn {lead.turn})")
-            lines.append(f"**优先级**: {lead.priority:.2f}")
-            lines.append("**状态**: pending")
-            lines.append("")
+        lines = ["## 线索追踪 / Lead Trail\n"]
+        if followed_leads:
+            lines.append("以下是研究过程中已跟进的关键线索及其发现：\n")
+            for i, lead in enumerate(followed_leads, 1):
+                lines.append(f"\n### Lead {i}: {lead.question}")
+                lines.append(f"**来源**: {lead.source} (Turn {lead.turn})")
+                lines.append(f"**优先级**: {lead.priority:.2f}")
+                lines.append("**状态**: followed")
+                if lead.follow_up_turn:
+                    lines.append(f"**追踪轮次**: Turn {lead.follow_up_turn}")
+                if lead.findings:
+                    lines.append(f"\n**发现**:\n{lead.findings}")
+                lines.append("")
+            if pending_leads:
+                lines.append("### 未跟进线索（摘要）\n")
+                for i, lead in enumerate(pending_leads, 1):
+                    q = lead.question.strip()
+                    if len(q) > 80:
+                        q = q[:77] + "…"
+                    lines.append(f"{i}. {q} — **未跟进**")
+                lines.append("")
+        else:
+            lines.append(
+                "本轮未实际跟进额外线索（种子线索仍为 pending，不视为报告未写完）。\n"
+            )
+            if pending_leads:
+                lines.append("### 未跟进线索（摘要）\n")
+                for i, lead in enumerate(pending_leads, 1):
+                    q = lead.question.strip()
+                    if len(q) > 80:
+                        q = q[:77] + "…"
+                    lines.append(f"{i}. {q} — **未跟进**")
+                lines.append("")
 
         return "\n".join(lines)
 
