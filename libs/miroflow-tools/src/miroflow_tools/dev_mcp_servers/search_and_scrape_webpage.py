@@ -206,6 +206,11 @@ SEARCH_SEARXNG_ONLY_DOWNGRADE_ORDER = os.getenv(
     "SEARCH_SEARXNG_ONLY_DOWNGRADE_ORDER",
     DEFAULT_SEARCH_SEARXNG_ONLY_DOWNGRADE_ORDER,
 ).strip()
+# searxng-only 等硬约束路由：禁止把未配置的可用 provider 追加进顺序表
+SEARCH_PROVIDER_ORDER_STRICT = _read_env_bool(
+    "SEARCH_PROVIDER_ORDER_STRICT",
+    False,
+)
 
 
 def _build_searxng_only_downgrade_providers(
@@ -440,7 +445,10 @@ async def google_search(
             if configured_mode not in VALID_SEARCH_PROVIDER_MODES:
                 configured_mode = DEFAULT_SEARCH_PROVIDER_MODE
 
-            providers = _registry.resolve_order(SEARCH_PROVIDER_ORDER)
+            providers = _registry.resolve_order(
+                SEARCH_PROVIDER_ORDER,
+                strict=SEARCH_PROVIDER_ORDER_STRICT,
+            )
             (
                 providers,
                 searxng_only_downgraded,

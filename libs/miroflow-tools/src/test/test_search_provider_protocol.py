@@ -181,6 +181,22 @@ class TestProviderRegistry:
         resolved = reg.resolve_order("serper")
         assert resolved == ["serper", "serpapi"]
 
+    def test_resolve_order_strict_does_not_append(self):
+        reg = ProviderRegistry()
+        reg.register(_FakeProvider("serper", available=True))
+        reg.register(_FakeProvider("serpapi", available=True))
+        reg.register(_FakeProvider("searxng", available=True))
+        # searxng-only: 严禁把 serper/serpapi 追加进来
+        resolved = reg.resolve_order("searxng", strict=True)
+        assert resolved == ["searxng"]
+
+    def test_resolve_order_strict_filters_unavailable(self):
+        reg = ProviderRegistry()
+        reg.register(_FakeProvider("serper", available=True))
+        reg.register(_FakeProvider("searxng", available=False))
+        resolved = reg.resolve_order("searxng", strict=True)
+        assert resolved == []
+
     def test_duplicate_register_overwrites(self):
         reg = ProviderRegistry()
         p1 = _FakeProvider("x")
