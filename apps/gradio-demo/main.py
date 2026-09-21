@@ -2777,7 +2777,7 @@ def _prepare_user_facing_report_safe(
     except Exception:
         return _strip_diagnostic_markers(raw)
 
-def _decorate_report_for_web(markdown_text: str) -> str:
+def _decorate_report_for_web(markdown_text: str, detail_level: Optional[str] = None) -> str:
     """Add lightweight HTML wrappers so Gradio renders clearer report chrome.
 
     Keeps Markdown headings intact (avoid replacing ``##`` with raw ``<h2>``)
@@ -2787,6 +2787,15 @@ def _decorate_report_for_web(markdown_text: str) -> str:
     text = str(markdown_text or "")
     if not text.strip():
         return text
+
+    resolved_detail = _normalize_output_detail_level(detail_level)
+    if resolved_detail == "compact":
+        # Hard guard: never show deep-dive folds on compact even if upstream leaked them.
+        text = re.sub(
+            r"(?ms)^##\s*[^\n]*(?:深入了解|深入分析)[^\n]*\n+.*?(?=^##\s|\Z)",
+            "",
+            text,
+        )
 
     # 1) Glance card for consumer ## 结论
     def _wrap_glance(match: "re.Match[str]") -> str:
@@ -2920,7 +2929,7 @@ def _build_summary_section(
     rewritten = (_humanize_pipeline_fallback(block) for block in normalized)
     # linkify first, then decorate so ref-chip class lands on citation anchors
     linkified = (_linkify_reference_citations(block) for block in rewritten)
-    lines.extend(_decorate_report_for_web(block) for block in linkified)
+    lines.extend(_decorate_report_for_web(block, detail_level=resolved_detail) for block in linkified)
     return lines
 
 
