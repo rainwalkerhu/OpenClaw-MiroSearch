@@ -5284,21 +5284,14 @@ def build_demo():
         box-shadow: none !important;
     }
 
-    /* Compact options helper text (settings modal) */
-    #settings-modal [data-testid="block-info"],
-    #settings-modal .info,
-    #options-panel [data-testid="block-info"],
-    #options-panel .info,
-    #mode-selector [data-testid="block-info"],
-    #search-profile-selector [data-testid="block-info"],
-    #search-result-num-selector [data-testid="block-info"],
-    #verification-rounds-selector [data-testid="block-info"],
-    #output-detail-level-selector [data-testid="block-info"],
+    /* Compact options helper text (settings modal) — .md p only; block-info is the TITLE */
     #mode-selector .md p,
     #search-profile-selector .md p,
     #search-result-num-selector .md p,
     #verification-rounds-selector .md p,
-    #output-detail-level-selector .md p {
+    #output-detail-level-selector .md p,
+    #settings-modal .md p,
+    #export-modal .md p {
         color: #94a3b8 !important;
         font-size: 0.72em !important;
         line-height: 1.35 !important;
@@ -7382,6 +7375,83 @@ def build_demo():
         padding: 8px 0 16px !important;
     }
 
+
+    /* ===== Audit fix: modal labels + radios (no light Gradio chrome) ===== */
+    #settings-modal [data-testid="block-info"],
+    #export-modal [data-testid="block-info"],
+    #settings-modal span[data-testid="block-info"],
+    #export-modal span[data-testid="block-info"],
+    #mode-selector [data-testid="block-info"],
+    #search-profile-selector [data-testid="block-info"],
+    #search-result-num-selector [data-testid="block-info"],
+    #verification-rounds-selector [data-testid="block-info"],
+    #output-detail-level-selector [data-testid="block-info"],
+    #export-format-selector [data-testid="block-info"] {
+        background: transparent !important;
+        background-color: transparent !important;
+        color: #e2e8f0 !important;
+        font-weight: 650 !important;
+        font-size: 0.92em !important;
+        letter-spacing: 0.01em !important;
+        padding: 0 0 4px !important;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        display: block !important;
+        -webkit-line-clamp: unset !important;
+        overflow: visible !important;
+    }
+
+    /* Output-detail radios: kill Gradio Soft white unselected chips */
+    #output-detail-level-selector label,
+    #settings-modal #output-detail-level-selector label,
+    #output-detail-level-selector label[data-testid$="-radio-label"] {
+        background: rgba(15, 23, 42, 0.88) !important;
+        background-color: rgba(15, 23, 42, 0.88) !important;
+        color: #cbd5e1 !important;
+        border: 1px solid rgba(148, 163, 184, 0.22) !important;
+        border-radius: 10px !important;
+        box-shadow: none !important;
+    }
+    #output-detail-level-selector label.selected,
+    #output-detail-level-selector label[data-testid$="-radio-label"].selected,
+    #settings-modal #output-detail-level-selector label.selected {
+        background: rgba(14, 165, 233, 0.78) !important;
+        background-color: rgba(14, 165, 233, 0.78) !important;
+        color: #f8fafc !important;
+        border-color: rgba(56, 189, 248, 0.55) !important;
+    }
+    #output-detail-level-selector .wrap,
+    #settings-modal #output-detail-level-selector .wrap {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        gap: 8px !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+    #output-detail-level-selector input[type="radio"] {
+        accent-color: #38bdf8 !important;
+    }
+
+    /* Document-style process fold: never light Gradio leftover wash */
+    #log-view .process-details {
+        background: transparent !important;
+        border: 1px solid rgba(148, 163, 184, 0.16) !important;
+        border-radius: 10px !important;
+        padding: 0 !important;
+    }
+    #log-view .process-details > summary {
+        color: #94a3b8 !important;
+        background: transparent !important;
+    }
+    #log-view .report-glance-body,
+    #log-view .report-glance-body p {
+        color: #e2e8f0 !important;
+        font-weight: 650 !important;
+    }
+
     #gr-task-id-bridge { position: absolute !important; left: -9999px !important; top: -9999px !important; width: 1px !important; height: 1px !important; opacity: 0 !important; pointer-events: none !important; }
     """
     custom_css = custom_css.replace(
@@ -7670,6 +7740,8 @@ def build_demo():
         i18n = _get_i18n(new_lang)
         # Use gr.update only — reconstructing HTML/Button/Markdown leaves
         # stacked ghost DOM nodes (esp. with position:fixed top bar).
+        # Keep out_md + output_section as-is so switching language does not
+        # wipe a finished report (chrome switches; content stays).
         return (
             new_lang,
             gr.update(value=_build_nav_html(new_lang)),
@@ -7680,8 +7752,8 @@ def build_demo():
             gr.update(value=i18n["btn_stop"]),
             gr.update(value=i18n["btn_run"]),
             gr.update(value=f'<div class="output-label">{i18n["output_label"]}</div>'),
-            gr.update(value=i18n["output_waiting"]),
-            gr.update(visible=False),
+            gr.update(),  # preserve report markdown
+            gr.update(),  # preserve output section visibility
             gr.update(value=f'<div class="modal-title">{i18n["settings_modal_title"]}</div>'),
             gr.update(label=i18n["mode_label"], info=i18n["mode_info"]),
             gr.update(
