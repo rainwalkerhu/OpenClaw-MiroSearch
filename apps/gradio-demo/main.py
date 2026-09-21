@@ -4077,6 +4077,7 @@ async def gradio_run(
     resolved_summary_merge_strategy = _normalize_final_summary_merge_strategy(
         _get_summary_merge_for_output_detail(resolved_output_detail_level)
     )
+    resolved_ui_lang = lang if lang in I18N else DEFAULT_LANG
 
     # ===== API 后端模式：把任务交给 api-server，刷新页面可由 task_id 重连 =====
     if api_client.is_api_mode_enabled():
