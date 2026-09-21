@@ -165,3 +165,37 @@ def test_reshape_prefers_bold_answer_over_fallback():
     assert "暂无法" not in out
     conclusion = out.split("## 结论", 1)[1].split("##", 1)[0]
     assert "1+1" in conclusion and "2" in conclusion
+
+
+def test_section_kind_direct_answer_is_glance():
+    from src.io.report_presentation import _section_kind, reshape_report_for_consumer
+    assert _section_kind("## 直接答案") == "glance"
+    assert _section_kind("Direct Answer") == "glance"
+    assert _section_kind("答案") == "glance"
+    raw = """## 直接答案
+
+1+1=2
+
+## References
+1. https://example.com/x
+"""
+    out = reshape_report_for_consumer(raw, detail_level="compact")
+    assert "## 结论" in out
+    assert "1+1=2" in out.split("## 结论", 1)[1].split("##", 1)[0]
+    assert "深入了解" not in out
+
+def test_prepare_does_not_use_confidence_as_answer():
+    """Re-preparing a consumer report must keep 1+1=2, not promote 置信度."""
+    raw = """## 结论
+
+1+1=2
+
+<!-- confidence:high -->
+**置信度：高**
+"""
+    out = prepare_user_facing_report(raw, detail_level="compact")
+    conclusion = out.split("## 结论", 1)[1].split("##", 1)[0]
+    assert "1+1=2" in conclusion
+    # answer line itself must not be only the confidence label
+    body_lines = [ln.strip() for ln in conclusion.splitlines() if ln.strip() and not ln.strip().startswith("<!--") and "置信度" not in ln]
+    assert any("1+1" in ln for ln in body_lines)

@@ -316,6 +316,9 @@ def _split_markdown_sections(text: str) -> List[tuple[str, str]]:
 
 def _section_kind(heading: str) -> str:
     h = heading.lower()
+    # Prefer explicit direct-answer headings as glance (before broader rules).
+    if re.search(r"直接答案|direct\s*answer|答案", h, re.I):
+        return "glance"
     if re.search(r"tl;?\s*dr|结论|总览|executive summary|一句话", h, re.I):
         return "glance"
     if re.search(r"冲突|不确定|conflict|uncertaint", h, re.I):
@@ -357,6 +360,20 @@ def _is_list_item(line: str) -> bool:
     return bool(re.match(r"^([-•]|\*(?!\*)|\d+\.)\s+", s))
 
 
+def _is_meta_confidence_line(s: str) -> bool:
+    """True for confidence badges / HTML confidence markers — never the answer."""
+    t = (s or "").strip()
+    if not t:
+        return False
+    if re.match(r"<!--\s*confidence:(?:high|mid|low)\s*-->", t, re.I):
+        return True
+    if re.match(r"^\*{0,2}置信度\s*[：:]\s*[高中低]\*{0,2}$", t):
+        return True
+    if re.match(r"^\*{0,2}confidence\s*[:=]\s*(high|mid|medium|low)\*{0,2}$", t, re.I):
+        return True
+    return False
+
+
 def _extract_direct_answer(text: str) -> str:
     """Prefer boxed / explicit 答案 lines over first-paragraph heuristics."""
     if not text:
@@ -373,12 +390,16 @@ def _extract_direct_answer(text: str) -> str:
     )
     if m:
         ans = m.group(1).strip().strip("*").strip()
-        if ans:
+        if ans and not _is_meta_confidence_line(ans) and not ans.startswith("置信度"):
             return ans
-    # leading **...** one-liner that looks like a verdict
-    m = re.search(r"^\*\*([^*]{2,120})\*\*\s*$", text, re.M)
-    if m:
-        return m.group(1).strip()
+    # leading **...** one-liner that looks like a verdict (skip confidence badges)
+    for m in re.finditer(r"^\*\*([^*]{2,120})\*\*\s*$", text, re.M):
+        cand = m.group(1).strip()
+        if _is_meta_confidence_line(cand) or cand.startswith("置信度"):
+            continue
+        if re.match(r"^confidence\s*[:=]", cand, re.I):
+            continue
+        return cand
     return ""
 
 
@@ -395,6 +416,8 @@ def _first_paragraph(body: str, max_chars: int = 160) -> str:
         if not s or s.startswith("```"):
             if lines:
                 break
+            continue
+        if _is_meta_confidence_line(s) or s.startswith("<!--"):
             continue
         if s.startswith("#"):
             if not lines and not heading_fallback:

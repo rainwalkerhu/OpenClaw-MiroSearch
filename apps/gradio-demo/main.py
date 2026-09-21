@@ -2816,11 +2816,19 @@ def _decorate_report_for_web(markdown_text: str, detail_level: Optional[str] = N
             f'<span class="confidence-badge confidence-{level}">'
             f"{html.escape(label, quote=False)}</span>"
         )
+        # Gradio Markdown drops bare text / <p> siblings inside HTML blocks.
+        # Put the entire answer inside ONE dedicated <div> with escaped text only
+        # (no markdown siblings after the HTML card).
+        body = re.sub(r"(?m)^\s*\*{0,2}置信度：[高中低]\*{0,2}\s*$", "", body).strip()
+        body = re.sub(r"\*{0,2}置信度：[高中低]\*{0,2}", "", body).strip()
+        answer = body.strip() if body.strip() else "（结论正文缺失，请展开过程或重试）"
+        # Collapse excessive blank lines but keep readable line breaks as <br>.
+        answer_html = html.escape(answer, quote=False).replace("\n", "<br>")
         return (
-            f'<div class="report-glance">\n'
-            f'<div class="report-glance-kicker">结论</div>\n'
-            f'<div class="report-glance-head">{conf}</div>\n\n'
-            f"{body}\n\n"
+            f'<div class="report-glance">'
+            f'<div class="report-glance-kicker">结论</div>'
+            f'<div class="report-glance-head">{conf}</div>'
+            f'<div class="report-glance-body">{answer_html}</div>'
             f"</div>\n\n"
         )
 
@@ -6580,6 +6588,76 @@ def build_demo():
         color: #a5f3fc !important;
     }
 
+    .report-glance {
+        margin: 8px 0 18px !important;
+        padding: 16px 18px !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(34, 211, 238, 0.32) !important;
+        background: linear-gradient(180deg, rgba(8,47,73,0.62), rgba(15,23,42,0.78)) !important;
+        box-shadow: 0 10px 28px rgba(2, 6, 23, 0.35) !important;
+    }
+    .report-glance-kicker {
+        font-size: 11px !important;
+        letter-spacing: 0.12em !important;
+        text-transform: uppercase !important;
+        color: #67e8f9 !important;
+        margin-bottom: 6px !important;
+        font-weight: 700 !important;
+    }
+    .report-glance-head {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 10px !important;
+        margin-bottom: 10px !important;
+        color: #f8fafc !important;
+    }
+    .report-glance-body {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #e2e8f0 !important;
+        font-size: 1.12rem !important;
+        font-weight: 600 !important;
+        line-height: 1.7 !important;
+        white-space: pre-wrap !important;
+        word-break: break-word !important;
+    }
+    .report-fold {
+        margin: 12px 0 16px !important;
+        padding: 0 !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(148, 163, 184, 0.22) !important;
+        background: rgba(2, 6, 23, 0.45) !important;
+        overflow: hidden !important;
+    }
+    .report-fold > summary {
+        cursor: pointer !important;
+        list-style: none !important;
+        padding: 12px 14px !important;
+        color: #cbd5e1 !important;
+        font-weight: 600 !important;
+        user-select: none !important;
+    }
+    .report-fold > summary::-webkit-details-marker { display: none !important; }
+    .report-fold > summary::before {
+        content: "▸" !important;
+        display: inline-block !important;
+        margin-right: 8px !important;
+        color: #67e8f9 !important;
+        transition: transform 0.15s ease !important;
+    }
+    .report-fold[open] > summary::before {
+        transform: rotate(90deg) !important;
+    }
+    .report-fold[open] > summary {
+        border-bottom: 1px solid rgba(148, 163, 184, 0.18) !important;
+        color: #e2e8f0 !important;
+    }
+    .report-fold > *:not(summary) {
+        padding: 0 14px 12px !important;
+        color: #cbd5e1 !important;
+    }
     .report-tldr {
         margin: 8px 0 18px !important;
         padding: 14px 16px !important;
@@ -7518,13 +7596,14 @@ def build_demo():
                     filterable=False,
                 )
 
-                output_detail_level_selector = gr.Dropdown(
+                # Radio is more reliable than Dropdown for 3 fixed tiers
+                # (Dropdown fill/select often left the internal value stuck on detailed).
+                output_detail_level_selector = gr.Radio(
                     label=I18N[DEFAULT_LANG]["output_detail_label"],
                     choices=_build_output_detail_choices(DEFAULT_LANG),
                     value=_normalize_output_detail_level(DEFAULT_OUTPUT_DETAIL_LEVEL),
                     info=I18N[DEFAULT_LANG]["output_detail_info"],
                     elem_id="output-detail-level-selector",
-                    filterable=False,
                 )
                 search_profile_selector = gr.Dropdown(
                     label=I18N[DEFAULT_LANG]["search_profile_label"],
